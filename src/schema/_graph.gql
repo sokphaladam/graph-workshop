@@ -1,0 +1,27 @@
+type Book {
+  title: String
+  author: String
+}
+
+type Query {
+  books: [Book]
+  userList: [User]
+  user(id: Int!): User
+}
+
+type User {
+  id: Int!
+  display: String
+  contact: String
+  gender: Gender
+  role: String
+  createdDate: String
+  latestModify: String
+  isActive: Boolean
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
