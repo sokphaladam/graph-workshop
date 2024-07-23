@@ -1,0 +1,64 @@
+extend type Query {
+  productList(
+    offset: Int = 0
+    limit: Int = 25
+    code: String
+    filter: FilterProduct
+  ): [Product]
+  product(id: Int!): Product
+}
+
+extend type Mutation {
+  createProduct(data: ProductInput): Boolean
+  updateProduct(id: Int!, data: ProductInput): Boolean
+}
+
+input ProductInput {
+  code: String
+  title: String
+  description: String
+  sku: [SKUInput]
+  category: Int
+  type: [TYPE_PRODUCT]
+  images: String
+}
+
+input SKUInput {
+  id: Int
+  unit: String
+  price: Float
+  discount: Float
+  name: String
+}
+
+type Product {
+  id: Int
+  code: String
+  title: String
+  description: String
+  category: Category
+  type: [TYPE_PRODUCT]
+  images: String
+  sku: [SKU]
+}
+
+type SKU {
+  id: Int
+  unit: String
+  price: Float
+  discount: Float
+  name: String
+}
+
+input FilterProduct {
+  category: [Int]
+}
+
+enum TYPE_PRODUCT {
+  PRODUCTION
+  RAW
+  ADDON
+  FREEZING
+  SECOND_HAND
+  FREE
+}

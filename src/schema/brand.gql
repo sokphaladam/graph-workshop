@@ -1,0 +1,20 @@
+extend type Query {
+  brandList(offset: Int = 0, limit: Int = 25): [Brand]
+  brand(id: Int!): Brand
+}
+
+extend type Mutation {
+  createBrand(data: BrandInput): Boolean
+  updateBrand(id: Int!, data: BrandInput, isActive: Boolean): Boolean
+}
+
+input BrandInput {
+  name: String
+  logo: String
+}
+
+type Brand {
+  id: Int
+  name: String
+  logo: String
+}

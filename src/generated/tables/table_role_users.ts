@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_role_users {  id?: number;  name?: string | null;  created_at?: Date;  updated_at?: Date;}

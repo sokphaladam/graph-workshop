@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_supplier {  id?: number;  name?: string | null;  contact?: string | null;  prefix?: string | null;  images?: string | null;  address?: string | null;  created_at?: Date;  updated_at?: Date;}

@@ -1,0 +1,20 @@
+import { Knex } from "knex";
+import moment from "moment";
+
+export async function createAuthToken(knex: Knex, token: string) {
+  const user = await knex.table("users").where("token", token).first();
+  const role = await knex.table("role_users").where("id", user.role_id).first();
+
+  return {
+    id: user.id,
+    display: user.display_name,
+    contact: user.contact,
+    role: {
+      id: role.id,
+      name: role.name,
+    },
+    createdDate: moment(user.created_at).format("YYYY-MM-DD"),
+    isActive: Boolean(user.active),
+    gender: user.gender,
+  };
+}

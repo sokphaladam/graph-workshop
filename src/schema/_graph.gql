@@ -1,23 +1,35 @@
+scalar JSON
+scalar JSONObject
+
 type Book {
   title: String
   author: String
 }
 
+type Mutation {
+  login(username: String!, password: String!): String
+}
+
 type Query {
   books: [Book]
-  userList: [User]
+  userList(offset: Int = 0, limit: Int = 25, roles: [Int]): [User]
   user(id: Int!): User
+  me: User
 }
 
 type User {
   id: Int!
   display: String
   contact: String
-  gender: Gender
-  role: String
+  gender: String
+  role: Role
   createdDate: String
-  latestModify: String
   isActive: Boolean
+}
+
+type Role {
+  id: Int
+  name: String
 }
 
 enum Gender {

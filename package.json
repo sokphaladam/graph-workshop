@@ -1,13 +1,17 @@
 {
-  "name": "graphql-api",
+  "name": "graphql-workshop",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js",
-    "dev": "nodemon --delay 500ms --watch src src/index.ts --exec babel-node --extensions=\".ts,.js\" -e js,ts,gql"
+    "start": "node dist/index.js",
+    "dev": "nodemon --delay 500ms --watch src src/index.ts --exec babel-node --extensions=\".ts,.js\" -e js,ts,gql",
+    "build": "babel src/schema -d dist/schema --copy-files && babel src -d dist --extensions=\".ts,.js\"",
+    "knex": "knex",
+    "table": "ts-node framework/generate_table_cli.ts",
+    "graph": "ts-node framework/generate_graph_type.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +19,19 @@
   "dependencies": {
     "@apollo/server": "^4.10.4",
     "@babel/polyfill": "^7.12.1",
+    "commander": "^12.1.0",
+    "crypto": "^1.0.1",
+    "dataloader": "^2.2.2",
     "dotenv": "^16.4.5",
     "fs": "0.0.1-security",
     "glob": "^11.0.0",
     "graphql": "^16.9.0",
+    "graphql-type-json": "^0.3.2",
     "knex": "^3.1.0",
-    "nodemon": "^3.1.4"
+    "moment": "^2.30.1",
+    "mysql2": "^3.10.3",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",

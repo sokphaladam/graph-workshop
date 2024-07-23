@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_product_sku {  discount?: string | null;  id?: number;  name?: string | null;  price?: string | null;  product_id?: number | null;  unit?: string | null;}

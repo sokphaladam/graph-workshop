@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
-    "outDir": "dist",
-    "lib": ["es2020"],
     "target": "es2020",
-    "module": "esnext",
+    "sourceMap": true,
+    "module": "commonjs",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "types": ["node"]
-  }
+    "baseUrl": "."
+  },
+  "include": ["src", "framework/AutoGenerateType.ts"],
+  "typeAcquisition": {
+    "include": ["jest"]
+  },
+  "exclude": ["node_modules"]
 }

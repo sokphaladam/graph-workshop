@@ -1,0 +1,20 @@
+extend type Mutation {
+  createCategory(data: CategoryInput): Boolean
+  updateCategory(id: Int!, data: CategoryInput, isActive: Boolean): Boolean
+}
+
+extend type Query {
+  categoryList: JSON
+  category(id: Int!): Category
+}
+
+input CategoryInput {
+  name: String
+  root: Int
+}
+
+type Category {
+  id: Int
+  name: String
+  root: Int
+}
