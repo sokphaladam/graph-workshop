@@ -69,7 +69,6 @@ export async function UpdateProducResolver(
           "id",
           previousSku.map((x) => x.id)
         )
-        .where("product_id", id)
         .del();
     }
     if (currentSku.length > 0) {

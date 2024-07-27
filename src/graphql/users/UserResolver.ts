@@ -32,6 +32,9 @@ export const UserResolver = {
       };
     },
     me: (_, {}, ctx: ContextType) => {
+      if (!ctx.auth) {
+        return null;
+      }
       return ctx.auth || null;
     },
   },

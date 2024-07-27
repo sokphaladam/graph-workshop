@@ -1,8 +1,14 @@
+const str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 export function prefix(serialNumber: any) {
-  return (parseInt(serialNumber, 36) + 1)
-    .toString(36)
-    .replace(/i/g, "j")
-    .replace(/o/g, "p")
-    .replace(/0/g, "1")
-    .toUpperCase();
+  let n = new Date().getTime();
+  let prefix = serialNumber[0].toUpperCase();
+
+  while (n) {
+    const alpha = n % 26;
+    prefix += str.charAt(alpha);
+    n = (n / 26) | 0;
+  }
+
+  return prefix;
 }

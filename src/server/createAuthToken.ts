@@ -3,6 +3,7 @@ import moment from "moment";
 
 export async function createAuthToken(knex: Knex, token: string) {
   const user = await knex.table("users").where("token", token).first();
+  if (!user) return null;
   const role = await knex.table("role_users").where("id", user.role_id).first();
 
   return {
