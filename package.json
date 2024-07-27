@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc",
-    "start": "node dist/index.js",
+    "start": "node public/index.js",
     "dev": "nodemon --delay 500ms --watch src src/index.ts --exec babel-node --extensions=\".ts,.js\" -e js,ts,gql",
-    "build": "babel src/schema -d dist/schema --copy-files && babel src -d dist --extensions=\".ts,.js\"",
+    "build": "babel src/schema -d public/schema --copy-files && babel src -d public --extensions=\".ts,.js\"",
     "knex": "knex",
     "table": "ts-node framework/generate_table_cli.ts",
     "graph": "ts-node framework/generate_graph_type.ts"
