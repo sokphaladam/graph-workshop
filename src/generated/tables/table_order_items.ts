@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_order_items {  created_at?: Date;  discount?: string | null;  id?: number;  order_id?: number | null;  price?: string | null;  qty?: number | null;  sku_id?: number | null;  updated_at?: Date;}

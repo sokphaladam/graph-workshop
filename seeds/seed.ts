@@ -1,6 +1,7 @@
 import { Knex } from "knex";
 import {
   table_category,
+  table_products,
   table_role_users,
   table_users,
 } from "../src/generated/tables";
@@ -16,6 +17,8 @@ export async function seed(knex: Knex): Promise<void> {
   await knex("role_users").del();
   await knex("users").del();
   await knex("category").del();
+  await knex("products").del();
+  await knex("product_sku").del();
 
   // Inserts seed entries
   await knex<table_role_users>("role_users").insert([
@@ -72,43 +75,28 @@ export async function seed(knex: Knex): Promise<void> {
   await knex<table_category>("category").insert([
     {
       id: 1,
-      name: "Drink",
+      name: "Hot",
       root: 0,
     },
     {
       id: 2,
-      name: "Food",
+      name: "Iced",
       root: 0,
     },
     {
       id: 3,
-      name: "Caffe",
-      root: 1,
+      name: "Frappe",
+      root: 0,
     },
     {
       id: 4,
-      name: "Soft Drink",
-      root: 1,
+      name: "Smoothies",
+      root: 0,
     },
     {
       id: 5,
-      name: "Bread",
-      root: 2,
-    },
-    {
-      id: 6,
-      name: "Sweet",
-      root: 2,
-    },
-    {
-      id: 7,
-      name: "Burger",
-      root: 5,
-    },
-    {
-      id: 8,
-      name: "Pizza",
-      root: 5,
+      name: "Soda",
+      root: 0,
     },
   ]);
 }

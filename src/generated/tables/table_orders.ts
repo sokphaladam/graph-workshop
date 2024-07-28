@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_orders {  address?: string | null;  created_at?: Date;  customer_number?: string | null;  id?: number;  order?: number | null;  set?: string | null;  status?: string | null;  total?: string | null;  total_paid?: string | null;  updated_at?: Date;  uuid?: string | null;}

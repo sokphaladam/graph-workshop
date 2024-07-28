@@ -1,0 +1,42 @@
+extend type Mutation {
+  createOrder(data: OrderInput): Boolean
+}
+
+extend type Query {
+  orderList(offset: Int = 0, limit: Int = 25): [Order]
+}
+
+type Order {
+  id: Int
+  name: String
+  address: String
+  set: String
+  status: String
+  uuid: String
+  items: [OrderItem]
+  total: String
+  paid: String
+}
+
+type OrderItem {
+  id: Int
+  sku: SKU
+  price: Float
+  qty: Int
+  discount: Float
+}
+
+input OrderInput {
+  name: String
+  address: String
+  set: String
+  carts: [CartItemInput]
+}
+
+input CartItemInput {
+  skuId: Int
+  productId: Int
+  price: Float
+  qty: Int
+  discount: Float
+}

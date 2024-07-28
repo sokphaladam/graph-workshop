@@ -3,6 +3,7 @@ import { CategoryResolver } from "./category/CatgoryResolver";
 import { loadSchema } from "./SchemaLoader";
 import { UserResolver } from "./users/UserResolver";
 import { ProductResolver } from "./product/ProductResolver";
+import { OrderResolver } from "./order/OrderResolver";
 
 const books = [
   {
@@ -25,6 +26,7 @@ export const AppResolvers = [
   UserResolver,
   CategoryResolver,
   ProductResolver,
+  OrderResolver,
   {
     Query: {
       books: () => books,
