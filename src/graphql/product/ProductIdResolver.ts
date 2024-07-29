@@ -1,4 +1,5 @@
 import { ContextType } from "src/ContextType";
+import { createAddonByProductIDLoader } from "src/dataloader/AddonLoader";
 import { createCategoryLoader } from "src/dataloader/CategoryLoader";
 import { createSkuByProductIDLoader } from "src/dataloader/SkuLoader";
 
@@ -6,6 +7,7 @@ export async function ProductIdResolver(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
   const categoryLoader = createCategoryLoader(knex);
   const skuLoader = createSkuByProductIDLoader(knex);
+  const addonLoader = createAddonByProductIDLoader(knex);
 
   const item = await knex
     .table("products")
@@ -21,5 +23,6 @@ export async function ProductIdResolver(_, { id }, ctx: ContextType) {
     sku: () => skuLoader.load(item.id),
     title: item.title,
     type: item.type.split(","),
+    addons: () => addonLoader.load(item.id),
   };
 }

@@ -19,6 +19,7 @@ export async function seed(knex: Knex): Promise<void> {
   await knex("category").del();
   await knex("products").del();
   await knex("product_sku").del();
+  await knex("addon_products").del();
 
   // Inserts seed entries
   await knex<table_role_users>("role_users").insert([

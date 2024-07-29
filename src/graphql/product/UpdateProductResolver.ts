@@ -53,6 +53,25 @@ export async function UpdateProducResolver(
       unit: x.unit,
     }));
 
+  const previousAddon = data.addons
+    .filter((x) => !!x.id)
+    .map((x) => ({
+      product_id: id,
+      name: x.name,
+      value: x.value,
+      id: x.id,
+      is_required: x.isRequired,
+    }));
+
+  const currentAddon = data.addons
+    .filter((x) => !x.id)
+    .map((x) => ({
+      product_id: id,
+      name: x.name,
+      value: x.value,
+      is_required: x.isRequired,
+    }));
+
   await knex.transaction(async (tx) => {
     await tx.table("products").where({ id }).update(inputProduct);
     const queries = previousSku.map((x) => {
@@ -69,14 +88,39 @@ export async function UpdateProducResolver(
           "id",
           previousSku.map((x) => x.id)
         )
+        .where("product_id", id)
         .del();
     }
     if (currentSku.length > 0) {
       await tx.table("product_sku").insert(currentSku);
     }
 
+    const queries2 = previousAddon.map((x) => {
+      return knex
+        .table("addon_products")
+        .where("id", x.id)
+        .update(x)
+        .transacting(tx);
+    });
+
+    if (previousAddon.length > 0) {
+      await tx
+        .table("addon_products")
+        .whereNotIn(
+          "id",
+          previousAddon.map((x) => x.id)
+        )
+        .where("product_id", id)
+        .del();
+    }
+
+    if (currentAddon.length > 0) {
+      await tx.table("addon_products").insert(currentAddon);
+    }
+
     try {
       await Promise.all(queries);
+      await Promise.all(queries2);
       await tx.commit();
     } catch (error) {
       await tx.rollback();

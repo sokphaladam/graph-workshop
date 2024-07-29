@@ -21,6 +21,14 @@ input ProductInput {
   category: Int
   type: [TYPE_PRODUCT]
   images: String
+  addons: [AddonInput]
+}
+
+input AddonInput {
+  id: Int
+  name: String
+  value: String
+  isRequired: Boolean
 }
 
 input SKUInput {
@@ -40,6 +48,14 @@ type Product {
   type: [TYPE_PRODUCT]
   images: String
   sku: [SKU]
+  addons: [AddonProduct]
+}
+
+type AddonProduct {
+  id: Int
+  name: String
+  value: String
+  isRequired: Boolean
 }
 
 type SKU {

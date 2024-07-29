@@ -45,6 +45,8 @@ export async function CreateOrderResolver(
               qty: x.qty,
               sku_id: x.skuId,
               product_id: x.productId,
+              addons: x.addons,
+              remark: x.remark,
             };
           })
         );

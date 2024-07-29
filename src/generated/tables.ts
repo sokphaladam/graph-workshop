@@ -1,3 +1,4 @@
+export * from './tables/table_addon_products';
 export * from './tables/table_brand';
 export * from './tables/table_category';
 export * from './tables/table_order_items';

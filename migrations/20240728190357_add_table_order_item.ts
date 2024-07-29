@@ -9,6 +9,8 @@ export async function up(knex: Knex): Promise<void> {
     table.integer("qty");
     table.decimal("price");
     table.decimal("discount");
+    table.string("addons");
+    table.string("remark");
     table.timestamps(true, true);
   });
 }

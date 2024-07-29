@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_addon_products {  id?: number;  is_required?: number | null;  name?: string | null;  product_id?: number | null;  value?: string | null;}

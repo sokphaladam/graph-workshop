@@ -39,4 +39,6 @@ input CartItemInput {
   price: Float
   qty: Int
   discount: Float
+  addons: String
+  remark: String
 }

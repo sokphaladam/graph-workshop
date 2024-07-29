@@ -1,7 +1,11 @@
 import moment from "moment";
 import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
-import { table_product_sku, table_products } from "src/generated/tables";
+import {
+  table_addon_products,
+  table_product_sku,
+  table_products,
+} from "src/generated/tables";
 import { prefix } from "src/lib/prefix";
 
 export async function CreateProductResolver(
@@ -37,12 +41,12 @@ export async function CreateProductResolver(
     width: "",
   };
 
-  const creat = await knex.transaction((tx) => {
+  await knex.transaction((tx) => {
     return tx
       .table<table_products>("products")
       .insert(inputProduct)
-      .then((res) => {
-        return tx.table<table_product_sku>("product_sku").insert(
+      .then(async (res) => {
+        await tx.table<table_product_sku>("product_sku").insert(
           data.sku.map((x) => ({
             product_id: res[0],
             name: x.name,
@@ -51,8 +55,18 @@ export async function CreateProductResolver(
             unit: x.unit,
           }))
         );
+        if (data.addons && data.addons.length > 0) {
+          await tx.table<table_addon_products>("addon_products").insert(
+            data.addons.map((x) => ({
+              product_id: res[0],
+              name: x.name,
+              value: x.value,
+              is_required: x.isRequired,
+            }))
+          );
+        }
       });
   });
 
-  return creat[0] > 0;
+  return true;
 }
