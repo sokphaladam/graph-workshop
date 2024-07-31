@@ -68,6 +68,7 @@ type SKU {
 
 input FilterProduct {
   category: [Int]
+  type: [TYPE_PRODUCT] = [PRODUCTION]
 }
 
 enum TYPE_PRODUCT {

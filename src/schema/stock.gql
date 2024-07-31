@@ -1,0 +1,22 @@
+extend type Mutation {
+  createProductStock(data: ProductStockInput): Boolean
+  updateProductStock(id: Int!, data: ProductStockInput): Boolean
+}
+
+extend type Query {
+  productStockList(offset: Int = 0, limit: Int = 25): [ProductStock]
+  productStock(id: Int!): ProductStock
+}
+
+input ProductStockInput {
+  productId: Int
+  qty: Int
+  location: String
+}
+
+type ProductStock {
+  id: Int
+  product: Product
+  qty: Int
+  location: String
+}

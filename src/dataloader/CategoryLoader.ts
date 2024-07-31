@@ -8,11 +8,16 @@ export function createCategoryLoader(knex: Knex) {
       .table<table_category>("category")
       .where("is_active", true)
       .whereIn("id", keys);
-    return items.map((x) => {
+
+    return keys.map((key) => {
+      const find = items.find((f) => f.id === key);
+      if (!find) {
+        return null;
+      }
       return {
-        id: x.id,
-        name: x.name,
-        root: x.root,
+        id: find.id,
+        name: find.name,
+        root: find.root,
       };
     });
   });

@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_item_stock {  created_at?: Date;  id?: number;  location?: string | null;  product_id?: number | null;  qty?: number | null;  updated_at?: Date;}

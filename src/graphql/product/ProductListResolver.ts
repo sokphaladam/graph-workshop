@@ -2,7 +2,6 @@ import { ContextType } from "src/ContextType";
 import { createAddonByProductIDLoader } from "src/dataloader/AddonLoader";
 import { createCategoryLoader } from "src/dataloader/CategoryLoader";
 import { createSkuByProductIDLoader } from "src/dataloader/SkuLoader";
-import { Graph } from "src/generated/graph";
 import { table_products } from "src/generated/tables";
 
 export async function ProductListResolver(
@@ -43,6 +42,10 @@ export async function ProductListResolver(
   if (filter) {
     if (filter.category) {
       queries.whereIn("category_id", filter.category);
+    }
+
+    if (filter.type) {
+      queries.whereIn("type", filter.type);
     }
   }
 
