@@ -11,6 +11,11 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal("discount");
     table.string("addons");
     table.string("remark");
+    table
+      .string("status")
+      .comment(
+        "0:PENDING,1:MAKING,2:OUT_OF_STOCK,3:REQUEST_CHANGE,4:COMPLETED"
+      );
     table.timestamps(true, true);
   });
 }

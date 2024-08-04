@@ -23,3 +23,25 @@ export function createSkuByProductIDLoader(knex: Knex) {
     });
   });
 }
+
+export function createSkuByIDLoader(knex: Knex) {
+  return new Dataloader(async (keys: number[]) => {
+    const items: table_product_sku[] = await knex
+      .table<table_product_sku>("product_sku")
+      .whereIn("id", keys);
+
+    return keys.map((row) => {
+      const find = items.find((f) => f.id === row);
+      if (find) {
+        return {
+          id: find.id,
+          unit: find.unit,
+          price: find.price,
+          discount: find.discount,
+          name: find.name,
+        };
+      }
+      return null;
+    });
+  });
+}

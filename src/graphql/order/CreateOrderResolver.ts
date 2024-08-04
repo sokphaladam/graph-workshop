@@ -2,6 +2,7 @@ import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
 import { table_order_items, table_orders } from "src/generated/tables";
 import { prefix } from "src/lib/prefix";
+import { StatusOrder, StatusOrderItem } from "./OrderResolver";
 
 function getTotal(price, discount, qty) {
   const discount_price = (price * discount) / 100;
@@ -21,14 +22,15 @@ export async function CreateOrderResolver(
     address: data.address,
     order: data.carts.length,
     set: data.set,
-    status: "PENDING",
+    status: StatusOrder.PENDING,
     total: data.carts
       .reduce((a, b) => (a = a + getTotal(b.price, b.discount, b.qty)), 0)
       .toFixed(2),
     total_paid: "0",
-    uuid:
-      prefix(data.name.split(" ").map((x) => x.charAt(0).toUpperCase())) +
-      new Date().getTime(),
+    uuid: data.uuid
+      ? data.uuid
+      : prefix(data.name.split(" ").map((x) => x.charAt(0).toUpperCase())) +
+        new Date().getTime(),
   };
 
   const create = await knex.transaction((tx) => {
@@ -47,6 +49,7 @@ export async function CreateOrderResolver(
               product_id: x.productId,
               addons: x.addons,
               remark: x.remark,
+              status: StatusOrderItem.PENDING,
             };
           })
         );

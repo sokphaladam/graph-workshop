@@ -1,9 +1,11 @@
 extend type Mutation {
   createOrder(data: OrderInput): Boolean
+  changeOrderStatus(data: ChangeOrderInput): Boolean
 }
 
 extend type Query {
   orderList(offset: Int = 0, limit: Int = 25): [Order]
+  order(id: Int, token: String): Order
 }
 
 type Order {
@@ -11,7 +13,7 @@ type Order {
   name: String
   address: String
   set: String
-  status: String
+  status: StatusOrder
   uuid: String
   items: [OrderItem]
   total: String
@@ -24,10 +26,12 @@ type OrderItem {
   price: Float
   qty: Int
   discount: Float
+  status: StatusOrderItem
 }
 
 input OrderInput {
   name: String
+  uuid: String
   address: String
   set: String
   carts: [CartItemInput]
@@ -41,4 +45,26 @@ input CartItemInput {
   discount: Float
   addons: String
   remark: String
+}
+
+input ChangeOrderInput {
+  orderId: Int!
+  id: Int
+  status: StatusOrder
+  itemStatus: StatusOrderItem
+}
+
+enum StatusOrder {
+  PENDING
+  VERIFY
+  DELIVERY
+  CHECKOUT
+}
+
+enum StatusOrderItem {
+  PENDING
+  MAKING
+  OUT_OF_STOCK
+  REQUEST_CHANGE
+  COMPLETED
 }
