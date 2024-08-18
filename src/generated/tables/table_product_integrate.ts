@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_product_integrate {  created_at?: Date;  id?: number;  integrate_id?: number | null;  product_id?: number | null;  qty?: string | null;  updated_at?: Date;}

@@ -39,6 +39,7 @@ export async function CreateProductResolver(
     unit: "",
     weight: "",
     width: "",
+    stock_alter: data.stockAlter + '',
   };
 
   if (data.sku && data.sku.length > 0) {
@@ -65,6 +66,15 @@ export async function CreateProductResolver(
                 is_required: x.isRequired,
               }))
             );
+          }
+          if(data.integrate && data.integrate.length > 0) {
+            await tx.table('product_integrate').insert(
+              data.integrate.map(x => ({
+                product_id: x.productId,
+                integrate_id: x.integrateId,
+                qty: x.qty
+              }))
+            )
           }
         });
     });
