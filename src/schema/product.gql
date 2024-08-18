@@ -22,6 +22,7 @@ input ProductInput {
   type: [TYPE_PRODUCT]
   images: String
   addons: [AddonInput]
+  integrate: [IntegrateInput]
 }
 
 input AddonInput {
@@ -39,6 +40,12 @@ input SKUInput {
   name: String
 }
 
+input IntegrateInput {
+  productId: Int
+  integrateId: Int
+  qty: String
+}
+
 type Product {
   id: Int
   code: String
@@ -49,6 +56,7 @@ type Product {
   images: String
   sku: [SKU]
   addons: [AddonProduct]
+  integrates: [Integrate]
 }
 
 type AddonProduct {
@@ -66,9 +74,17 @@ type SKU {
   name: String
 }
 
+type Integrate {
+  id: Int
+  product: Product
+  integrate: Product
+  qty: String
+}
+
 input FilterProduct {
   category: [Int]
   type: [TYPE_PRODUCT] = [PRODUCTION]
+  isLowStock: Boolean
 }
 
 enum TYPE_PRODUCT {

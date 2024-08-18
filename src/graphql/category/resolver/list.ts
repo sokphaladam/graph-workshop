@@ -27,26 +27,6 @@ export async function categoryList(_, {}, ctx: ContextType) {
     .table<table_category>("category")
     .where("is_active", true);
 
-  // const idMapping = category.reduce((acc: any, el, i) => {
-  //   acc[el.id] = i;
-  //   return acc;
-  // }, {});
-
-  // let root;
-
-  // category.forEach((el) => {
-  //   if (el.root === 0) {
-  //     root = el;
-  //     return;
-  //   }
-
-  //   const parentEl: any = category[idMapping[el.root]];
-
-  //   parentEl.items = [...(parentEl.items || []), el];
-  // });
-
-  // return category.filter((x) => x.root === 0);
-
   const hash: { [key: number]: CategoryTreeNode } = {
     0: {
       children: [],
@@ -83,5 +63,6 @@ export async function categoryList(_, {}, ctx: ContextType) {
   return {
     root: hash[0],
     hash,
+    raw: category,
   };
 }

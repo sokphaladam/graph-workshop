@@ -23,7 +23,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string("width");
     table.string("height");
     table.string("length");
-    table.integer('stock').defaultTo(0);
+    table.float("stock").defaultTo(0);
+    table.float("stock_alter").defaultTo(0);
     table.timestamps(true, true);
   });
 }

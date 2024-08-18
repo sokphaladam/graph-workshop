@@ -29,10 +29,11 @@ export async function seed(knex: Knex): Promise<void> {
     { id: 3, name: "User" },
   ]);
 
-  const pwd1 = (await knex.select(knex.raw(`md5("123456") as pwd`)).first())
+  const pwd1 = (await knex.select(knex.raw(`md5("5up3r@ol!m") as pwd`)).first())
     .pwd;
-  const pwd2 = (await knex.select(knex.raw(`md5("12345") as pwd`)).first()).pwd;
-  const pwd3 = (await knex.select(knex.raw(`md5("1234") as pwd`)).first()).pwd;
+  const pwd2 = (await knex.select(knex.raw(`md5("@ol!m") as pwd`)).first()).pwd;
+  const pwd3 = (await knex.select(knex.raw(`md5("ol3fu@l") as pwd`)).first())
+    .pwd;
 
   const users: table_users[] = [
     {

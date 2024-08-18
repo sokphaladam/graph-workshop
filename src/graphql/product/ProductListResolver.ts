@@ -47,6 +47,10 @@ export async function ProductListResolver(
     if (filter.type) {
       queries.whereIn("type", filter.type);
     }
+
+    if (filter.isLowStock) {
+      queries.whereRaw("stock <= stock_alter");
+    }
   }
 
   const items: table_products[] = await queries

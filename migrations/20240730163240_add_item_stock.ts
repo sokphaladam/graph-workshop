@@ -6,7 +6,8 @@ export async function up(knex: Knex): Promise<void> {
     table.integer("product_id").index();
     table.string("location");
     table.integer("qty");
-    table.text('note');
+    table.text("note");
+    table.text("proof");
     table.timestamps(true, true);
   });
 }

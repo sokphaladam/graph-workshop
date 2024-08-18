@@ -41,32 +41,34 @@ export async function CreateProductResolver(
     width: "",
   };
 
-  await knex.transaction((tx) => {
-    return tx
-      .table<table_products>("products")
-      .insert(inputProduct)
-      .then(async (res) => {
-        await tx.table<table_product_sku>("product_sku").insert(
-          data.sku.map((x) => ({
-            product_id: res[0],
-            name: x.name,
-            price: String(x.price),
-            discount: String(x.discount),
-            unit: x.unit,
-          }))
-        );
-        if (data.addons && data.addons.length > 0) {
-          await tx.table<table_addon_products>("addon_products").insert(
-            data.addons.map((x) => ({
+  if (data.sku && data.sku.length > 0) {
+    await knex.transaction((tx) => {
+      return tx
+        .table<table_products>("products")
+        .insert(inputProduct)
+        .then(async (res) => {
+          await tx.table<table_product_sku>("product_sku").insert(
+            data.sku.map((x) => ({
               product_id: res[0],
               name: x.name,
-              value: x.value,
-              is_required: x.isRequired,
+              price: String(x.price),
+              discount: String(x.discount),
+              unit: x.unit,
             }))
           );
-        }
-      });
-  });
+          if (data.addons && data.addons.length > 0) {
+            await tx.table<table_addon_products>("addon_products").insert(
+              data.addons.map((x) => ({
+                product_id: res[0],
+                name: x.name,
+                value: x.value,
+                is_required: x.isRequired,
+              }))
+            );
+          }
+        });
+    });
+  }
 
   return true;
 }
