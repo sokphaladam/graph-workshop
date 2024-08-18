@@ -30,7 +30,7 @@ export async function UpdateProducResolver(
     unit: "",
     weight: "",
     width: "",
-    stock_alter: data.stockAlter + '',
+    stock_alter: data.stockAlter + "",
   };
 
   const previousSku = data.sku
@@ -73,18 +73,22 @@ export async function UpdateProducResolver(
       is_required: x.isRequired,
     }));
 
-  const previousIntegrate = data.integrate.filter(x => !!x.id).map(x => ({
-    id: x.id,
-    product_id: x.productId,
-    integrate_id: x.integrateId,
-    qty: x.qty
-  }))
+  const previousIntegrate = data.integrate
+    .filter((x) => !!x.id)
+    .map((x) => ({
+      id: x.id,
+      product_id: x.productId,
+      integrate_id: x.integrateId,
+      qty: x.qty,
+    }));
 
-  const currentIntegrate = data.integrate.filter(x => !x.id).map(x => ({
-    product_id: x.productId,
-    integrate_id: x.integrateId,
-    qty: x.qty
-  }))
+  const currentIntegrate = data.integrate
+    .filter((x) => !x.id)
+    .map((x) => ({
+      product_id: id,
+      integrate_id: x.integrateId,
+      qty: x.qty,
+    }));
 
   await knex.transaction(async (tx) => {
     await tx.table("products").where({ id }).update(inputProduct);
@@ -132,20 +136,33 @@ export async function UpdateProducResolver(
       await tx.table("addon_products").insert(currentAddon);
     }
 
-    if(previousIntegrate.length > 0){
-      await tx.table('product_integrate')
-      .whereIn('id', previousIntegrate.map(x => x.id))
-      .where('product_id', id)
-      .del();
+    const queries3 = previousIntegrate.map((x) => {
+      return knex
+        .table("product_integrate")
+        .where("id", x.id)
+        .update(x)
+        .transacting(tx);
+    });
+
+    if (previousIntegrate.length > 0) {
+      await tx
+        .table("product_integrate")
+        .whereNotIn(
+          "id",
+          previousIntegrate.map((x) => x.id)
+        )
+        .where("product_id", id)
+        .del();
     }
 
-    if(currentIntegrate.length > 0) {
-      await tx.table('product_integrate').insert(currentIntegrate);
+    if (currentIntegrate.length > 0) {
+      await tx.table("product_integrate").insert(currentIntegrate);
     }
 
     try {
       await Promise.all(queries);
       await Promise.all(queries2);
+      await Promise.all(queries3);
       await tx.commit();
     } catch (error) {
       await tx.rollback();

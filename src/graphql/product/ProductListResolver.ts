@@ -1,6 +1,7 @@
 import { ContextType } from "src/ContextType";
 import { createAddonByProductIDLoader } from "src/dataloader/AddonLoader";
 import { createCategoryLoader } from "src/dataloader/CategoryLoader";
+import { createIntegrateByProductIDLoader } from "src/dataloader/IntegrateLoader";
 import { createSkuByProductIDLoader } from "src/dataloader/SkuLoader";
 import { table_products } from "src/generated/tables";
 
@@ -13,6 +14,7 @@ export async function ProductListResolver(
   const categoryLoader = createCategoryLoader(knex);
   const skuLoader = createSkuByProductIDLoader(knex);
   const addonLoader = createAddonByProductIDLoader(knex);
+  const integrateLoader = createIntegrateByProductIDLoader(knex);
 
   const queries = knex
     .table<table_products>("products")
@@ -69,6 +71,8 @@ export async function ProductListResolver(
       title: x.title,
       type: x.type.split(","),
       addons: () => addonLoader.load(x.id),
+      integrates: () => integrateLoader.load(x.id),
+      stockAlter: x.stock_alter,
     };
   });
 }
