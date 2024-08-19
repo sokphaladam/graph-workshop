@@ -2,7 +2,7 @@ import { ContextType } from "src/ContextType";
 import { createOrderItemLoader } from "src/dataloader/OrderItemLoader";
 import { Graph } from "src/generated/graph";
 import { table_orders } from "src/generated/tables";
-import { StatusOrder } from "./OrderResolver";
+import { StatusOrder, StatusOrderItem } from "./OrderResolver";
 
 export async function OrderListResolver(
   _,

@@ -6,7 +6,9 @@ export async function up(knex: Knex): Promise<void> {
     table.string("uuid");
     table.string("set");
     table.integer("order");
-    table.string("status").comment("0:PENDING,1:VERIFY,2:DELIVERY,3:CHECKOUT");
+    table
+      .string("status")
+      .comment("0:PENDING,1:VERIFY,2:DELIVERY,3:CHECKOUT,4:CANCELLED");
     table.string("customer_number");
     table.string("address");
     table.decimal("total");

@@ -1,11 +1,16 @@
 extend type Mutation {
   createOrder(data: OrderInput): Boolean
   changeOrderStatus(data: ChangeOrderInput): Boolean
+  addOrderItem(orderId: Int!, data: CartItemInput): Boolean
+  markOrderItemStatus(id: Int!, status: StatusOrderItem): Boolean
+  increaseOrderItem(id: Int!): Boolean
+  decreaseOrderItem(id: Int!): Boolean
 }
 
 extend type Query {
   orderList(offset: Int = 0, limit: Int = 25): [Order]
   order(id: Int, token: String): Order
+  generateTokenOrder(set: Int!): String
 }
 
 type Order {
@@ -27,6 +32,9 @@ type OrderItem {
   qty: Int
   discount: Float
   status: StatusOrderItem
+  addons: String
+  remark: String
+  product: Product
 }
 
 input OrderInput {
@@ -59,6 +67,7 @@ enum StatusOrder {
   VERIFY
   DELIVERY
   CHECKOUT
+  CANCELLED
 }
 
 enum StatusOrderItem {
@@ -67,4 +76,5 @@ enum StatusOrderItem {
   OUT_OF_STOCK
   REQUEST_CHANGE
   COMPLETED
+  DELETED
 }
