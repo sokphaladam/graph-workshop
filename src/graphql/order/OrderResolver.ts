@@ -26,9 +26,16 @@ export enum StatusOrderItem {
   DELETED = "5",
 }
 
+export enum OrderViewBy {
+  KITCHEN = "0",
+  ADMIN = "1",
+  USER = "2",
+}
+
 export const OrderResolver = {
   StatusOrder,
   StatusOrderItem,
+  OrderViewBy,
   Mutation: {
     createOrder: CreateOrderResolver,
     changeOrderStatus: ChangeOrderStatusResolver,
@@ -36,10 +43,10 @@ export const OrderResolver = {
     markOrderItemStatus: RemoveOrderItemResolver,
     increaseOrderItem: IncreaseOrderItemResolver,
     decreaseOrderItem: DecreaseOrderItemResolver,
+    generateTokenOrder: GenerateTokenOrderResolver,
   },
   Query: {
     orderList: OrderListResolver,
     order: OrderKeyResolver,
-    generateTokenOrder: GenerateTokenOrderResolver,
   },
 };

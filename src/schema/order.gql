@@ -5,12 +5,12 @@ extend type Mutation {
   markOrderItemStatus(id: Int!, status: StatusOrderItem): Boolean
   increaseOrderItem(id: Int!): Boolean
   decreaseOrderItem(id: Int!): Boolean
+  generateTokenOrder(set: Int!): String
 }
 
 extend type Query {
-  orderList(offset: Int = 0, limit: Int = 25): [Order]
+  orderList(offset: Int = 0, limit: Int = 25, viewBy: OrderViewBy): [Order]
   order(id: Int, token: String): Order
-  generateTokenOrder(set: Int!): String
 }
 
 type Order {
@@ -77,4 +77,10 @@ enum StatusOrderItem {
   REQUEST_CHANGE
   COMPLETED
   DELETED
+}
+
+enum OrderViewBy {
+  KITCHEN
+  ADMIN
+  USER
 }

@@ -2,20 +2,34 @@ import { ContextType } from "src/ContextType";
 import { createOrderItemLoader } from "src/dataloader/OrderItemLoader";
 import { Graph } from "src/generated/graph";
 import { table_orders } from "src/generated/tables";
-import { StatusOrder, StatusOrderItem } from "./OrderResolver";
+import { OrderViewBy, StatusOrder, StatusOrderItem } from "./OrderResolver";
 
 export async function OrderListResolver(
   _,
-  { offset, limit },
+  { offset, limit, viewBy },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
-  const loader = createOrderItemLoader(knex);
+  const loader = createOrderItemLoader(knex, viewBy === OrderViewBy.KITCHEN);
 
-  const items: table_orders[] = await knex
+  const query = knex
     .table("orders")
+    .orderBy([
+      { column: "id", order: "asc" },
+      { column: "status", order: "asc" },
+    ])
     .offset(offset)
     .limit(limit);
+
+  if (viewBy === OrderViewBy.KITCHEN) {
+    query.whereIn("status", [
+      StatusOrder.PENDING,
+      StatusOrder.VERIFY,
+      StatusOrder.DELIVERY,
+    ]);
+  }
+
+  const items: table_orders[] = await query;
 
   return items.map((x) => {
     return {
@@ -23,7 +37,7 @@ export async function OrderListResolver(
       name: x.customer_number,
       address: x.address,
       set: x.set,
-      status: StatusOrder[x.status],
+      status: isNaN(Number(x.status)) ? StatusOrder[x.status] : x.status,
       uuid: x.uuid,
       items: () => loader.load(x.id),
       total: x.total,

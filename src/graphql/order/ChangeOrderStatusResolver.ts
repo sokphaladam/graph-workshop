@@ -28,11 +28,12 @@ export async function ChangeOrderStatusResolver(
         const amount = Number(b.qty) * (Number(b.price) - dis_price);
         return (a = a + amount);
       }, 0);
+      const qty = items.reduce((a, b) => (a = a + b.qty), 0);
 
       await knex
         .table("orders")
         .where({ id: data.orderId })
-        .update({ status: data.status, total, order: items.length });
+        .update({ status: data.status, total, order: qty });
     } else {
       await knex
         .table("orders")

@@ -5,13 +5,13 @@ import { createSkuByIDLoader } from "./SkuLoader";
 import { StatusOrderItem } from "src/graphql/order/OrderResolver";
 import { createProductByIDLoader } from "./ProductLoader";
 
-export function createOrderItemLoader(knex: Knex) {
+export function createOrderItemLoader(knex: Knex, deleted?: boolean) {
   const loader = createSkuByIDLoader(knex);
   const productLoader = createProductByIDLoader(knex);
   return new Dataloader(async (keys: number[]) => {
     const items: table_order_items[] = await knex
       .table<table_order_items>("order_items")
-      .whereNotIn("status", [StatusOrderItem.DELETED])
+      .whereNotIn("status", !!deleted ? [] : [StatusOrderItem.DELETED])
       .whereIn("order_id", keys);
 
     return keys.map((row) => {
