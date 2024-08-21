@@ -9,6 +9,5 @@ export type KnexList = {
 
 export type ContextType = {
   knex: KnexList;
-  pubsub: PubSub;
   auth?: Graph.User;
 };
