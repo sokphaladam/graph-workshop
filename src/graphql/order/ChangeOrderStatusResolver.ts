@@ -1,6 +1,7 @@
 import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
 import { StatusOrder, StatusOrderItem } from "./OrderResolver";
+import GraphPubSub from "src/lib/PubSub/PubSub";
 
 interface Props {
   orderId: number;
@@ -48,6 +49,10 @@ export async function ChangeOrderStatusResolver(
       .where({ order_id: data.orderId, id: data.id })
       .update({ status: data.itemStatus });
   }
+
+  GraphPubSub.publish("NEW_ORDER_PENDING", {
+    newOrderPending: `Change Status`,
+  });
 
   return true;
 }

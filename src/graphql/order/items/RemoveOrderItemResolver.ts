@@ -12,6 +12,10 @@ export async function RemoveOrderItemResolver(
 
   await knex.table("order_items").where("id", id).update("status", status);
 
+  GraphPubSub.publish("NEW_ORDER_PENDING", {
+    newOrderPending: `Change Status`,
+  });
+
   return true;
 }
 

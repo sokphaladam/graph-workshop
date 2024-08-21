@@ -12,7 +12,6 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import { expressMiddleware } from "@apollo/server/express4";
-import { PubSub } from "graphql-subscriptions";
 
 const app = express();
 
@@ -25,10 +24,22 @@ const schema = makeExecutableSchema({
 
 const weServer = new WebSocketServer({
   server: httpServer,
-  path: "/subscriptions",
 });
 
-const serverCleanup = useServer({ schema }, weServer);
+const serverCleanup = useServer(
+  {
+    schema,
+    onConnect: async (ctx) => {
+      if (!ctx.connectionParams) {
+        throw new Error("Auth token missing!");
+      }
+    },
+    onDisconnect(ctx, code, reason) {
+      console.log("Disconnected!");
+    },
+  },
+  weServer
+);
 
 const server = new ApolloServer({
   schema,
@@ -51,7 +62,7 @@ async function workplace() {
 
   app.use(
     "/",
-    cors<cors.CorsRequest>({ origin: ["*"] }),
+    cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => {
