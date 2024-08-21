@@ -8,6 +8,8 @@ import {
   IncreaseOrderItemResolver,
   RemoveOrderItemResolver,
 } from "./items/RemoveOrderItemResolver";
+import { NewOrderPending } from "./subscription/NewOrderPending";
+import { subscribe } from "diagnostics_channel";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -48,5 +50,10 @@ export const OrderResolver = {
   Query: {
     orderList: OrderListResolver,
     order: OrderKeyResolver,
+  },
+  Subscription: {
+    newOrderPending: {
+      subscribe: NewOrderPending,
+    },
   },
 };

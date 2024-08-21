@@ -1,50 +1,95 @@
 import "@babel/polyfill";
 import { ApolloServer } from "@apollo/server";
 import { AppResolvers, AppSchema } from "./graphql/_AppSchema";
-import { startStandaloneServer } from "@apollo/server/standalone";
 import { envconfig } from "./lib/envconfig";
 import { createKnexConnectionsFromSetting } from "./server/createKnexConnection";
 import { createAuthToken } from "./server/createAuthToken";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import express from "express";
+import http from "http";
+import cors from "cors";
+import { expressMiddleware } from "@apollo/server/express4";
+import { PubSub } from "graphql-subscriptions";
 
-const server = new ApolloServer({
+const app = express();
+
+const httpServer = http.createServer(app);
+
+const schema = makeExecutableSchema({
   typeDefs: AppSchema,
   resolvers: AppResolvers,
 });
 
-async function workplace() {
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: Number(envconfig.port) },
-    context: async ({ req, res }) => {
-      const knex = createKnexConnectionsFromSetting();
+const weServer = new WebSocketServer({
+  server: httpServer,
+  path: "/subscriptions",
+});
 
-      if (req.headers.authorization) {
+const serverCleanup = useServer({ schema }, weServer);
+
+const server = new ApolloServer({
+  schema,
+  plugins: [
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+    {
+      async serverWillStart() {
         return {
-          knex,
-          auth: await createAuthToken(
-            knex.default,
-            req.headers.authorization.replace("Bearer", "").trim()
-          ),
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
         };
-      }
-
-      if ((req as any).query.token) {
-        return {
-          knex,
-          auth: await createAuthToken(
-            knex.default,
-            (req as any).query.token.trim()
-          ),
-        };
-      }
-
-      return {
-        knex,
-        // auth: await createAuthToken(knex, req.),
-      };
+      },
     },
-  });
+  ],
+});
 
-  console.log(`🚀  Server ready at: ${url}`);
+async function workplace() {
+  await server.start();
+
+  app.use(
+    "/",
+    cors<cors.CorsRequest>({ origin: ["*"] }),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        const knex = createKnexConnectionsFromSetting();
+
+        if (req.headers.authorization) {
+          return {
+            knex,
+            auth: await createAuthToken(
+              knex.default,
+              req.headers.authorization.replace("Bearer", "").trim()
+            ),
+          };
+        }
+
+        if ((req as any).query.token) {
+          return {
+            knex,
+            auth: await createAuthToken(
+              knex.default,
+              (req as any).query.token.trim()
+            ),
+          };
+        }
+
+        return {
+          knex,
+          auth: null,
+        };
+      },
+    })
+  );
+
+  const PORT = Number(envconfig.port) || 4000;
+
+  httpServer.listen(PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT}`);
+  });
 }
 
 workplace();

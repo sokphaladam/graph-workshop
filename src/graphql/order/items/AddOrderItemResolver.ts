@@ -1,6 +1,7 @@
 import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
 import { StatusOrderItem } from "../OrderResolver";
+import GraphPubSub from "src/lib/PubSub/PubSub";
 
 export async function AddOrderItemResolver(
   _,
@@ -33,6 +34,9 @@ export async function AddOrderItemResolver(
           remark: data.remark,
           status: StatusOrderItem.PENDING,
         });
+      GraphPubSub.publish("NEW_ORDER_PENDING", {
+        newOrderPending: `Set: ${order.set} (Change)`,
+      });
     } else {
       await knex.table("order_items").insert({
         order_id: orderId,
@@ -44,6 +48,9 @@ export async function AddOrderItemResolver(
         addons: data.addons,
         remark: data.remark,
         status: StatusOrderItem.PENDING,
+      });
+      GraphPubSub.publish("NEW_ORDER_PENDING", {
+        newOrderPending: `Set: ${order.set} (New)`,
       });
     }
   }

@@ -8,6 +8,11 @@ type Book {
 
 type Mutation {
   login(username: String!, password: String!): String
+  testSubscription(str: String): Boolean
+}
+
+type Subscription {
+  newOrderPending: String
 }
 
 type Query {
