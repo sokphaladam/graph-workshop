@@ -27,6 +27,6 @@ RUN pnpm -v
 
 RUN pnpm graph
 RUN pnpm run build
-HEALTHCHECK CMD curl --fail http://localhost/.well-known/apollo/server-health || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:4000 || exit 1
 EXPOSE 4000
 CMD [ "pnpm", "run", "start" ]
