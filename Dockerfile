@@ -14,6 +14,7 @@ COPY . .
 RUN pnpm i
 RUN pnpm -v
 
+RUN pnpm graph
 RUN pnpm run build
 HEALTHCHECK CMD curl --fail http://localhost/.well-known/apollo/server-health || exit 1
 EXPOSE 80
