@@ -30,12 +30,12 @@ export async function seed(knex: Knex): Promise<void> {
     { id: 4, name: "Kitchen" },
   ]);
 
-  const pwd1 = (await knex.select(knex.raw(`md5("5up3r@ol!m") as pwd`)).first())
+  const pwd1 = (await knex.select(knex.raw(`md5('5up3r@ol!m') as pwd`)).first())
     .pwd;
-  const pwd2 = (await knex.select(knex.raw(`md5("@ol!m") as pwd`)).first()).pwd;
-  const pwd3 = (await knex.select(knex.raw(`md5("ol3fu@l") as pwd`)).first())
+  const pwd2 = (await knex.select(knex.raw(`md5('@ol!m') as pwd`)).first()).pwd;
+  const pwd3 = (await knex.select(knex.raw(`md5('ol3fu@l') as pwd`)).first())
     .pwd;
-  const pwd4 = (await knex.select(knex.raw(`md5("k!tch3n") as pwd`)).first())
+  const pwd4 = (await knex.select(knex.raw(`md5('k!tch3n') as pwd`)).first())
     .pwd;
 
   const users: table_users[] = [
@@ -86,7 +86,7 @@ export async function seed(knex: Knex): Promise<void> {
       token: `KC${getToken()}`,
       created_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
       active: 1,
-    }
+    },
   ];
 
   await knex<table_users>("users").insert(users);
