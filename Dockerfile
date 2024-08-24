@@ -21,6 +21,6 @@ RUN pnpm -v
 
 RUN pnpm graph
 RUN pnpm run build
-HEALTHCHECK CMD curl --fail http://localhost:4000 || exit 1
-EXPOSE 4000
+HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
+EXPOSE 8080
 CMD [ "pnpm", "run", "start" ]
