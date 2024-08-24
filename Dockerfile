@@ -4,12 +4,6 @@ ARG PORT
 ENV PORT=${PORT}
 ARG DB_MAIN
 ENV DB_MAIN=${DB_MAIN}
-ARG CAPROVER_GIT_COMMIT_SHA=${CAPROVER_GIT_COMMIT_SHA}
-ENV CAPROVER_GIT_COMMIT_SHA=${CAPROVER_GIT_COMMIT_SHA}
-
-RUN echo SHA is: $CAPROVER_GIT_COMMIT_SHA
-
-RUN apk update && apk upgrade && apk add --no-cache git
 
 # Create app directory
 WORKDIR /usr/src/app

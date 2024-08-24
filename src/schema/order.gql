@@ -9,7 +9,13 @@ extend type Mutation {
 }
 
 extend type Query {
-  orderList(offset: Int = 0, limit: Int = 25, viewBy: OrderViewBy): [Order]
+  orderList(
+    offset: Int = 0
+    limit: Int = 25
+    viewBy: OrderViewBy
+    status: [StatusOrder]
+    orderId: String
+  ): [Order]
   order(id: Int, token: String): Order
 }
 
@@ -23,6 +29,7 @@ type Order {
   items: [OrderItem]
   total: String
   paid: String
+  note: String
 }
 
 type OrderItem {

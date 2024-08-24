@@ -6,7 +6,7 @@ import { OrderViewBy, StatusOrder, StatusOrderItem } from "./OrderResolver";
 
 export async function OrderListResolver(
   _,
-  { offset, limit, viewBy },
+  { offset, limit, viewBy, status, orderId },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
@@ -20,6 +20,29 @@ export async function OrderListResolver(
     ])
     .offset(offset)
     .limit(limit);
+
+  if (orderId) {
+    const items = await query.clone().where("id", orderId);
+
+    return items.map((x) => {
+      return {
+        id: x.id,
+        name: x.customer_number,
+        address: x.address,
+        set: x.set,
+        status: isNaN(Number(x.status)) ? StatusOrder[x.status] : x.status,
+        uuid: x.uuid,
+        items: () => loader.load(x.id),
+        total: x.total,
+        paid: x.total_paid,
+        note: x.note,
+      };
+    });
+  }
+
+  if (status || (status as StatusOrder[]).length > 0) {
+    query.whereIn("status", status);
+  }
 
   if (viewBy === OrderViewBy.KITCHEN) {
     query.whereIn("status", [
@@ -42,6 +65,7 @@ export async function OrderListResolver(
       items: () => loader.load(x.id),
       total: x.total,
       paid: x.total_paid,
+      note: x.note,
     };
   });
 }
