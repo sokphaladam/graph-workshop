@@ -67,6 +67,7 @@ input ChangeOrderInput {
   id: Int
   status: StatusOrder
   itemStatus: StatusOrderItem
+  reason: String
 }
 
 enum StatusOrder {

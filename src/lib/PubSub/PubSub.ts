@@ -1,3 +1,4 @@
+import EventEmitter from "events";
 import { PubSub } from "graphql-subscriptions";
 
 abstract class IPubSub {
@@ -11,7 +12,9 @@ class InMemoryGraphPubSub implements IPubSub {
   protected pub: PubSub;
 
   constructor() {
-    this.pub = new PubSub();
+    const biggerEventEmitter = new EventEmitter();
+    biggerEventEmitter.setMaxListeners(Infinity);
+    this.pub = new PubSub({ eventEmitter: biggerEventEmitter });
   }
 
   publish(channel, data) {

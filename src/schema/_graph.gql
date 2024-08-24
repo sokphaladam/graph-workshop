@@ -12,7 +12,7 @@ type Mutation {
 }
 
 type Subscription {
-  newOrderPending: String
+  newOrderPending(broadCast: String): String
 }
 
 type Query {

@@ -14,6 +14,14 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal("total");
     table.decimal("total_paid");
     table.string("note");
+    table.timestamp("verify_date");
+    table.integer("verify_by");
+    table.timestamp("deliver_date");
+    table.integer("deliver_by");
+    table.timestamp("confirm_checkout_date");
+    table.integer("confirm_checkout_by");
+    table.timestamp("cancelled_date");
+    table.integer("cancelled_by");
     table.timestamps(true, true);
   });
 }

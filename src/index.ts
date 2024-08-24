@@ -35,7 +35,7 @@ const serverCleanup = useServer(
       }
     },
     onDisconnect(ctx, code, reason) {
-      console.log("Disconnected!");
+      // console.log("Disconnected!");
     },
   },
   weServer

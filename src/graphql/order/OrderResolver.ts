@@ -10,6 +10,7 @@ import {
 } from "./items/RemoveOrderItemResolver";
 import { NewOrderPending } from "./subscription/NewOrderPending";
 import { subscribe } from "diagnostics_channel";
+import { ContextType } from "src/ContextType";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -53,7 +54,7 @@ export const OrderResolver = {
   },
   Subscription: {
     newOrderPending: {
-      subscribe: NewOrderPending,
+      subscribe: NewOrderPending(),
     },
   },
 };
