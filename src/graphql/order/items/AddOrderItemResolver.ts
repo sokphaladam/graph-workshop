@@ -2,6 +2,23 @@ import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
 import { StatusOrderItem } from "../OrderResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
+import { table_orders } from "src/generated/tables";
+
+export function sendNotification(
+  order: table_orders,
+  str: string,
+  auth?: Graph.User
+) {
+  if (auth) {
+    GraphPubSub.publish(order.uuid, {
+      newOrderPending: str,
+    });
+  } else {
+    GraphPubSub.publish("ADMIN_CHANNEL", {
+      newOrderPending: str,
+    });
+  }
+}
 
 export async function AddOrderItemResolver(
   _,
@@ -9,8 +26,12 @@ export async function AddOrderItemResolver(
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
+  const auth = ctx.auth;
 
-  const order = await knex.table("orders").where("id", orderId).first();
+  const order: table_orders = await knex
+    .table("orders")
+    .where("id", orderId)
+    .first();
 
   if (order) {
     const orderItem = await knex
@@ -34,9 +55,7 @@ export async function AddOrderItemResolver(
           remark: data.remark,
           status: StatusOrderItem.PENDING,
         });
-      GraphPubSub.publish("NEW_ORDER_PENDING", {
-        newOrderPending: `Set: ${order.set} (Change)`,
-      });
+      sendNotification(order, `Set: ${order.set} (Change)`, auth);
     } else {
       await knex.table("order_items").insert({
         order_id: orderId,
@@ -49,9 +68,7 @@ export async function AddOrderItemResolver(
         remark: data.remark,
         status: StatusOrderItem.PENDING,
       });
-      GraphPubSub.publish("NEW_ORDER_PENDING", {
-        newOrderPending: `Set: ${order.set} (New)`,
-      });
+      sendNotification(order, `Set: ${order.set} (New)`, auth);
     }
   }
 

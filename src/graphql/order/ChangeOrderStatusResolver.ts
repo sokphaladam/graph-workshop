@@ -1,8 +1,8 @@
 import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
-import { StatusOrder, StatusOrderItem } from "./OrderResolver";
-import GraphPubSub from "src/lib/PubSub/PubSub";
+import { StatusOrderItem } from "./OrderResolver";
 import moment from "moment";
+import { sendNotification } from "./items/AddOrderItemResolver";
 
 interface Props {
   orderId: number;
@@ -10,6 +10,7 @@ interface Props {
   status: Graph.StatusOrder;
   itemStatus: Graph.StatusOrderItem;
   reason: string;
+  amount: string;
 }
 
 export async function ChangeOrderStatusResolver(
@@ -54,6 +55,8 @@ export async function ChangeOrderStatusResolver(
           ),
           confirm_checkout_by: auth ? auth.id : null,
           updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          note: data.reason,
+          total_paid: Number(data.amount),
         };
         break;
       case 4:
@@ -88,7 +91,6 @@ export async function ChangeOrderStatusResolver(
         .where({ id: data.orderId })
         .update({ ...input, total, order: qty });
     } else {
-      console.log(input);
       await knex
         .table("orders")
         .where({ id: data.orderId })
@@ -110,9 +112,11 @@ export async function ChangeOrderStatusResolver(
     }
   }
 
-  GraphPubSub.publish("NEW_ORDER_PENDING", {
-    newOrderPending: `Change Status`,
-  });
+  // GraphPubSub.publish("NEW_ORDER_PENDING", {
+  //   newOrderPending: `Change Status`,
+  // });
+  const order = await knex.table("orders").where("id", data.orderId).first();
+  sendNotification(order, `Change Status`, auth);
 
   return true;
 }

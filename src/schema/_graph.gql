@@ -12,7 +12,7 @@ type Mutation {
 }
 
 type Subscription {
-  newOrderPending(broadCast: String): String
+  newOrderPending(channel: String = "ADMIN_CHANNEL"): String
 }
 
 type Query {

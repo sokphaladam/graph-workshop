@@ -5,7 +5,7 @@ import { UserResolver } from "./users/UserResolver";
 import { ProductResolver } from "./product/ProductResolver";
 import { OrderResolver } from "./order/OrderResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
-import { NEW_ORDER_PENDING } from "./order/subscription/NewOrderPending";
+import { SubscriptionResolvers } from "./subscription";
 
 const books = [
   {
@@ -35,11 +35,12 @@ export const AppResolvers = [
     },
     Mutation: {
       testSubscription: (_, { str }) => {
-        GraphPubSub.publish(NEW_ORDER_PENDING, {
+        GraphPubSub.publish("ADMIN_CHANNEL", {
           newOrderPending: str,
         });
         return true;
       },
     },
+    Subscription: SubscriptionResolvers,
   },
 ];

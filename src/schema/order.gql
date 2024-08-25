@@ -30,6 +30,7 @@ type Order {
   total: String
   paid: String
   note: String
+  log: JSON
 }
 
 type OrderItem {
@@ -68,6 +69,7 @@ input ChangeOrderInput {
   status: StatusOrder
   itemStatus: StatusOrderItem
   reason: String
+  amount: String
 }
 
 enum StatusOrder {
