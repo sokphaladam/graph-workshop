@@ -10,7 +10,7 @@ export function createUserLoader(knex: Knex) {
     return roles.map((x) => {
       return {
         id: x.id,
-        name: x.display_name,
+        display: x.display_name,
       };
     });
   });

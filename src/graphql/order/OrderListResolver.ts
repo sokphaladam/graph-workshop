@@ -20,7 +20,7 @@ function LogStatus(order: table_orders, ctx: ContextType) {
     logs.push({
       date: moment(order.verify_date).format("YYYY-MM-DD HH:mm"),
       text: "Verifed",
-      by: () => loader.load(order.verify_by),
+      by: order.verify_by ? () => loader.load(order.verify_by) : null,
     });
   }
 
@@ -28,7 +28,7 @@ function LogStatus(order: table_orders, ctx: ContextType) {
     logs.push({
       date: moment(order.deliver_date).format("YYYY-MM-DD HH:mm"),
       text: "Deliver",
-      by: () => loader.load(order.deliver_by),
+      by: order.deliver_by ? () => loader.load(order.deliver_by) : null,
     });
   }
 
@@ -36,7 +36,9 @@ function LogStatus(order: table_orders, ctx: ContextType) {
     logs.push({
       date: moment(order.confirm_checkout_date).format("YYYY-MM-DD HH:mm"),
       text: "Checkout",
-      by: () => loader.load(order.confirm_checkout_by),
+      by: order.confirm_checkout_by
+        ? () => loader.load(order.confirm_checkout_by)
+        : null,
     });
   }
 
@@ -44,7 +46,7 @@ function LogStatus(order: table_orders, ctx: ContextType) {
     logs.push({
       date: moment(order.cancelled_date).format("YYYY-MM-DD HH:mm"),
       text: "Cancelled",
-      by: () => loader.load(order.cancelled_by),
+      by: order.cancelled_by ? () => loader.load(order.cancelled_by) : null,
     });
   }
 
@@ -164,5 +166,6 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
     items: () => loader.load(item.id),
     total: item.total,
     paid: item.total_paid,
+    log: LogStatus(item, ctx),
   };
 }

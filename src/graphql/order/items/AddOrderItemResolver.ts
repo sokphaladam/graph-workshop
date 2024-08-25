@@ -13,6 +13,9 @@ export function sendNotification(
     GraphPubSub.publish(order.uuid, {
       newOrderPending: str,
     });
+    GraphPubSub.publish("ADMIN_CHANNEL", {
+      newOrderPending: str,
+    });
   } else {
     GraphPubSub.publish("ADMIN_CHANNEL", {
       newOrderPending: str,

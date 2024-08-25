@@ -30,7 +30,13 @@ type Order {
   total: String
   paid: String
   note: String
-  log: JSON
+  log: [OrderLog]
+}
+
+type OrderLog {
+  text: String
+  date: String
+  by: User
 }
 
 type OrderItem {
