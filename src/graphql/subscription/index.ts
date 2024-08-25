@@ -5,9 +5,8 @@ export const SubscriptionResolvers = {
   newOrderPending: {
     subscribe: (_, { channel }, ctx: ContextType) => {
       if (channel) {
-        GraphPubSub.asyncIterator(channel);
+        return GraphPubSub.asyncIterator(channel);
       }
-
       return false;
     },
   },
