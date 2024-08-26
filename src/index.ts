@@ -11,59 +11,64 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import express from "express";
 import http from "http";
 import cors from "cors";
+import { json } from "body-parser";
 import { expressMiddleware } from "@apollo/server/express4";
 
-const app = express();
+async function workplace() {
+  const app = express();
+  const httpServer = http.createServer(app);
 
-const httpServer = http.createServer(app);
+  const schema = makeExecutableSchema({
+    typeDefs: AppSchema,
+    resolvers: AppResolvers,
+  });
 
-const schema = makeExecutableSchema({
-  typeDefs: AppSchema,
-  resolvers: AppResolvers,
-});
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+  });
 
-const weServer = new WebSocketServer({
-  server: httpServer,
-});
-
-const serverCleanup = useServer(
-  {
-    schema,
-    onConnect: async (ctx) => {
-      if (!ctx.connectionParams) {
-        throw new Error("Auth token missing!");
-      }
-    },
-    onDisconnect(ctx, code, reason) {
-      // console.log("Disconnected!");
-    },
-  },
-  weServer
-);
-
-const server = new ApolloServer({
-  schema,
-  plugins: [
-    ApolloServerPluginDrainHttpServer({ httpServer }),
+  const serverCleanup = useServer(
     {
-      async serverWillStart() {
-        return {
-          async drainServer() {
-            await serverCleanup.dispose();
-          },
-        };
+      schema,
+      onConnect: async (ctx) => {
+        if (!ctx.connectionParams) {
+          throw new Error("Auth token missing!");
+        }
+      },
+      onDisconnect(ctx, code, reason) {
+        console.log("Disconnected!");
       },
     },
-  ],
-});
+    wsServer
+  );
 
-async function workplace() {
+  const server = new ApolloServer({
+    schema,
+    allowBatchedHttpRequests: true,
+    csrfPrevention: false,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              wsServer.close();
+              // await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ].filter(Boolean),
+  });
+
   await server.start();
+  console.log("Apollo Server is started");
+  app.use(cors());
 
   app.use(
     "/",
     cors<cors.CorsRequest>(),
-    express.json(),
+    json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => {
         const knex = createKnexConnectionsFromSetting();
@@ -98,9 +103,10 @@ async function workplace() {
 
   const PORT = Number(envconfig.port) || 4000;
 
-  httpServer.listen(PORT, () => {
-    console.log(`🚀 Server ready at http://localhost:${PORT}`);
-  });
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: PORT }, resolve)
+  );
+  console.log(`🚀 Server ready at http://localhost:${PORT}`);
 }
 
 workplace();

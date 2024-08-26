@@ -2,6 +2,7 @@
 import { KnexList } from "src/ContextType";
 import { Connection } from "mysql2";
 import { envconfig } from "src/lib/envconfig";
+import DebugQueryCounter from "src/lib/DebugQueryCounter";
 const knex = require("knex");
 
 function createKnexList(
@@ -31,7 +32,7 @@ function createKnexList(
     if (process.env.DEBUG === "true") {
       knexPools[name].on("query", function (queryData) {
         // eslint-disable-next-line no-console
-        // console.log(DebugQueryCounter.counter, name, new Date(), queryData.sql);
+        console.log(DebugQueryCounter.counter, name, new Date(), queryData.sql);
       });
     }
   }
