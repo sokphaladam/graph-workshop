@@ -108,6 +108,7 @@ export async function ChangeOrderStatusResolver(
       await knex
         .table("order_items")
         .where({ order_id: data.orderId })
+        .whereNot({ status: "5" })
         .update({ status: subStatus });
     }
   }
