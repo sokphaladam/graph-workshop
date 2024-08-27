@@ -13,10 +13,16 @@ import http from "http";
 import cors from "cors";
 import { json } from "body-parser";
 import { expressMiddleware } from "@apollo/server/express4";
+import { KnexList } from "./ContextType";
+import { createGraphContextHandler } from "./server/createGraphContextHandler";
+import tokenExtractor from "./server/utils/tokenExtractor";
 
-async function workplace() {
+const knex = createKnexConnectionsFromSetting();
+
+async function workplace(knexPools: KnexList) {
   const app = express();
   const httpServer = http.createServer(app);
+  const contextHandler = createGraphContextHandler(knexPools, tokenExtractor);
 
   const schema = makeExecutableSchema({
     typeDefs: AppSchema,
@@ -52,8 +58,8 @@ async function workplace() {
         async serverWillStart() {
           return {
             async drainServer() {
-              wsServer.close();
-              // await serverCleanup.dispose();
+              await wsServer.close();
+              await serverCleanup.dispose();
             },
           };
         },
@@ -70,34 +76,7 @@ async function workplace() {
     cors<cors.CorsRequest>(),
     json(),
     expressMiddleware(server, {
-      context: async ({ req, res }) => {
-        const knex = createKnexConnectionsFromSetting();
-
-        if (req.headers.authorization) {
-          return {
-            knex,
-            auth: await createAuthToken(
-              knex.default,
-              req.headers.authorization.replace("Bearer", "").trim()
-            ),
-          };
-        }
-
-        if ((req as any).query.token) {
-          return {
-            knex,
-            auth: await createAuthToken(
-              knex.default,
-              (req as any).query.token.trim()
-            ),
-          };
-        }
-
-        return {
-          knex,
-          auth: null,
-        };
-      },
+      context: contextHandler,
     })
   );
 
@@ -109,4 +88,4 @@ async function workplace() {
   console.log(`🚀 Server ready at http://localhost:${PORT}`);
 }
 
-workplace();
+workplace(knex).then().catch();
