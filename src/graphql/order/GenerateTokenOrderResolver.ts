@@ -14,10 +14,12 @@ export async function GenerateTokenOrderResolver(
     const item = await tx
       .table("orders")
       .where({ set })
+      .where("total_paid", "=", 0)
       .whereNotIn("status", [StatusOrder.CANCELLED])
       .first();
 
     if (item) {
+      console.log(item.total_paid);
       if (item.status === "3" && Number(item.total_paid || 0) <= 0) {
         return item.uuid;
       }
