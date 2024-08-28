@@ -1,5 +1,5 @@
 import { ContextType } from "src/ContextType";
-import { sendNotification } from "./AddOrderItemResolver";
+import GraphPubSub from "src/lib/PubSub/PubSub";
 
 export async function RemoveOrderItemResolver(
   _,
@@ -7,17 +7,54 @@ export async function RemoveOrderItemResolver(
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
-  await knex.table("order_items").where("id", id).update("status", status);
-  sendNotification({}, "change status", ctx.auth);
+  const order_item = await knex.table("order_items").where("id", id).first();
+
+  if (order_item) {
+    const order = await knex
+      .table("orders")
+      .select("uuid")
+      .where({ id: order_item.order_id })
+      .first();
+
+    await knex.table("order_items").where("id", id).update("status", status);
+
+    if (order) {
+      GraphPubSub.publish(order.uuid, {
+        orderSubscript: { status: "REMOVE" },
+      });
+      GraphPubSub.publish("ADMIN_CHANNEL", {
+        orderSubscript: { status: "REMOVE", uuid: order.uuid },
+      });
+    }
+  }
+
+  // sendNotification({}, "change status", ctx.auth);
 
   return true;
 }
 
 export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
+  const order_item = await knex.table("order_items").where("id", id).first();
 
-  await knex.table("order_items").where("id", id).increment("qty", 1);
-  sendNotification({}, `Change qty (+)`, ctx.auth);
+  if (order_item) {
+    const order = await knex
+      .table("orders")
+      .select("uuid")
+      .where({ id: order_item.order_id })
+      .first();
+    await knex.table("order_items").where("id", id).increment("qty", 1);
+    if (order) {
+      GraphPubSub.publish(order.uuid, {
+        orderSubscript: { status: "ADD_QTY" },
+      });
+      GraphPubSub.publish("ADMIN_CHANNEL", {
+        orderSubscript: { status: "ADD_QTY", uuid: order.uuid },
+      });
+    }
+  }
+
+  // sendNotification({}, `Change qty (+)`, ctx.auth);
 
   return true;
 }
@@ -25,8 +62,26 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
 export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
 
-  await knex.table("order_items").where("id", id).increment("qty", -1);
-  sendNotification({}, `Change qty (-)`, ctx.auth);
+  // sendNotification({}, `Change qty (-)`, ctx.auth);
+
+  const order_item = await knex.table("order_items").where("id", id).first();
+
+  if (order_item) {
+    const order = await knex
+      .table("orders")
+      .select("uuid")
+      .where({ id: order_item.order_id })
+      .first();
+    await knex.table("order_items").where("id", id).decrement("qty", 1);
+    if (order) {
+      GraphPubSub.publish(order.uuid, {
+        orderSubscript: { status: "REMOVE_QTY" },
+      });
+      GraphPubSub.publish("ADMIN_CHANNEL", {
+        orderSubscript: { status: "REMOVE_QTY", uuid: order.uuid },
+      });
+    }
+  }
 
   return true;
 }

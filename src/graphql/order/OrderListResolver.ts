@@ -128,6 +128,8 @@ export async function OrderListResolver(
       paid: x.total_paid,
       note: x.note,
       log: logs,
+      code: (x as any).verify_code,
+      vat: (x as any).vat,
     };
   });
 }
@@ -167,5 +169,7 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
     total: item.total,
     paid: item.total_paid,
     log: LogStatus(item, ctx),
+    code: (item as any).verify_code,
+    vat: (item as any).vat,
   };
 }

@@ -6,6 +6,7 @@ extend type Mutation {
   increaseOrderItem(id: Int!): Boolean
   decreaseOrderItem(id: Int!): Boolean
   generateTokenOrder(set: Int!): String
+  verifyOtpOrder(token: String!, code: String!): Boolean
 }
 
 extend type Query {
@@ -31,6 +32,8 @@ type Order {
   paid: String
   note: String
   log: [OrderLog]
+  code: String
+  vat: String
 }
 
 type OrderLog {

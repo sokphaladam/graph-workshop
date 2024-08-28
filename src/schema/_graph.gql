@@ -13,6 +13,7 @@ type Mutation {
 
 type Subscription {
   newOrderPending(channel: String = "ADMIN_CHANNEL"): String
+  orderSubscript(channel: String = "ADMIN_CHANNEL"): JSON
 }
 
 type Query {

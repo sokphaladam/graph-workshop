@@ -1,0 +1,13 @@
+extend type Query {
+  settingList: [Setting]
+}
+
+extend type Mutation {
+  updateSetting(option: String, value: String): Boolean
+}
+
+type Setting {
+  option: String
+  value: String
+  type: String
+}

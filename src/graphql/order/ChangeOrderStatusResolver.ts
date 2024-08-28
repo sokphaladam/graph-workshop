@@ -2,7 +2,7 @@ import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
 import { StatusOrderItem } from "./OrderResolver";
 import moment from "moment";
-import { sendNotification } from "./items/AddOrderItemResolver";
+import GraphPubSub from "src/lib/PubSub/PubSub";
 
 interface Props {
   orderId: number;
@@ -55,7 +55,7 @@ export async function ChangeOrderStatusResolver(
           ),
           confirm_checkout_by: auth ? auth.id : null,
           updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-          note: data.reason,
+          note: data.reason || "",
           total_paid: Number(data.amount),
         };
         break;
@@ -117,7 +117,12 @@ export async function ChangeOrderStatusResolver(
   //   newOrderPending: `Change Status`,
   // });
   const order = await knex.table("orders").where("id", data.orderId).first();
-  sendNotification(order, `Change Status`, auth);
+  GraphPubSub.publish(order.uuid, {
+    orderSubscript: { status: "STATUS" },
+  });
+  GraphPubSub.publish("ADMIN_CHANNEL", {
+    orderSubscript: { status: data.status },
+  });
 
   return true;
 }

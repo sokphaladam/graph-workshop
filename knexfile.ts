@@ -9,6 +9,10 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql2",
     connection: process.env.DB_MAIN,
+    pool: {
+      min: 2,
+      max: 10,
+    },
   },
 
   // staging: {

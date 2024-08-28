@@ -1,7 +1,10 @@
 import { CreateOrderResolver } from "./CreateOrderResolver";
 import { OrderKeyResolver, OrderListResolver } from "./OrderListResolver";
 import { ChangeOrderStatusResolver } from "./ChangeOrderStatusResolver";
-import { GenerateTokenOrderResolver } from "./GenerateTokenOrderResolver";
+import {
+  GenerateTokenOrderResolver,
+  verifyOtpOrder,
+} from "./GenerateTokenOrderResolver";
 import { AddOrderItemResolver } from "./items/AddOrderItemResolver";
 import {
   DecreaseOrderItemResolver,
@@ -44,6 +47,7 @@ export const OrderResolver = {
     increaseOrderItem: IncreaseOrderItemResolver,
     decreaseOrderItem: DecreaseOrderItemResolver,
     generateTokenOrder: GenerateTokenOrderResolver,
+    verifyOtpOrder,
   },
   Query: {
     orderList: OrderListResolver,

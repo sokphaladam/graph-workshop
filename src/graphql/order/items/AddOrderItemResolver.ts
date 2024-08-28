@@ -4,32 +4,12 @@ import { StatusOrderItem } from "../OrderResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { table_orders } from "src/generated/tables";
 
-export function sendNotification(
-  order: table_orders,
-  str: string,
-  auth?: Graph.User
-) {
-  if (auth) {
-    GraphPubSub.publish(order.uuid, {
-      newOrderPending: str,
-    });
-    GraphPubSub.publish("ADMIN_CHANNEL", {
-      newOrderPending: str,
-    });
-  } else {
-    GraphPubSub.publish("ADMIN_CHANNEL", {
-      newOrderPending: str,
-    });
-  }
-}
-
 export async function AddOrderItemResolver(
   _,
   { orderId, data }: { orderId: number; data: Graph.CartItemInput },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
-  const auth = ctx.auth;
 
   const order: table_orders = await knex
     .table("orders")
@@ -58,7 +38,7 @@ export async function AddOrderItemResolver(
           remark: data.remark,
           status: StatusOrderItem.PENDING,
         });
-      sendNotification(order, `Set: ${order.set} (Change)`, auth);
+      // sendNotification(order, `Set: ${order.set} (Change)`, auth);
     } else {
       await knex.table("order_items").insert({
         order_id: orderId,
@@ -69,9 +49,18 @@ export async function AddOrderItemResolver(
         product_id: data.productId,
         addons: data.addons,
         remark: data.remark,
-        status: StatusOrderItem.PENDING,
+        status: [1, 2].includes(Number(order.status))
+          ? StatusOrderItem.MAKING
+          : StatusOrderItem.PENDING,
       });
-      sendNotification(order, `Set: ${order.set} (New)`, auth);
+
+      GraphPubSub.publish(order.uuid, {
+        orderSubscript: { status: "ADD_ITEM" },
+      });
+
+      GraphPubSub.publish("ADMIN_CHANNEL", {
+        orderSubscript: { status: "ADD_ITEM", uuid: order.uuid },
+      });
     }
   }
 

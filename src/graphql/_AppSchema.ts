@@ -6,6 +6,8 @@ import { ProductResolver } from "./product/ProductResolver";
 import { OrderResolver } from "./order/OrderResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { SubscriptionResolvers } from "./subscription";
+import { SettingResolver } from "./setting/SettingResolver";
+import { Telegram } from "src/lib/telegram";
 
 const books = [
   {
@@ -29,15 +31,18 @@ export const AppResolvers = [
   CategoryResolver,
   ProductResolver,
   OrderResolver,
+  SettingResolver,
   {
     Query: {
       books: () => books,
     },
     Mutation: {
       testSubscription: (_, { str }) => {
+        const tele = new Telegram();
         GraphPubSub.publish("ADMIN_CHANNEL", {
           newOrderPending: str,
         });
+        tele.sendMessage(str);
         return true;
       },
     },
