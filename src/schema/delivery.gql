@@ -1,0 +1,20 @@
+type Delivery {
+  id: Int
+  name: String
+  contact: String
+}
+
+input DeliveryInput {
+  name: String
+  contact: String
+}
+
+extend type Query {
+  deliveryList(offset: Int = 0, limit: Int = 25): [Delivery]
+  deliveryById(id: Int!): Delivery
+}
+
+extend type Mutation {
+  createDelivery(data: DeliveryInput): Boolean
+  updateDelivery(id: Int!, data: DeliveryInput): Boolean
+}

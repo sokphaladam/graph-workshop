@@ -3,6 +3,8 @@ import { Graph } from "src/generated/graph";
 import { StatusOrderItem } from "./OrderResolver";
 import moment from "moment";
 import GraphPubSub from "src/lib/PubSub/PubSub";
+import { Knex } from "knex";
+import { table_orders } from "src/generated/tables";
 
 interface Props {
   orderId: number;
@@ -11,6 +13,23 @@ interface Props {
   itemStatus: Graph.StatusOrderItem;
   reason: string;
   amount: string;
+  deliverPickupId: number;
+  deliverPickupCode: string;
+}
+
+async function DeliveryPick(
+  orderId: number,
+  deliveryId: number,
+  code: string,
+  knex: Knex
+) {
+  const input = {
+    deliver_by: deliveryId,
+    delivery_code: code,
+    updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+  };
+
+  await knex.table<table_orders>("orders").where("id", orderId).update(input);
 }
 
 export async function ChangeOrderStatusResolver(
@@ -20,6 +39,16 @@ export async function ChangeOrderStatusResolver(
 ) {
   const knex = ctx.knex.default;
   const auth = ctx.auth;
+
+  if (data.deliverPickupId) {
+    await DeliveryPick(
+      data.orderId,
+      data.deliverPickupId,
+      data.deliverPickupCode,
+      knex
+    );
+    return true;
+  }
 
   let subStatus: any = data.itemStatus;
 

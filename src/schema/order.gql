@@ -7,6 +7,7 @@ extend type Mutation {
   decreaseOrderItem(id: Int!): Boolean
   generateTokenOrder(set: Int!): String
   verifyOtpOrder(token: String!, code: String!): Boolean
+  signatureOrder(id: Int!, username: String!, password: String!): Boolean
 }
 
 extend type Query {
@@ -34,6 +35,8 @@ type Order {
   log: [OrderLog]
   code: String
   vat: String
+  delivery: Delivery
+  deliveryCode: String
 }
 
 type OrderLog {
@@ -79,6 +82,8 @@ input ChangeOrderInput {
   itemStatus: StatusOrderItem
   reason: String
   amount: String
+  deliverPickupId: Int
+  deliverPickupCode: String
 }
 
 enum StatusOrder {

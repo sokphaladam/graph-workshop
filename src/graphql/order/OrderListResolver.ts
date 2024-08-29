@@ -5,9 +5,20 @@ import { table_orders } from "src/generated/tables";
 import { OrderViewBy, StatusOrder, StatusOrderItem } from "./OrderResolver";
 import moment from "moment";
 import { createUserLoader } from "src/dataloader/UserLoader";
+import DataLoader from "dataloader";
+import { createDeliveryByIDLoader } from "src/dataloader/DeliverLoader";
 
-function LogStatus(order: table_orders, ctx: ContextType) {
-  const loader = createUserLoader(ctx.knex.default);
+export function LogStatus(
+  order: table_orders,
+  loader: DataLoader<
+    number,
+    {
+      id: number;
+      display: string;
+    },
+    number
+  >
+) {
   const logs = [
     {
       date: moment(order.created_at).format("YYYY-MM-DD HH:mm"),
@@ -50,6 +61,14 @@ function LogStatus(order: table_orders, ctx: ContextType) {
     });
   }
 
+  if (order.signature_date) {
+    logs.push({
+      date: moment(order.signature_date).format("YYYY-MM-DD HH:mm"),
+      text: "Signature",
+      by: order.signature_by ? () => loader.load(order.signature_by) : null,
+    });
+  }
+
   if (logs.length > 1) {
     if (order.updated_at) {
       logs.push({
@@ -70,6 +89,8 @@ export async function OrderListResolver(
 ) {
   const knex = ctx.knex.default;
   const loader = createOrderItemLoader(knex, viewBy === OrderViewBy.KITCHEN);
+  const loaderUser = createUserLoader(knex);
+  const loaderDeliver = createDeliveryByIDLoader(knex);
 
   const query = knex
     .table("orders")
@@ -95,7 +116,11 @@ export async function OrderListResolver(
         total: x.total,
         paid: x.total_paid,
         note: x.note,
-        log: LogStatus(x, ctx),
+        log: LogStatus(x, loaderUser),
+        delivery: x.delivery_id
+          ? () => loaderDeliver.load(x.delivery_id)
+          : null,
+        deliveryCode: x.delivery_code,
       };
     });
   }
@@ -115,7 +140,7 @@ export async function OrderListResolver(
   const items: table_orders[] = await query;
 
   return items.map((x) => {
-    const logs = LogStatus(x, ctx);
+    const logs = LogStatus(x, loaderUser);
     return {
       id: x.id,
       name: x.customer_number,
@@ -130,6 +155,8 @@ export async function OrderListResolver(
       log: logs,
       code: (x as any).verify_code,
       vat: (x as any).vat,
+      delivery: x.delivery_id ? () => loaderDeliver.load(x.delivery_id) : null,
+      deliveryCode: x.delivery_code,
     };
   });
 }
@@ -137,6 +164,8 @@ export async function OrderListResolver(
 export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
   const knex = ctx.knex.default;
   const loader = createOrderItemLoader(knex);
+  const loaderUser = createUserLoader(ctx.knex.default);
+  const loaderDeliver = createDeliveryByIDLoader(knex);
 
   if (!token && !id) {
     return null;
@@ -168,8 +197,12 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
     items: () => loader.load(item.id),
     total: item.total,
     paid: item.total_paid,
-    log: LogStatus(item, ctx),
+    log: LogStatus(item, loaderUser),
     code: (item as any).verify_code,
     vat: (item as any).vat,
+    delivery: item.delivery_id
+      ? () => loaderDeliver.load(item.delivery_id)
+      : null,
+    deliveryCode: item.delivery_code,
   };
 }

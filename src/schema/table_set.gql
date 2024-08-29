@@ -1,0 +1,13 @@
+extend type Query {
+  tableSetList(limit: Int = 25, offset: Int = 0): [TableSet]
+  tableSet(id: Int!): TableSet
+}
+
+extend type Mutation {
+  generateTableSet(sets: Int!): Boolean
+}
+
+type TableSet {
+  set: Int
+  order: Order
+}

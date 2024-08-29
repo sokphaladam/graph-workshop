@@ -16,14 +16,18 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal("vat");
     table.string("note");
     table.timestamp("verify_date");
-    table.integer("verify_by");
+    table.integer("verify_by").index();
     table.timestamp("deliver_date");
-    table.integer("deliver_by");
+    table.integer("deliver_by").index();
     table.timestamp("confirm_checkout_date");
-    table.integer("confirm_checkout_by");
+    table.integer("confirm_checkout_by").index();
     table.timestamp("cancelled_date");
-    table.integer("cancelled_by");
+    table.integer("cancelled_by").index();
     table.string("verify_code");
+    table.integer("delivery_id").index();
+    table.string("delivery_code");
+    table.integer("signature_by").index();
+    table.timestamp("signature_date");
     table.timestamps(true, true);
   });
 }

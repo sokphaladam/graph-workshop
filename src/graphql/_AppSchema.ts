@@ -8,6 +8,8 @@ import GraphPubSub from "src/lib/PubSub/PubSub";
 import { SubscriptionResolvers } from "./subscription";
 import { SettingResolver } from "./setting/SettingResolver";
 import { Telegram } from "src/lib/telegram";
+import { TableSetResolver } from "./set/TableSetReolver";
+import { DeliveryResolver } from "./delivery/DeliveryResolver";
 
 const books = [
   {
@@ -32,6 +34,8 @@ export const AppResolvers = [
   ProductResolver,
   OrderResolver,
   SettingResolver,
+  TableSetResolver,
+  DeliveryResolver,
   {
     Query: {
       books: () => books,
