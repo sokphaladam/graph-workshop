@@ -24,7 +24,7 @@ async function DeliveryPick(
   knex: Knex
 ) {
   const input = {
-    deliver_by: deliveryId,
+    delivery_id: deliveryId,
     delivery_code: code,
     updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
   };
