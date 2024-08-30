@@ -25,17 +25,20 @@ export function createOrderByIDLoader(knex: Knex) {
 
       return {
         id: find.id,
-        set: find.set,
-        uuid: find.uuid,
+        name: find.customer_number,
         address: find.address,
+        set: find.set,
         status: isNaN(Number(find.status))
           ? StatusOrder[find.status]
           : find.status,
+        uuid: find.uuid,
         items: find.id ? () => loaderOrderItem.load(find.id) : null,
         total: find.total,
         paid: find.total_paid,
         note: find.note,
         log: LogStatus(find, loaderUser),
+        code: find.verify_code,
+        vat: find.vat,
         delivery: find.delivery_id
           ? () => loaderDelivery.load(find.delivery_id)
           : null,

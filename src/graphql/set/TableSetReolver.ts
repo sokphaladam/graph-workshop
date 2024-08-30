@@ -50,7 +50,7 @@ export const TableSetResolver = {
       const items = [...new Array(sets)].map((_, i) => ({ set: i + 1 }));
 
       if (items.length > 0) {
-        await knex.table("table_set").del();
+        await knex.table("table_set").del().whereNot("created_at", null);
         await knex.table("table_set").insert(items);
       }
 
