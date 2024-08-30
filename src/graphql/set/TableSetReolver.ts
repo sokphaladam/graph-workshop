@@ -48,7 +48,11 @@ export const TableSetResolver = {
       const knex = ctx.knex.default;
 
       const items = [...new Array(sets)].map((_, i) => ({ set: i + 1 }));
-      await knex.table("table_set").insert(items);
+
+      if (items.length > 0) {
+        await knex.table("table_set").del();
+        await knex.table("table_set").insert(items);
+      }
 
       return true;
     },
