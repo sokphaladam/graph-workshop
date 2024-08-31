@@ -13,6 +13,15 @@ export async function up(knex: Knex): Promise<void> {
     table.string("owner_identity");
     table.boolean("active").defaultTo(false);
     table.dateTime("created_at");
+    table.string("dob");
+    table.string("starting_at");
+    table.string("bank_name");
+    table.string("bank_account");
+    table.string("bank_type");
+    table.string("profile");
+    table.string("position");
+    table.string("base_salary");
+    table.string("type").comment("SYS, STAFF");
   });
 }
 

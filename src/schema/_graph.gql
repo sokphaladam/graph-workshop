@@ -9,6 +9,8 @@ type Book {
 type Mutation {
   login(username: String!, password: String!): String
   testSubscription(str: String): Boolean
+  createUser(data: UserInput): Boolean
+  updateUser(id: Int!, data: UserInput): Boolean
 }
 
 type Subscription {
@@ -23,6 +25,24 @@ type Query {
   me: User
 }
 
+input UserInput {
+  display: String
+  contact: String
+  gender: String
+  roleId: Int
+  createdDate: String
+  isActive: Boolean
+  ownerId: String
+  startingAt: String
+  bankName: String
+  bankAcc: String
+  bankType: String
+  position: String
+  baseSalary: String
+  type: String
+  profile: String
+}
+
 type User {
   id: Int!
   display: String
@@ -31,6 +51,15 @@ type User {
   role: Role
   createdDate: String
   isActive: Boolean
+  ownerId: String
+  startingAt: String
+  bankName: String
+  bankAcc: String
+  bankType: String
+  position: String
+  baseSalary: String
+  type: String
+  profile: String
 }
 
 type Role {

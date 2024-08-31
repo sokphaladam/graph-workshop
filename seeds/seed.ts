@@ -18,6 +18,7 @@ export async function seed(knex: Knex): Promise<void> {
   await knex("role_users").del();
   await knex("users").del();
   await knex("setting").del();
+  await knex("bank_info").del();
 
   // Inserts seed entries
   await knex<table_role_users>("role_users").insert([
@@ -97,8 +98,52 @@ export async function seed(knex: Knex): Promise<void> {
       value: "0",
       type: "NUMBER",
     },
+    {
+      option: "LOCATION",
+      value: "11.5729132,104.8908722",
+      type: "STRING",
+    },
+    {
+      option: "DEFAULT_STARTWORK",
+      value: "8:30",
+      type: "TIME",
+    },
+    {
+      option: "DEFAULT_ENDWORK",
+      value: "17:00",
+      type: "TIME",
+    },
+    {
+      option: "DEFAULT_BREAKWORK",
+      value: "1:30",
+      type: "TIME",
+    },
+  ];
+
+  const bank = [
+    {
+      id: 1,
+      name: "CASH",
+    },
+    {
+      id: 2,
+      name: "ABA Bank",
+    },
+    {
+      id: 3,
+      name: "Acleda Bank",
+    },
+    {
+      id: 4,
+      name: "Wing Bank",
+    },
+    {
+      id: 5,
+      name: "True Money",
+    },
   ];
 
   await knex<table_users>("users").insert(users);
   await knex("setting").insert(settings);
+  await knex("bank_info").insert(bank);
 }
