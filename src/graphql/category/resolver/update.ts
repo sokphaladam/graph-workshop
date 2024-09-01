@@ -13,6 +13,10 @@ export async function updateCategory(
 ) {
   const knex = ctx.knex.default;
 
+  if (id === data.root) {
+    return false;
+  }
+
   const update = await knex
     .table<table_category>("category")
     .where({ id })
