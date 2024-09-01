@@ -106,7 +106,11 @@ export async function ChangeOrderStatusResolver(
       const items = await knex
         .table("order_items")
         .where({ order_id: data.orderId })
-        .whereIn("status", [StatusOrderItem.COMPLETED]);
+        .whereIn("status", [
+          StatusOrderItem.COMPLETED,
+          StatusOrderItem.PENDING,
+          StatusOrderItem.MAKING,
+        ]);
 
       const total = items.reduce((a, b) => {
         const dis_price = Number(b.price) * (Number(b.discount) / 100);
@@ -137,7 +141,7 @@ export async function ChangeOrderStatusResolver(
       await knex
         .table("order_items")
         .where({ order_id: data.orderId })
-        .whereNot({ status: "5" })
+        .whereNotIn("status", ["4", "5"])
         .update({ status: subStatus });
     }
   }
