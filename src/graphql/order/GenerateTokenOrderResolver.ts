@@ -1,6 +1,7 @@
 import { ContextType } from "src/ContextType";
 import { StatusOrder } from "./OrderResolver";
 import { Telegram } from "src/lib/telegram";
+import GraphPubSub from "src/lib/PubSub/PubSub";
 
 export async function GenerateTokenOrderResolver(
   _,
@@ -48,6 +49,10 @@ export async function GenerateTokenOrderResolver(
     const str = `តុលេខ (${set}) លេខកូដ (${code})`;
 
     telegram.sendMessage(str);
+
+    GraphPubSub.publish("ADMIN_CHANNEL", {
+      orderSubscript: { status: "CREAT_NEW", uuid: uuid },
+    });
 
     return res[0] > 0 ? uuid : null;
   });

@@ -45,8 +45,9 @@ export const AppResolvers = [
         const tele = new Telegram();
         GraphPubSub.publish("ADMIN_CHANNEL", {
           newOrderPending: str,
+          orderSubscript: str,
         });
-        tele.sendMessage(str);
+        // tele.sendMessage(str);
         return true;
       },
     },
