@@ -1,8 +1,13 @@
-# extend type Query {
-#   getbankList(offset: Int = 0, limit: Int = 30): [BankInfo]
-#   bankInfo(id: Int!): BankInfo
-# }
+extend type Query {
+  getAttendanceStaff(
+    limit: Int = 25
+    offset: Int = 0
+    from: String
+    to: String
+  ): JSON
+  getAttendanceAdmin(limit: Int = 25, offset: Int = 0): JSON
+}
 
 extend type Mutation {
-  checkAttandance(userId: Int!, date: String!): Boolean
+  checkAttendance(userId: Int!, date: String!): Boolean
 }

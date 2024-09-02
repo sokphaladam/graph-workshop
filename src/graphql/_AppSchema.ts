@@ -12,7 +12,7 @@ import { TableSetResolver } from "./set/TableSetReolver";
 import { DeliveryResolver } from "./delivery/DeliveryResolver";
 import { PositionResolver } from "./position/PositionResolver";
 import { BankResolver } from "./bank/BankResolver";
-import { AttandanceResolver } from "./attandance/AttandanceResolver";
+import { AttendanceResolver } from "./attandance/AttandanceResolver";
 
 const books = [
   {
@@ -41,7 +41,7 @@ export const AppResolvers = [
   DeliveryResolver,
   PositionResolver,
   BankResolver,
-  AttandanceResolver,
+  AttendanceResolver,
   {
     Query: {
       books: () => books,
