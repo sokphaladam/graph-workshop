@@ -1,9 +1,24 @@
 import moment from "moment";
+import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
 import { ContextType } from "src/ContextType";
 
-export const AttandanceResolver = {
+export const AttendanceResolver = {
+  Query: {
+    getAttendanceStaff: async (_, { from, to }, ctx: ContextType) => {
+      const knex = ctx.knex.default;
+      const user = ctx.auth;
+
+      if (!user) {
+        return null;
+      }
+
+      const items = await knex.table("attendance").where({ user_id: user.id });
+
+      return items;
+    },
+  },
   Mutation: {
-    checkAttandance: async (_, { userId, date }, ctx: ContextType) => {
+    checkAttendance: async (_, { userId, date }, ctx: ContextType) => {
       const knex = ctx.knex.default;
 
       const today = moment(new Date(date)).format("YYYY-MM-DD");

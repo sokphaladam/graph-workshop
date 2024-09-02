@@ -6,11 +6,11 @@ export async function up(knex: Knex): Promise<void> {
     table.time("leave_from");
     table.time("leave_to");
     table.string("leave_reason");
-    table.string("leave_status");
     table
       .string("status")
       .comment("REQUEST, APPROVED, REJECTED")
       .defaultTo("REQUEST");
+    table.enum("type", ["AL", "SL", "DO"]);
     table.integer("approved_by");
     table.integer("request_by");
     table.integer("rejected_by");
