@@ -16,6 +16,7 @@ export async function up(knex: Knex): Promise<void> {
       .comment(
         "0:PENDING,1:MAKING,2:OUT_OF_STOCK,3:REQUEST_CHANGE,4:COMPLETED,5:DELETED"
       );
+    table.boolean("is_print").defaultTo(false);
     table.timestamps(true, true);
   });
 }
