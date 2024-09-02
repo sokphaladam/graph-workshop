@@ -1,0 +1,17 @@
+extend type Query {
+  getbankList(offset: Int = 0, limit: Int = 30): [BankInfo]
+  bankInfo(id: Int!): BankInfo
+}
+
+extend type Mutation {
+  createBank(name: String!, phone: String): Boolean
+  updateBank(id: Int!, name: String!, phone: String): Boolean
+}
+
+type BankInfo {
+  id: Int
+  name: String
+  phone: String
+  createdDate: String
+  updatedDate: String
+}

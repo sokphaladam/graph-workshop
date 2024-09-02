@@ -1,8 +1,7 @@
 import moment from "moment";
 import { ContextType } from "src/ContextType";
 import { createDataLoader } from "src/dataloader";
-import { Graph } from "src/generated/graph";
-import { table_role_users, table_users } from "src/generated/tables";
+import { table_users } from "src/generated/tables";
 
 export async function UserListResolver(
   _,
@@ -31,5 +30,15 @@ export async function UserListResolver(
     createdDate: moment(x.created_at).format("YYYY-MM-DD"),
     isActive: Boolean(x.active),
     gender: x.gender,
+    dob: moment(x.dob).format("YYYY-MM-DD"),
+    owerId: x.owner_identity,
+    startingAt: moment(x.starting_at).format("YYYY-MM-DD"),
+    bankName: x.bank_name,
+    bankAcc: x.bank_account,
+    bankType: x.bank_type,
+    position: x.position,
+    baseSalary: x.base_salary,
+    type: x.type,
+    profile: x.profile,
   }));
 }

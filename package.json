@@ -11,7 +11,8 @@
     "build": "babel src/schema -d public/schema --copy-files && babel src -d public --extensions=\".ts,.js\"",
     "knex": "knex",
     "table": "ts-node framework/generate_table_cli.ts",
-    "graph": "ts-node framework/generate_graph_type.ts"
+    "graph": "ts-node framework/generate_graph_type.ts",
+    "file": "ts-node framework/generate_file.ts"
   },
   "keywords": [],
   "author": "",

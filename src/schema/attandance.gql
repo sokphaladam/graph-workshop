@@ -1,0 +1,8 @@
+# extend type Query {
+#   getbankList(offset: Int = 0, limit: Int = 30): [BankInfo]
+#   bankInfo(id: Int!): BankInfo
+# }
+
+extend type Mutation {
+  checkAttandance(userId: Int!, date: String!): Boolean
+}

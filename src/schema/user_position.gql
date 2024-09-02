@@ -1,0 +1,16 @@
+extend type Query {
+  getPositionList(offset: Int = 0, limit: Int = 30): [Position]
+  position(id: Int!): Position
+}
+
+extend type Mutation {
+  createPosition(name: String!): Boolean
+  updatePosition(id: Int!, name: String!): Boolean
+}
+
+type Position {
+  id: Int
+  name: String
+  createdDate: String
+  updatedDate: String
+}

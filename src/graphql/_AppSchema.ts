@@ -10,6 +10,9 @@ import { SettingResolver } from "./setting/SettingResolver";
 import { Telegram } from "src/lib/telegram";
 import { TableSetResolver } from "./set/TableSetReolver";
 import { DeliveryResolver } from "./delivery/DeliveryResolver";
+import { PositionResolver } from "./position/PositionResolver";
+import { BankResolver } from "./bank/BankResolver";
+import { AttandanceResolver } from "./attandance/AttandanceResolver";
 
 const books = [
   {
@@ -36,6 +39,9 @@ export const AppResolvers = [
   SettingResolver,
   TableSetResolver,
   DeliveryResolver,
+  PositionResolver,
+  BankResolver,
+  AttandanceResolver,
   {
     Query: {
       books: () => books,
