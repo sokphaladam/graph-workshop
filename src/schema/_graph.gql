@@ -65,6 +65,11 @@ type User {
   baseSalary: String
   type: String
   profile: String
+  dob: String
+
+  # User login
+  username: String
+  password: String
 }
 
 type Role {

@@ -47,6 +47,8 @@ export const UserResolver = {
         baseSalary: user.base_salary,
         type: user.type,
         profile: user.profile,
+        username: user.username,
+        password: user.password,
       };
     },
     me: (_, {}, ctx: ContextType) => {

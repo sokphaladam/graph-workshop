@@ -40,5 +40,8 @@ export async function UserListResolver(
     baseSalary: x.base_salary,
     type: x.type,
     profile: x.profile,
+
+    username: x.username,
+    password: x.password,
   }));
 }
