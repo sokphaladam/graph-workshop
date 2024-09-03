@@ -17,10 +17,7 @@ export async function UserListResolver(
     query.whereIn("role_id", roles);
   }
 
-  const users: table_users[] = await query
-    .offset(offset)
-    .limit(limit)
-    .where("active", true);
+  const users: table_users[] = await query.offset(offset).limit(limit);
 
   return users.map((x) => ({
     id: x.id,
@@ -31,7 +28,7 @@ export async function UserListResolver(
     isActive: Boolean(x.active),
     gender: x.gender,
     dob: moment(x.dob).format("YYYY-MM-DD"),
-    owerId: x.owner_identity,
+    ownerId: x.owner_identity,
     startingAt: moment(x.starting_at).format("YYYY-MM-DD"),
     bankName: x.bank_name,
     bankAcc: x.bank_account,

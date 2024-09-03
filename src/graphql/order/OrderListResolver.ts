@@ -157,6 +157,7 @@ export async function OrderListResolver(
       vat: (x as any).vat,
       delivery: x.delivery_id ? () => loaderDeliver.load(x.delivery_id) : null,
       deliveryCode: x.delivery_code,
+      invoice: (x as any).invoice,
     };
   });
 }
@@ -204,5 +205,6 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
       ? () => loaderDeliver.load(item.delivery_id)
       : null,
     deliveryCode: item.delivery_code,
+    invoice: (item as any).invoice,
   };
 }

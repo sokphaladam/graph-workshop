@@ -15,6 +15,7 @@ interface Props {
   amount: string;
   deliverPickupId: number;
   deliverPickupCode: string;
+  invoice: number;
 }
 
 async function DeliveryPick(
@@ -86,6 +87,7 @@ export async function ChangeOrderStatusResolver(
           updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
           note: data.reason || "",
           total_paid: Number(data.amount),
+          invoice: Number(data.invoice),
         };
         break;
       case 4:
@@ -122,7 +124,11 @@ export async function ChangeOrderStatusResolver(
       await knex
         .table("orders")
         .where({ id: data.orderId })
-        .update({ ...input, total, order: qty });
+        .update({
+          ...input,
+          total,
+          order: qty,
+        });
     } else {
       await knex
         .table("orders")

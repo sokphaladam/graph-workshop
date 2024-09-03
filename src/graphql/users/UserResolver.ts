@@ -38,7 +38,7 @@ export const UserResolver = {
         isActive: Boolean(user.active),
         gender: user.gender,
         dob: moment(user.dob).format("YYYY-MM-DD"),
-        owerId: user.owner_identity,
+        ownerId: user.owner_identity,
         startingAt: moment(user.starting_at).format("YYYY-MM-DD"),
         bankName: user.bank_name,
         bankAcc: user.bank_account,
@@ -56,6 +56,18 @@ export const UserResolver = {
         return null;
       }
       return ctx.auth || null;
+    },
+    roleList: async (_, {}, ctx: ContextType) => {
+      const knex = ctx.knex.default;
+
+      const items = await knex.table("role_users");
+
+      return items.map((x) => {
+        return {
+          id: x.id,
+          name: x.name,
+        };
+      });
     },
   },
 };

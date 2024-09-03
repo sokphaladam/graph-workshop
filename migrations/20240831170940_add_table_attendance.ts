@@ -4,10 +4,11 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("attendance", (table) => {
     table.increments("id").index().primary();
     table.integer("user_id").index();
-    table.time("check_in");
-    table.time("check_out");
-    table.time("overtime_from");
-    table.time("overtime_to");
+    table.timestamp("check_in");
+    table.timestamp("check_out");
+    table.timestamp("overtime_from");
+    table.timestamp("overtime_to");
+    table.date("check_date");
     table.timestamps(true, true);
   });
 }

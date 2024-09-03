@@ -1,5 +1,6 @@
 import { ContextType } from "src/ContextType";
 import { Graph } from "src/generated/graph";
+import { table_users } from "src/generated/tables";
 
 export async function UpdateUserResolver(
   _,
@@ -8,10 +9,10 @@ export async function UpdateUserResolver(
 ) {
   const knex = ctx.knex.default;
 
-  const input = {
+  const input: table_users = {
     role_id: data.roleId,
     display_name: data.display,
-    gender: data.gender,
+    gender: data.gender as any,
     contact: data.contact,
     owner_identity: data.ownerId,
     dob: data.dob,
@@ -23,7 +24,19 @@ export async function UpdateUserResolver(
     position: data.position,
     base_salary: data.baseSalary,
     type: "STAFF",
+    active: data.isActive as any,
+    username: data.username,
   };
+
+  if (data.password) {
+    const pwd = (
+      await knex
+        .select(knex.raw(`md5(:pwd) as pwd`, { pwd: data.password }))
+        .first()
+    ).pwd;
+
+    input.password = pwd;
+  }
 
   await knex.table("users").where({ id }).update(input);
 

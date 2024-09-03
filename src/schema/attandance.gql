@@ -4,10 +4,21 @@ extend type Query {
     offset: Int = 0
     from: String
     to: String
-  ): JSON
+  ): [Attendance]
   getAttendanceAdmin(limit: Int = 25, offset: Int = 0): JSON
+  getAttendanceStaffToday(date: String!): Attendance
 }
 
 extend type Mutation {
   checkAttendance(userId: Int!, date: String!): Boolean
+}
+
+type Attendance {
+  id: Int
+  user: User
+  checkIn: String
+  checkOut: String
+  overTimeIn: String
+  overTimeOut: String
+  checkDate: String
 }

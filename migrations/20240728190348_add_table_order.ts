@@ -29,6 +29,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer("signature_by").index();
     table.timestamp("signature_date");
     table.timestamps(true, true);
+    table.integer("invoice");
   });
 }
 

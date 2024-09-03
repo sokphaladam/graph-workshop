@@ -37,6 +37,7 @@ type Order {
   vat: String
   delivery: Delivery
   deliveryCode: String
+  invoice: Int
 }
 
 type OrderLog {
@@ -84,6 +85,7 @@ input ChangeOrderInput {
   amount: String
   deliverPickupId: Int
   deliverPickupCode: String
+  invoice: Int
 }
 
 enum StatusOrder {

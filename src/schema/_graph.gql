@@ -23,6 +23,7 @@ type Query {
   userList(offset: Int = 0, limit: Int = 25, roles: [Int]): [User]
   user(id: Int!): User
   me: User
+  roleList: [Role]
 }
 
 input UserInput {
