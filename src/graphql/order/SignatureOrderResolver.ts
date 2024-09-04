@@ -4,7 +4,7 @@ import { table_orders, table_users } from "src/generated/tables";
 
 export async function SignatureOrderResolver(
   _,
-  { id, username, password },
+  { id, username, password, userId },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
@@ -25,7 +25,7 @@ export async function SignatureOrderResolver(
         signature_by: null,
       })
       .update({
-        signature_by: user.id,
+        signature_by: userId,
         signature_date: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
         updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
       });

@@ -16,7 +16,7 @@ export async function RemoveOrderItemResolver(
       .where({ id: order_item.order_id })
       .first();
 
-    await knex.table("order_items").where("id", id).update("status", status);
+    await knex.table("order_items").where({ id: id, is_print: false }).del();
 
     if (order) {
       GraphPubSub.publish(order.uuid, {
@@ -35,7 +35,10 @@ export async function RemoveOrderItemResolver(
 
 export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
-  const order_item = await knex.table("order_items").where("id", id).first();
+  const order_item = await knex
+    .table("order_items")
+    .where({ id: id, is_print: false })
+    .first();
 
   if (order_item) {
     const order = await knex
@@ -64,7 +67,10 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
 
   // sendNotification({}, `Change qty (-)`, ctx.auth);
 
-  const order_item = await knex.table("order_items").where("id", id).first();
+  const order_item = await knex
+    .table("order_items")
+    .where({ id: id, is_print: false })
+    .first();
 
   if (order_item) {
     const order = await knex

@@ -64,6 +64,10 @@ export const AttendanceResolver = {
         .where({ user_id: user.id, check_date: today })
         .first();
 
+      if (!items) {
+        return null;
+      }
+
       return {
         id: items.id,
         user: user,
@@ -94,6 +98,7 @@ export const AttendanceResolver = {
 
       const item = await knex
         .table("attendance")
+        .where("user_id", userId)
         .whereRaw(`DATE(check_date) = DATE(:date)`, { date: today })
         .first();
 

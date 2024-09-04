@@ -16,6 +16,7 @@ interface Props {
   deliverPickupId: number;
   deliverPickupCode: string;
   invoice: number;
+  bankType: string;
 }
 
 async function DeliveryPick(
@@ -33,11 +34,7 @@ async function DeliveryPick(
   await knex.table<table_orders>("orders").where("id", orderId).update(input);
 }
 
-export async function ChangeOrderStatusResolver(
-  _,
-  { data }: { data: Props },
-  ctx: ContextType
-) {
+export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
   const knex = ctx.knex.default;
   const auth = ctx.auth;
 
@@ -88,6 +85,7 @@ export async function ChangeOrderStatusResolver(
           note: data.reason || "",
           total_paid: Number(data.amount),
           invoice: Number(data.invoice),
+          bank_type: data.bankType,
         };
         break;
       case 4:
@@ -105,6 +103,7 @@ export async function ChangeOrderStatusResolver(
     }
 
     if (Number(data.status) === 3) {
+      // return true;
       const items = await knex
         .table("order_items")
         .where({ order_id: data.orderId })

@@ -121,6 +121,7 @@ export async function OrderListResolver(
           ? () => loaderDeliver.load(x.delivery_id)
           : null,
         deliveryCode: x.delivery_code,
+        bankType: (x as any).bank_type,
       };
     });
   }
@@ -158,6 +159,7 @@ export async function OrderListResolver(
       delivery: x.delivery_id ? () => loaderDeliver.load(x.delivery_id) : null,
       deliveryCode: x.delivery_code,
       invoice: (x as any).invoice,
+      bankType: (x as any).bank_type,
     };
   });
 }
@@ -206,5 +208,6 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
       : null,
     deliveryCode: item.delivery_code,
     invoice: (item as any).invoice,
+    bankType: (item as any).bank_type,
   };
 }

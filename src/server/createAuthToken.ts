@@ -30,5 +30,6 @@ export async function createAuthToken(knex: Knex, token: string) {
     baseSalary: user.base_salary,
     type: user.type,
     profile: user.profile,
+    username: user.username,
   };
 }

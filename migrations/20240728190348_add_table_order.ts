@@ -30,6 +30,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp("signature_date");
     table.timestamps(true, true);
     table.integer("invoice");
+    table.string("bank_type");
   });
 }
 

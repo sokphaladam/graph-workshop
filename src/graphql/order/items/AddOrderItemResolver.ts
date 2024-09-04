@@ -23,7 +23,7 @@ export async function AddOrderItemResolver(
         order_id: orderId,
         sku_id: data.skuId,
         product_id: data.productId,
-        is_print: false
+        is_print: false,
       })
       .first();
 
