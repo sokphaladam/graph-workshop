@@ -30,6 +30,7 @@ export function createOrderItemLoader(knex: Knex, deleted?: boolean) {
             addons: x.addons,
             remark: x.remark,
             product: () => productLoader.load(x.product_id),
+            isPrint: (x as any).is_print
           };
         });
     });

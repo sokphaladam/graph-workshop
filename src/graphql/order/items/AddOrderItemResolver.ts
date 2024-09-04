@@ -23,8 +23,11 @@ export async function AddOrderItemResolver(
         order_id: orderId,
         sku_id: data.skuId,
         product_id: data.productId,
+        is_print: false
       })
       .first();
+
+    // return true;
 
     if (orderItem) {
       await knex
@@ -49,9 +52,7 @@ export async function AddOrderItemResolver(
         product_id: data.productId,
         addons: data.addons,
         remark: data.remark,
-        status: [1, 2].includes(Number(order.status))
-          ? StatusOrderItem.MAKING
-          : StatusOrderItem.PENDING,
+        status: StatusOrderItem.PENDING,
       });
 
       GraphPubSub.publish(order.uuid, {
