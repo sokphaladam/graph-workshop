@@ -22,6 +22,8 @@ extend type Query {
     viewBy: OrderViewBy
     status: [StatusOrder]
     orderId: String
+    fromDate: String
+    toDate: String
   ): [Order]
   order(id: Int, token: String): Order
 }
@@ -94,6 +96,8 @@ input ChangeOrderInput {
   deliverPickupCode: String
   invoice: Int
   bankType: String
+  currency: String
+  bankId: Int
 }
 
 enum StatusOrder {

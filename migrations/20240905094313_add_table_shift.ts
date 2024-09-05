@@ -5,12 +5,18 @@ export async function up(knex: Knex): Promise<void> {
     table.increments("id").primary().index();
     table.dateTime("open");
     table.dateTime("close");
-    table.decimal("open_usd").defaultTo(0);
-    table.decimal("open_khr").defaultTo(0);
-    table.decimal("close_usd").defaultTo(0);
-    table.decimal("close_khr").defaultTo(0);
-    table.decimal("deposit").defaultTo(0);
+    table.string("open_usd").defaultTo(0);
+    table.string("open_khr").defaultTo(0);
+    table.string("close_usd").defaultTo(0);
+    table.string("close_khr").defaultTo(0);
+    table.string("expect_usd").defaultTo(0);
+    table.string("expect_khr").defaultTo(0);
+    table.string("deposit").defaultTo(0);
     table.string("note");
+    table.string("bank");
+    table.string("bill");
+    table.string("card");
+    table.integer("user_id").index();
   });
 }
 

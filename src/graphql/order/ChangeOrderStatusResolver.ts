@@ -17,6 +17,8 @@ interface Props {
   deliverPickupCode: string;
   invoice: number;
   bankType: string;
+  currency: string;
+  bankId: number;
 }
 
 async function DeliveryPick(
@@ -86,6 +88,8 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
           total_paid: Number(data.amount),
           invoice: Number(data.invoice),
           bank_type: data.bankType,
+          currency: data.currency,
+          bank: data.bankId,
         };
         break;
       case 4:

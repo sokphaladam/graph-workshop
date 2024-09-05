@@ -25,7 +25,9 @@ export async function ProductListResolver(
       .clone()
       .offset(offset)
       .limit(limit)
-      .whereRaw("code LIKE :code", { code: "%" + code + "%" });
+      .whereRaw("code LIKE :code OR title LIKE :code", {
+        code: "%" + code + "%",
+      });
 
     return item.map((x) => {
       return {

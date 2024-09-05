@@ -20,7 +20,13 @@ type Subscription {
 
 type Query {
   books: [Book]
-  userList(offset: Int = 0, limit: Int = 25, roles: [Int]): [User]
+  userList(
+    offset: Int = 0
+    limit: Int = 25
+    roles: [Int]
+    position: [String]
+    search: String
+  ): [User]
   user(id: Int!): User
   me: User
   roleList: [Role]

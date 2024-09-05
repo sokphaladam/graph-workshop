@@ -84,7 +84,7 @@ export function LogStatus(
 
 export async function OrderListResolver(
   _,
-  { offset, limit, viewBy, status, orderId },
+  { offset, limit, viewBy, status, orderId, fromDate, toDate },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
@@ -139,6 +139,10 @@ export async function OrderListResolver(
       StatusOrder.VERIFY,
       StatusOrder.DELIVERY,
     ]);
+  }
+
+  if (fromDate && toDate) {
+    query.whereBetween("orders.verify_date", [fromDate, toDate]);
   }
 
   const items: table_orders[] = await query;

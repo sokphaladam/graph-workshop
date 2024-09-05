@@ -26,6 +26,8 @@ export async function seed(knex: Knex): Promise<void> {
     { id: 2, name: "Admin" },
     { id: 3, name: "User" },
     { id: 4, name: "Kitchen" },
+    { id: 5, name: "Manager" },
+    { id: 6, name: "Cashier" },
   ]);
 
   const pwd1 = (await knex.select(knex.raw(`md5('5up3r@ol!m') as pwd`)).first())

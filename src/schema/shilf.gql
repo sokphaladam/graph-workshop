@@ -1,0 +1,50 @@
+extend type Mutation {
+  createShift(data: ShiftInput): Boolean
+  updateShift(id: Int!, data: ShiftInput, expected: Boolean): Boolean
+}
+
+extend type Query {
+  shiftList(
+    limit: Int = 30
+    offset: Int = 0
+    users: [Int]
+    fromDate: String
+    toDate: String
+  ): [Shift]
+  shiftById(id: Int!): Shift
+}
+
+type Shift {
+  id: Int
+  open: String
+  openCurrency: CurrencyShift
+  close: String
+  closeCurrency: CurrencyShift
+  expectedCurrency: CurrencyShift
+  deposit: String
+  note: String
+  bank: JSON
+  bill: Int
+  card: Int
+  user: User
+}
+
+type CurrencyShift {
+  usd: Float
+  khr: Float
+}
+
+input ShiftInput {
+  open: String
+  close: String
+  openCurrency: CurrencyShiftInput
+  closeCurrency: CurrencyShiftInput
+  deposit: String
+  note: String
+  userId: Int!
+}
+
+input CurrencyShiftInput {
+  usd: Float = 0
+  khr: Float = 0
+}
