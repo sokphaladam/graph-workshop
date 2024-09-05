@@ -31,6 +31,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamps(true, true);
     table.integer("invoice");
     table.string("bank_type");
+    table.string("currency").defaultTo("USD");
   });
 }
 
