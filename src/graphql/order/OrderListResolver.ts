@@ -94,12 +94,15 @@ export async function OrderListResolver(
 
   const query = knex
     .table("orders")
+    .innerJoin("order_items", "order_items.order_id", "orders.id")
     .orderBy([
       { column: "id", order: "asc" },
       { column: "status", order: "asc" },
     ])
     .offset(offset)
-    .limit(limit);
+    .limit(limit)
+    .select("orders.*")
+    .groupBy("orders.id");
 
   if (orderId) {
     const items = await query.clone().where("id", orderId);
@@ -127,11 +130,11 @@ export async function OrderListResolver(
   }
 
   if (status && (status as StatusOrder[]).length > 0) {
-    query.whereIn("status", status);
+    query.whereIn("orders.status", status);
   }
 
   if (viewBy === OrderViewBy.KITCHEN) {
-    query.whereIn("status", [
+    query.whereIn("orders.status", [
       StatusOrder.PENDING,
       StatusOrder.VERIFY,
       StatusOrder.DELIVERY,
