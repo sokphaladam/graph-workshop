@@ -11,7 +11,7 @@ extend type Query {
     fromDate: String
     toDate: String
   ): [Shift]
-  shiftById(id: Int!): Shift
+  shiftById(id: Int, date: String, userId: Int): Shift
 }
 
 type Shift {

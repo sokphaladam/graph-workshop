@@ -59,19 +59,41 @@ export const ShiftResolver = {
         };
       });
     },
-    shiftById: async (_, { id }, ctx: ContextType) => {
+    shiftById: async (_, { id, date, userId }, ctx: ContextType) => {
       const knex = ctx.knex.default;
       const loader = createUserLoader(knex);
-      const item = await knex.table("shift").where({ id }).first();
+      const query = knex.table("shift");
+
+      if (id) {
+        query.where({ id });
+      }
+
+      if (date) {
+        query.whereRaw(`DATE(open) = Date(:date)`, { date });
+      }
+
+      if (userId) {
+        query.where({ user_id: userId });
+      }
+
+      const item = await query.clone().first();
+
+      if (!item) {
+        return null;
+      }
 
       return {
         id: item.id,
-        open: moment(item.open).format("YYYY-MM-DD HH:mm:ss"),
+        open: item.open
+          ? moment(item.open).format("YYYY-MM-DD HH:mm:ss")
+          : null,
         openCurrency: {
           usd: item.open_usd,
           khr: item.open_khr,
         },
-        close: moment(item.close).format("YYYY-MM-DD HH:mm:ss"),
+        close: item.close
+          ? moment(item.close).format("YYYY-MM-DD HH:mm:ss")
+          : null,
         closeCurrency: {
           usd: item.close_usd,
           khr: item.close_khr,
