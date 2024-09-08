@@ -16,7 +16,16 @@ export async function RemoveOrderItemResolver(
       .where({ id: order_item.order_id })
       .first();
 
-    await knex.table("order_items").where({ id: id, is_print: false }).del();
+    await knex.table("order_items").where({ id: id }).del();
+
+    await knex
+      .table("orders")
+      .where({ id: order_item.order_id })
+      .update({
+        total_paid: 0,
+        confirm_checkout_date: null,
+        confirm_checkout_by: null,
+      });
 
     if (order) {
       GraphPubSub.publish(order.uuid, {
