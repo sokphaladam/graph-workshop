@@ -26,17 +26,16 @@ export async function AddOrderItemResolver(
         addons: data.addons,
         remark: data.remark,
         is_print: false,
+        status: "0",
       })
       .first();
-
-    // return true;
 
     if (orderItem) {
       await knex
         .table("order_items")
         .where("id", orderItem.id)
         .update({
-          qty: data.qty,
+          qty: Number(orderItem.qty) + Number(data.qty),
           discount: data.discount.toFixed(2),
           price: data.price.toFixed(2),
           addons: data.addons,
