@@ -16,3 +16,24 @@ export function createRoleLoader(knex: Knex) {
     });
   });
 }
+
+export function createRoleByIdLoader(knex: Knex) {
+  return new Dataloader(async (keys: number[]) => {
+    const roles: table_role_users[] = await knex
+      .table<table_role_users>("role_users")
+      .whereIn("id", keys);
+
+    return keys.map((row) => {
+      const find = roles.find((f) => f.id === row);
+
+      if (!find) {
+        return null;
+      }
+
+      return {
+        id: find.id,
+        name: find.name,
+      };
+    });
+  });
+}

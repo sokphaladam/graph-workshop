@@ -1,6 +1,7 @@
 import moment from "moment";
 import { ContextType } from "src/ContextType";
 import { createDataLoader } from "src/dataloader";
+import { createRoleByIdLoader } from "src/dataloader/RoleLoader";
 import { table_users } from "src/generated/tables";
 
 export async function UserListResolver(
@@ -9,7 +10,7 @@ export async function UserListResolver(
   ctx: ContextType
 ): Promise<any[]> {
   const knex = ctx.knex.default;
-  const loader = createDataLoader(knex);
+  const loader = createRoleByIdLoader(knex);
 
   const query = knex.table<table_users>("users");
 
@@ -26,7 +27,7 @@ export async function UserListResolver(
       id: x.id,
       display: x.display_name,
       contact: x.contact,
-      role: () => loader.roleLoader.load(x.role_id) as any,
+      role: () => loader.load(x.role_id) as any,
       createdDate: moment(x.created_at).format("YYYY-MM-DD"),
       isActive: Boolean(x.active),
       gender: x.gender,
@@ -60,7 +61,7 @@ export async function UserListResolver(
     id: x.id,
     display: x.display_name,
     contact: x.contact,
-    role: () => loader.roleLoader.load(x.role_id) as any,
+    role: () => loader.load(x.role_id) as any,
     createdDate: moment(x.created_at).format("YYYY-MM-DD"),
     isActive: Boolean(x.active),
     gender: x.gender,

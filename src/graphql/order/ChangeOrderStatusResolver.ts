@@ -5,6 +5,7 @@ import moment from "moment";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { Knex } from "knex";
 import { table_orders } from "src/generated/tables";
+import { Formatter } from "src/lib/Formatter";
 
 interface Props {
   orderId: number;
@@ -30,7 +31,7 @@ async function DeliveryPick(
   const input = {
     delivery_id: deliveryId,
     delivery_code: code,
-    updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+    updated_at: Formatter.getNowDateTime(),
   };
 
   await knex.table<table_orders>("orders").where("id", orderId).update(input);
@@ -61,29 +62,27 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
       case 1:
         input = {
           status: data.status,
-          verify_date: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          verify_date: Formatter.getNowDateTime(),
           verify_by: auth ? auth.id : null,
-          updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: Formatter.getNowDateTime(),
         };
         subStatus = StatusOrderItem.MAKING;
         break;
       case 2:
         input = {
           status: data.status,
-          deliver_date: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          deliver_date: Formatter.getNowDateTime(),
           deliver_by: auth ? auth.id : null,
-          updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: Formatter.getNowDateTime(),
         };
         subStatus = StatusOrderItem.COMPLETED;
         break;
       case 3:
         input = {
           status: data.status,
-          confirm_checkout_date: moment(new Date()).format(
-            "YYYY-MM-DD HH:mm:ss"
-          ),
+          confirm_checkout_date: Formatter.getNowDateTime(),
           confirm_checkout_by: auth ? auth.id : null,
-          updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: Formatter.getNowDateTime(),
           note: data.reason || "",
           total_paid: Number(data.amount),
           invoice: Number(data.invoice),
@@ -95,9 +94,9 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
       case 4:
         input = {
           status: data.status,
-          cancelled_date: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          cancelled_date: Formatter.getNowDateTime(),
           cancelled_by: auth ? auth.id : null,
-          updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: Formatter.getNowDateTime(),
           note: data.reason,
         };
         break;
@@ -107,7 +106,6 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
     }
 
     if (Number(data.status) === 3) {
-      // return true;
       const items = await knex
         .table("order_items")
         .where({ order_id: data.orderId })

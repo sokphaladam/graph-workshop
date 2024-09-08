@@ -36,12 +36,12 @@ export const ShiftResolver = {
       return items.map((x) => {
         return {
           id: x.id,
-          open: moment(x.open).format("YYYY-MM-DD HH:mm:ss"),
+          open: x.open ? moment(x.open).format("YYYY-MM-DD HH:mm:ss") : null,
           openCurrency: {
             usd: x.open_usd,
             khr: x.open_khr,
           },
-          close: moment(x.close).format("YYYY-MM-DD HH:mm:ss"),
+          close: x.close ? moment(x.close).format("YYYY-MM-DD HH:mm:ss") : null,
           closeCurrency: {
             usd: x.close_usd,
             khr: x.close_khr,
