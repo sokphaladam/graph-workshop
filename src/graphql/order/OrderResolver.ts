@@ -13,6 +13,7 @@ import {
 } from "./items/RemoveOrderItemResolver";
 import { SignatureOrderResolver } from "./SignatureOrderResolver";
 import { PeopleInOrderResolver } from "./PeopleInOrderResolver";
+import { AddDiscountOrderResolver } from "./AddDiscountOrderResolver";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -52,6 +53,7 @@ export const OrderResolver = {
     verifyOtpOrder,
     signatureOrder: SignatureOrderResolver,
     peopleInOrder: PeopleInOrderResolver,
+    addDiscountOrder: AddDiscountOrderResolver,
   },
   Query: {
     orderList: OrderListResolver,

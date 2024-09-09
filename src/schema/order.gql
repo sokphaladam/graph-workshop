@@ -14,6 +14,7 @@ extend type Mutation {
     userId: Int!
   ): Boolean
   peopleInOrder(id: Int!, count: Int!): Boolean
+  addDiscountOrder(id: Int!, discount: Float!): Boolean
 }
 
 extend type Query {
@@ -48,6 +49,7 @@ type Order {
   invoice: Int
   bankType: String
   person: Int
+  discount: Float
 }
 
 type OrderLog {
@@ -100,6 +102,7 @@ input ChangeOrderInput {
   bankType: String
   currency: String
   bankId: Int
+  discount: Float
 }
 
 enum StatusOrder {

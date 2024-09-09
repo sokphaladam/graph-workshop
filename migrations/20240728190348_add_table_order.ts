@@ -34,6 +34,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer("bank").index();
     table.string("currency").defaultTo("USD");
     table.integer("person");
+    table.float("discount").defaultTo(0);
   });
 }
 
