@@ -15,3 +15,24 @@ export function createUserLoader(knex: Knex) {
     });
   });
 }
+
+export function createUserByIdLoader(knex: Knex) {
+  return new Dataloader(async (keys: number[]) => {
+    const users: table_users[] = await knex
+      .table<table_users>("users")
+      .whereIn("id", keys);
+
+    return keys.map(row => {
+      const find = users.find(f => f.id === row);
+
+      if(!find) {
+        return null
+      }
+
+      return {
+        id: find.id,
+        display: find.display_name
+      }
+    })
+  });
+}

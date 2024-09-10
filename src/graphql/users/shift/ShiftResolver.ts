@@ -3,7 +3,7 @@ import { CreateShiftResolver } from "./CreateShiftResolver";
 import { UpdateShiftResolver } from "./UpdateShiftResolver";
 import { table_shift } from "src/generated/tables";
 import moment from "moment";
-import { createUserLoader } from "src/dataloader/UserLoader";
+import { createUserByIdLoader } from "src/dataloader/UserLoader";
 
 export const ShiftResolver = {
   Mutation: {
@@ -17,7 +17,7 @@ export const ShiftResolver = {
       ctx: ContextType
     ) => {
       const knex = ctx.knex.default;
-      const loader = createUserLoader(knex);
+      const loader = createUserByIdLoader(knex);
       const query = knex.table("shift");
 
       if (users) {
@@ -61,7 +61,7 @@ export const ShiftResolver = {
     },
     shiftById: async (_, { id, date, userId }, ctx: ContextType) => {
       const knex = ctx.knex.default;
-      const loader = createUserLoader(knex);
+      const loader = createUserByIdLoader(knex);
       const query = knex.table("shift");
 
       if (id) {

@@ -1,3 +1,45 @@
 extend type Query {
   getLeaveAdmin: JSON
+  leaveList(admin: Boolean = false, limit: Int = 25, offset: Int = 0, status: [LeaveStatus], from: String, to: String): [Leave]
+  leave(id: Int!): Leave
+}
+
+extend type Mutation {
+  createLeave(data: LeaveInput, userId: Int!): Boolean
+  updateLeave(id: Int!, data: LeaveInput): Boolean
+  updateLeaveStatus(id: Int!, status: LeaveStatus): Boolean
+}
+
+input LeaveInput {
+  startDate: String
+  endDate: String
+  leaveType: String
+  leaveReason: String
+  duration: String
+  status: LeaveStatus
+}
+
+type Leave {
+  id: Int
+  startDate: String
+  endDate: String
+  leaveType: String
+  leaveReason: String
+  duration: String
+  status: LeaveStatus
+  approvedDate: String
+  approvedBy: User
+  requestedBy: User
+  requestedDate: String
+  rejectedBy: User
+  rejectedDate: String
+  cancelledDate: String
+  cancelledBy: User
+}
+
+enum LeaveStatus{
+  REQUEST
+  APPROVED
+  REJECTED
+  CANCELLED
 }

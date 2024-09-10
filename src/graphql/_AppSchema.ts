@@ -14,6 +14,7 @@ import { PositionResolver } from "./position/PositionResolver";
 import { BankResolver } from "./bank/BankResolver";
 import { AttendanceResolver } from "./attandance/AttandanceResolver";
 import { ShiftResolver } from "./users/shift/ShiftResolver";
+import { LeaveResolver } from "./users/leave/LeaveResolver";
 
 const books = [
   {
@@ -44,6 +45,7 @@ export const AppResolvers = [
   BankResolver,
   AttendanceResolver,
   ShiftResolver,
+  LeaveResolver,
   {
     Query: {
       books: () => books,

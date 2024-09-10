@@ -3,20 +3,23 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("user_leave", (table) => {
     table.increments("id").primary().index();
-    table.time("leave_from");
-    table.time("leave_to");
+    table.dateTime("leave_from");
+    table.dateTime("leave_to");
     table.string("leave_reason");
+    table.integer('duration');
     table
       .string("status")
-      .comment("REQUEST, APPROVED, REJECTED")
+      .comment("REQUEST, APPROVED, REJECTED, CANCEL")
       .defaultTo("REQUEST");
-    table.enum("type", ["AL", "SL", "DO"]);
+    table.string("type");
     table.integer("approved_by");
     table.integer("request_by");
     table.integer("rejected_by");
     table.dateTime("approved_date");
     table.dateTime("request_date");
     table.dateTime("rejected_date");
+    table.dateTime("cancelled_date");
+    table.dateTime("cancelled_by");
     table.timestamps(true, true);
   });
 }

@@ -1,10 +1,9 @@
 import { ContextType } from "src/ContextType";
 import { createOrderItemLoader } from "src/dataloader/OrderItemLoader";
-import { Graph } from "src/generated/graph";
 import { table_orders } from "src/generated/tables";
 import { OrderViewBy, StatusOrder, StatusOrderItem } from "./OrderResolver";
 import moment from "moment";
-import { createUserLoader } from "src/dataloader/UserLoader";
+import { createUserByIdLoader } from "src/dataloader/UserLoader";
 import DataLoader from "dataloader";
 import { createDeliveryByIDLoader } from "src/dataloader/DeliverLoader";
 
@@ -89,7 +88,7 @@ export async function OrderListResolver(
 ) {
   const knex = ctx.knex.default;
   const loader = createOrderItemLoader(knex, viewBy === OrderViewBy.KITCHEN);
-  const loaderUser = createUserLoader(knex);
+  const loaderUser = createUserByIdLoader(knex);
   const loaderDeliver = createDeliveryByIDLoader(knex);
 
   const query = knex
@@ -176,7 +175,7 @@ export async function OrderListResolver(
 export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
   const knex = ctx.knex.default;
   const loader = createOrderItemLoader(knex);
-  const loaderUser = createUserLoader(ctx.knex.default);
+  const loaderUser = createUserByIdLoader(ctx.knex.default);
   const loaderDeliver = createDeliveryByIDLoader(knex);
 
   if (!token && !id) {

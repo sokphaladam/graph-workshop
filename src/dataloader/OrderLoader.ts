@@ -3,13 +3,13 @@ import { Knex } from "knex";
 import { table_orders } from "src/generated/tables";
 import { LogStatus } from "src/graphql/order/OrderListResolver";
 import { createOrderItemLoader } from "./OrderItemLoader";
-import { createUserLoader } from "./UserLoader";
+import { createUserByIdLoader, createUserLoader } from "./UserLoader";
 import { StatusOrder } from "src/graphql/order/OrderResolver";
 import { createDeliveryByIDLoader } from "./DeliverLoader";
 
 export function createOrderByIDLoader(knex: Knex) {
   const loaderOrderItem = createOrderItemLoader(knex);
-  const loaderUser = createUserLoader(knex);
+  const loaderUser = createUserByIdLoader(knex);
   const loaderDelivery = createDeliveryByIDLoader(knex);
   return new DataLoader(async (keys: number[]) => {
     const orders: table_orders[] = await knex
