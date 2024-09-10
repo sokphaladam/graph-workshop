@@ -11,6 +11,7 @@ export function createUserLoader(knex: Knex) {
       return {
         id: x.id,
         display: x.display_name,
+        profile: x.profile,
       };
     });
   });
@@ -22,17 +23,18 @@ export function createUserByIdLoader(knex: Knex) {
       .table<table_users>("users")
       .whereIn("id", keys);
 
-    return keys.map(row => {
-      const find = users.find(f => f.id === row);
+    return keys.map((row) => {
+      const find = users.find((f) => f.id === row);
 
-      if(!find) {
-        return null
+      if (!find) {
+        return null;
       }
 
       return {
         id: find.id,
-        display: find.display_name
-      }
-    })
+        display: find.display_name,
+        profile: find.profile,
+      };
+    });
   });
 }
