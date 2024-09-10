@@ -6,20 +6,20 @@ export async function up(knex: Knex): Promise<void> {
     table.dateTime("leave_from");
     table.dateTime("leave_to");
     table.string("leave_reason");
-    table.integer('duration');
+    table.integer("duration");
     table
       .string("status")
       .comment("REQUEST, APPROVED, REJECTED, CANCEL")
       .defaultTo("REQUEST");
     table.string("type");
-    table.integer("approved_by");
-    table.integer("request_by");
-    table.integer("rejected_by");
+    table.integer("approved_by").index();
+    table.integer("request_by").index();
+    table.integer("rejected_by").index();
     table.dateTime("approved_date");
     table.dateTime("request_date");
     table.dateTime("rejected_date");
     table.dateTime("cancelled_date");
-    table.dateTime("cancelled_by");
+    table.dateTime("cancelled_by").index();
     table.timestamps(true, true);
   });
 }
