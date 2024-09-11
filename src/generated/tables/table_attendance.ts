@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_attendance {  check_date?: string | null;  check_in?: Date | null;  check_out?: Date | null;  created_at?: Date;  id?: number;  overtime_from?: Date | null;  overtime_to?: Date | null;  updated_at?: Date;  user_id?: number | null;}

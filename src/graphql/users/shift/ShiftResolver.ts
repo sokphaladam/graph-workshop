@@ -17,11 +17,14 @@ export const ShiftResolver = {
       ctx: ContextType
     ) => {
       const knex = ctx.knex.default;
+      const user = ctx.auth;
       const loader = createUserByIdLoader(knex);
       const query = knex.table("shift");
 
-      if (users) {
-        query.whereIn("user_id", users);
+      if (![1, 2, 5].includes(user.role.id || 0)) {
+        if (users) {
+          query.whereIn("user_id", users);
+        }
       }
 
       if (fromDate && toDate) {

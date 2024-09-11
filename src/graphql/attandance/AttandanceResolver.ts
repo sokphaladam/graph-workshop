@@ -1,9 +1,11 @@
 import moment from "moment";
 import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
 import { ContextType } from "src/ContextType";
+import { AttendanceAdminListResolver } from "./AttendanceListAdminResolver";
 
 export const AttendanceResolver = {
   Query: {
+    attendanceListAdmin: AttendanceAdminListResolver,
     getAttendanceStaff: async (
       _,
       { from, to, limit, offset },

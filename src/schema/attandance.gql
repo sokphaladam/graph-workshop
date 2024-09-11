@@ -5,7 +5,12 @@ extend type Query {
     from: String
     to: String
   ): [Attendance]
-  getAttendanceAdmin(limit: Int = 25, offset: Int = 0): JSON
+  attendanceListAdmin(
+    limit: Int = 31
+    offset: Int = 0
+    month: Int!
+    year: Int!
+  ): [Attendance]
   getAttendanceStaffToday(date: String!): Attendance
 }
 
@@ -21,4 +26,5 @@ type Attendance {
   overTimeIn: String
   overTimeOut: String
   checkDate: String
+  leave: Leave
 }

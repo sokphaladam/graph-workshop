@@ -8,19 +8,28 @@ export const TableSetResolver = {
       const loaderOrder = createOrderByIDLoader(knex);
 
       const item = await knex.table("table_set").limit(limit).offset(offset);
+
+      const fakeSet = [...new Array(10)].map((_, i) => {
+        return {
+          set: i + 1 + item.length,
+          fake: true,
+        };
+      });
+
       const orders = await knex
         .table("orders")
         .whereIn(
           "set",
-          item.map((x) => String(x.set))
+          [...item, ...fakeSet].map((x) => String(x.set))
         )
         .whereIn("status", ["0", "1", "2"])
         .select(["id", "set"]);
 
-      return item.map((x) => {
+      return [...item, ...fakeSet].map((x) => {
         const find = orders.find((f) => String(f.set) === String(x.set));
         return {
           set: x.set,
+          fake: x.fake ? true : false,
           order: find ? () => loaderOrder.load(find.id) : null,
         };
       });
