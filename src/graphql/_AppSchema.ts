@@ -15,6 +15,7 @@ import { BankResolver } from "./bank/BankResolver";
 import { AttendanceResolver } from "./attandance/AttandanceResolver";
 import { ShiftResolver } from "./users/shift/ShiftResolver";
 import { LeaveResolver } from "./users/leave/LeaveResolver";
+import { OverTimeResolver } from "./users/overtime/OverTimeResolver";
 
 const books = [
   {
@@ -46,6 +47,7 @@ export const AppResolvers = [
   AttendanceResolver,
   ShiftResolver,
   LeaveResolver,
+  OverTimeResolver,
   {
     Query: {
       books: () => books,

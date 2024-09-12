@@ -1,13 +1,13 @@
 import { ContextType } from "src/ContextType";
-import { table_user_leave } from "src/generated/tables";
+import { table_staff_overtime, table_user_leave } from "src/generated/tables";
 import { Formatter } from "src/lib/Formatter";
 import { CreateActivity } from "../activity/ActivityResolver";
 
-export async function UpdateLeaveStatus(_, { id, status }, ctx: ContextType) {
+export async function UpdateOTStatus(_, { id, status }, ctx: ContextType) {
   const knex = ctx.knex.default;
   const user = ctx.auth;
 
-  let input: table_user_leave = {
+  let input: table_staff_overtime = {
     status,
   };
 
@@ -27,15 +27,15 @@ export async function UpdateLeaveStatus(_, { id, status }, ctx: ContextType) {
   }
 
   await knex.transaction(async (tx) => {
-    const item = await tx.table("user_leave").where({ id }).first();
-    await tx.table("user_leave").where({ id }).update(input);
+    const item = await tx.table("staff_overtime").where({ id }).first();
+    await tx.table("staff_overtime").where({ id }).update(input);
     await CreateActivity(
       _,
       {
         data: {
-          userId: item.request_by,
-          type: "LEAVE",
-          description: `Update status request leave to ${status} by ${user.display}`,
+          userId: item.user_id,
+          type: "OT",
+          description: `Update status OT to ${status} by ${user.display}`,
         },
       },
       { knex: { default: tx } }

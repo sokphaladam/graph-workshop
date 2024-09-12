@@ -11,6 +11,8 @@ export * from './tables/table_product_sku';
 export * from './tables/table_products';
 export * from './tables/table_role_users';
 export * from './tables/table_shift';
+export * from './tables/table_staff_overtime';
 export * from './tables/table_supplier';
+export * from './tables/table_user_activity';
 export * from './tables/table_user_leave';
 export * from './tables/table_users';

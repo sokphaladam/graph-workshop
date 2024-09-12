@@ -1,0 +1,48 @@
+extend type Query {
+  overTimeList(
+    limit: Int = 25
+    offset: Int = 0
+    status: [OverTimeStatus]
+    from: String
+    to: String
+  ): [OverTime]
+  overTime(id: Int!): OverTime
+}
+
+extend type Mutation {
+  createOverTime(data: OverTimeInput, userId: Int!): Boolean
+  updateOverTime(id: Int!, data: OverTimeInput): Boolean
+  updateOverTimeStatus(id: Int!, status: OverTimeStatus): Boolean
+}
+
+input OverTimeInput {
+  startat: String
+  endAt: String
+  otDate: String
+  note: String
+  status: OverTimeStatus
+}
+
+type OverTime {
+  id: Int
+  startat: String
+  endAt: String
+  otDate: String
+  note: String
+  status: OverTimeStatus
+  approvedDate: String
+  approvedBy: User
+  requestedBy: User
+  requestedDate: String
+  rejectedBy: User
+  rejectedDate: String
+  cancelledDate: String
+  cancelledBy: User
+}
+
+enum OverTimeStatus {
+  REQUEST
+  APPROVED
+  REJECTED
+  CANCELLED
+}

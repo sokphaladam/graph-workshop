@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_user_activity {  id?: number;  user_id?: number | null;  type?: string | null;  description?: string | null;  created_at?: Date;  updated_at?: Date;}

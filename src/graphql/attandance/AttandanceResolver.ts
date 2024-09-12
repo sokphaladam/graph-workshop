@@ -1,10 +1,15 @@
 import moment from "moment";
-import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
 import { ContextType } from "src/ContextType";
 import { AttendanceAdminListResolver } from "./AttendanceListAdminResolver";
+import { SummaryAttendanceStaffResolver } from "./SummaryAttendanceStaffResolver";
+import {
+  CreateActivity,
+  PropsActivityInput,
+} from "../users/activity/ActivityResolver";
 
 export const AttendanceResolver = {
   Query: {
+    getSummaryAttendanceStaff: SummaryAttendanceStaffResolver,
     attendanceListAdmin: AttendanceAdminListResolver,
     getAttendanceStaff: async (
       _,
@@ -95,6 +100,12 @@ export const AttendanceResolver = {
     checkAttendance: async (_, { userId, date }, ctx: ContextType) => {
       const knex = ctx.knex.default;
 
+      const activity: PropsActivityInput = {
+        userId: userId,
+        type: "ATTENDANCE",
+        description: "",
+      };
+
       const today = moment(new Date(date)).format("YYYY-MM-DD");
       const todayTime = moment(new Date(date)).format("YYYY-MM-DD HH:mm:ss");
 
@@ -127,16 +138,26 @@ export const AttendanceResolver = {
               .update({ overtime_from: todayTime });
           }
         } else {
+          activity.description = `Check out`;
           await knex
             .table("attendance")
             .where({ id: item.id })
             .update({ check_out: todayTime });
         }
       } else {
+        activity.description = `Check in`;
         await knex
           .table("attendance")
           .insert({ check_in: todayTime, user_id: userId, check_date: today });
       }
+
+      await CreateActivity(
+        _,
+        {
+          data: activity,
+        },
+        ctx
+      );
 
       return true;
     },

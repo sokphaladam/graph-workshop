@@ -12,6 +12,7 @@ extend type Query {
     year: Int!
   ): [Attendance]
   getAttendanceStaffToday(date: String!): Attendance
+  getSummaryAttendanceStaff(userId: Int!): JSON
 }
 
 extend type Mutation {

@@ -19,7 +19,7 @@ export async function up(knex: Knex): Promise<void> {
     table.dateTime("request_date");
     table.dateTime("rejected_date");
     table.dateTime("cancelled_date");
-    table.dateTime("cancelled_by").index();
+    table.integer("cancelled_by").index();
     table.timestamps(true, true);
   });
 }
