@@ -21,7 +21,7 @@ export async function AttendanceAdminListResolver(
     query.whereRaw(`YEAR(check_date) = :year`, { year });
   }
 
-  const items = await query.clone().offset(offset).limit(limit);
+  const items = await query.clone();
 
   return items.map((x) => {
     return {
