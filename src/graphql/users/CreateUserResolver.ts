@@ -40,6 +40,8 @@ export async function CreateUserResolver(
     base_salary: data.baseSalary,
     type: "STAFF",
     active: data.isActive as any,
+    from_time: data.fromTime as any,
+    to_time: data.toTime as any,
   };
 
   await knex.table("users").insert(input);

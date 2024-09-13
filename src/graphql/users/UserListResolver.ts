@@ -75,6 +75,8 @@ export async function UserListResolver(
     baseSalary: x.base_salary,
     type: x.type,
     profile: x.profile,
+    fromTime: x.from_time,
+    toTime: x.to_time,
 
     username: x.username,
     password: x.password,

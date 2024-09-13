@@ -26,6 +26,8 @@ export async function UpdateUserResolver(
     type: "STAFF",
     active: data.isActive as any,
     username: data.username,
+    from_time: data.fromTime as any,
+    to_time: data.toTime as any,
   };
 
   if (data.password) {

@@ -31,5 +31,7 @@ export async function createAuthToken(knex: Knex, token: string) {
     type: user.type,
     profile: user.profile,
     username: user.username,
+    fromTime: user.from_time,
+    toTime: user.to_time,
   };
 }

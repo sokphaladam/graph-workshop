@@ -12,6 +12,8 @@ export function createUserLoader(knex: Knex) {
         id: x.id,
         display: x.display_name,
         profile: x.profile,
+        fromTime: x.from_time,
+        toTime: x.to_time,
       };
     });
   });
@@ -34,6 +36,8 @@ export function createUserByIdLoader(knex: Knex) {
         id: find.id,
         display: find.display_name,
         profile: find.profile,
+        fromTime: find.from_time,
+        toTime: find.to_time,
       };
     });
   });

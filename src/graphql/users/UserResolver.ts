@@ -49,6 +49,8 @@ export const UserResolver = {
         profile: user.profile,
         username: user.username,
         password: user.password,
+        fromTime: user.from_time,
+        toTime: user.to_time,
       };
     },
     me: (_, {}, ctx: ContextType) => {

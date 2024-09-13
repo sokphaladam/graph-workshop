@@ -49,6 +49,8 @@ input UserInput {
   type: String
   profile: String
   dob: String
+  fromTime: String
+  toTime: String
 
   # User login
   username: String
@@ -73,6 +75,8 @@ type User {
   type: String
   profile: String
   dob: String
+  fromTime: String
+  toTime: String
 
   # User login
   username: String

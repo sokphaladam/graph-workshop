@@ -76,7 +76,7 @@ export async function OverTimeById(_, { id }, ctx: ContextType) {
   const loaderUser = createUserByIdLoader(knex);
 
   const item: table_staff_overtime = await knex
-    .table("user_lstaff_overtimeeave")
+    .table("staff_overtime")
     .where({ id })
     .first();
 
