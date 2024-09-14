@@ -42,7 +42,7 @@ export async function UpdateProducResolver(
       discount: String(x.discount),
       unit: x.unit,
       id: x.id,
-      image: x.image
+      image: x.image,
     }));
 
   const currentSku = data.sku
@@ -53,7 +53,7 @@ export async function UpdateProducResolver(
       price: String(x.price),
       discount: String(x.discount),
       unit: x.unit,
-      image: x.image
+      image: x.image,
     }));
 
   const previousAddon = data.addons
@@ -115,28 +115,33 @@ export async function UpdateProducResolver(
       await tx.table("product_sku").insert(currentSku);
     }
 
-    const queries2 = previousAddon.map((x) => {
-      return knex
-        .table("addon_products")
-        .where("id", x.id)
-        .update(x)
-        .transacting(tx);
-    });
+    //Start script addons
+    if (data.addons.length === 0) {
+      await knex.table("addon_products").where({ product_id: id }).del();
+    } else {
+      await previousAddon.map((x) => {
+        return knex
+          .table("addon_products")
+          .where("id", x.id)
+          .update(x)
+          .transacting(tx);
+      });
+      if (previousAddon.length > 0) {
+        await tx
+          .table("addon_products")
+          .whereNotIn(
+            "id",
+            previousAddon.map((x) => x.id)
+          )
+          .where("product_id", id)
+          .del();
+      }
 
-    if (previousAddon.length > 0) {
-      await tx
-        .table("addon_products")
-        .whereNotIn(
-          "id",
-          previousAddon.map((x) => x.id)
-        )
-        .where("product_id", id)
-        .del();
+      if (currentAddon.length > 0) {
+        await tx.table("addon_products").insert(currentAddon);
+      }
     }
-
-    if (currentAddon.length > 0) {
-      await tx.table("addon_products").insert(currentAddon);
-    }
+    //End script addons
 
     const queries3 = previousIntegrate.map((x) => {
       return knex
@@ -163,7 +168,7 @@ export async function UpdateProducResolver(
 
     try {
       await Promise.all(queries);
-      await Promise.all(queries2);
+      // await Promise.all(queries2);
       await Promise.all(queries3);
       await tx.commit();
     } catch (error) {
