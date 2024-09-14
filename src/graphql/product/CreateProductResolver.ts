@@ -55,6 +55,7 @@ export async function CreateProductResolver(
               price: String(x.price),
               discount: String(x.discount),
               unit: x.unit,
+              image: x.image
             }))
           );
           if (data.addons && data.addons.length > 0) {

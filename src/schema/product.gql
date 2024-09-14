@@ -39,6 +39,7 @@ input SKUInput {
   price: Float
   discount: Float
   name: String
+  image: String
 }
 
 input IntegrateInput {
@@ -75,6 +76,7 @@ type SKU {
   price: Float
   discount: Float
   name: String
+  image: String
 }
 
 type Integrate {

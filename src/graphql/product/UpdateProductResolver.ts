@@ -42,6 +42,7 @@ export async function UpdateProducResolver(
       discount: String(x.discount),
       unit: x.unit,
       id: x.id,
+      image: x.image
     }));
 
   const currentSku = data.sku
@@ -52,6 +53,7 @@ export async function UpdateProducResolver(
       price: String(x.price),
       discount: String(x.discount),
       unit: x.unit,
+      image: x.image
     }));
 
   const previousAddon = data.addons

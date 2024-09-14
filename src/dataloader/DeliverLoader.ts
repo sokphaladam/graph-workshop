@@ -1,10 +1,8 @@
 import DataLoader from "dataloader";
 import { Knex } from "knex";
 import { table_delivery, table_orders } from "src/generated/tables";
-import { LogStatus } from "src/graphql/order/OrderListResolver";
 import { createOrderItemLoader } from "./OrderItemLoader";
 import { createUserLoader } from "./UserLoader";
-import { StatusOrder } from "src/graphql/order/OrderResolver";
 
 export function createDeliveryByIDLoader(knex: Knex) {
   const loaderOrderItem = createOrderItemLoader(knex);

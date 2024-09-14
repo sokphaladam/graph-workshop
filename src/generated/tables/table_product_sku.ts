@@ -1,1 +1,1 @@
-/* eslint-disable */export interface table_product_sku {  discount?: string | null;  id?: number;  name?: string | null;  price?: string | null;  product_id?: number | null;  unit?: string | null;}
+/* eslint-disable */export interface table_product_sku {  id?: number;  product_id?: number | null;  unit?: string | null;  name?: string | null;  price?: string | null;  discount?: string | null;  image?: string | null;}

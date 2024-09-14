@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("name");
     table.decimal("price").defaultTo(0);
     table.decimal("discount").defaultTo(0);
+    table.string('image');
   });
 }
 
