@@ -11,9 +11,23 @@ export async function OrderBalanceSummaryResolver(_, {}, ctx: ContextType) {
     .table("orders")
     .where({ status: "3" })
     .whereRaw("DATE(confirm_checkout_date) = :date", { date: now })
-    .sum("total_paid");
+    .sum("total_paid as total")
+    .first();
 
-  console.log(order);
+  const products = await knex
+    .table("products")
+    .where({ is_active: true })
+    .count("* as count")
+    .first();
+  const staff = await knex
+    .table("users")
+    .where({ active: true, type: "STAFF" })
+    .count("* as count")
+    .first();
 
-  return {};
+  return {
+    order: order.total || 0,
+    product: products.count || 0,
+    staff: staff.count || 0,
+  };
 }

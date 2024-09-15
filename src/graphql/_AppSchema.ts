@@ -16,6 +16,7 @@ import { AttendanceResolver } from "./attandance/AttandanceResolver";
 import { ShiftResolver } from "./users/shift/ShiftResolver";
 import { LeaveResolver } from "./users/leave/LeaveResolver";
 import { OverTimeResolver } from "./users/overtime/OverTimeResolver";
+import { ReportResolver } from "./report/ReportResolver";
 
 const books = [
   {
@@ -48,6 +49,7 @@ export const AppResolvers = [
   ShiftResolver,
   LeaveResolver,
   OverTimeResolver,
+  ReportResolver,
   {
     Query: {
       books: () => books,
