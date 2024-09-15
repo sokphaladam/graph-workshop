@@ -75,6 +75,7 @@ export async function ProductListResolver(
       addons: () => addonLoader.load(x.id),
       integrates: () => integrateLoader.load(x.id),
       stockAlter: x.stock_alter,
+      status: (x as any).status,
     };
   });
 }

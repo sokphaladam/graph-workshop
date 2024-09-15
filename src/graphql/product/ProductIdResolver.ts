@@ -28,5 +28,6 @@ export async function ProductIdResolver(_, { id }, ctx: ContextType) {
     addons: () => addonLoader.load(item.id),
     integrates: () => integrateLoader.load(item.id),
     stockAlter: item.stock_alter,
+    status: (item as any).status,
   };
 }

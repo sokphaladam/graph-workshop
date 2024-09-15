@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("logo");
     table.integer("root").index();
     table.boolean("is_active").defaultTo(true);
+    table.integer("index").defaultTo(0);
   });
 }
 

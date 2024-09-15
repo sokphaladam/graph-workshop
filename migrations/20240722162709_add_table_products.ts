@@ -26,6 +26,10 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal("stock").defaultTo(0);
     table.decimal("stock_alter").defaultTo(0);
     table.timestamps(true, true);
+    table
+      .string("status")
+      .comment("AVAILABLE,OUT_OF_STOCK")
+      .defaultTo("AVAILABLE");
   });
 }
 

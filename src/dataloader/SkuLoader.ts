@@ -18,7 +18,8 @@ export function createSkuByProductIDLoader(knex: Knex) {
             price: x.price,
             discount: x.discount,
             name: x.name,
-            image: x.image
+            image: x.image,
+            status: x.status,
           };
         });
     });
@@ -40,7 +41,8 @@ export function createSkuByIDLoader(knex: Knex) {
           price: find.price,
           discount: find.discount,
           name: find.name,
-          image: find.image
+          image: find.image,
+          status: find.status,
         };
       }
       return null;

@@ -11,6 +11,7 @@ extend type Query {
 extend type Mutation {
   createProduct(data: ProductInput): Boolean
   updateProduct(id: Int!, data: ProductInput): Boolean
+  updateStatusProduct(id: Int!, status: STATUS_PRODUCT!): Boolean
 }
 
 input ProductInput {
@@ -40,6 +41,7 @@ input SKUInput {
   discount: Float
   name: String
   image: String
+  status: STATUS_PRODUCT
 }
 
 input IntegrateInput {
@@ -61,6 +63,7 @@ type Product {
   addons: [AddonProduct]
   integrates: [Integrate]
   stockAlter: Float
+  status: STATUS_PRODUCT
 }
 
 type AddonProduct {
@@ -77,6 +80,7 @@ type SKU {
   discount: Float
   name: String
   image: String
+  status: STATUS_PRODUCT
 }
 
 type Integrate {
@@ -99,4 +103,9 @@ enum TYPE_PRODUCT {
   FREEZING
   SECOND_HAND
   FREE
+}
+
+enum STATUS_PRODUCT {
+  AVAILABLE
+  OUT_OF_STOCK
 }
