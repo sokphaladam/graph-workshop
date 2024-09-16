@@ -1,6 +1,7 @@
 extend type Mutation {
   createCategory(data: CategoryInput): Boolean
   updateCategory(id: Int!, data: CategoryInput, isActive: Boolean): Boolean
+  updateCategoryIndex(data: [CategoryIndexInput]): Boolean
 }
 
 extend type Query {
@@ -13,8 +14,14 @@ input CategoryInput {
   root: Int
 }
 
+input CategoryIndexInput {
+  id: Int!
+  index: Int!
+}
+
 type Category {
   id: Int
   name: String
   root: Int
+  index: Int
 }

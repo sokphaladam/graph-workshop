@@ -2,6 +2,7 @@ import { createCategory } from "./resolver/create";
 import { category } from "./resolver/id";
 import { categoryList } from "./resolver/list";
 import { updateCategory } from "./resolver/update";
+import { UpdateCategoryIndexResolver } from "./resolver/UpdateCategoryIndexResolver";
 
 export const CategoryResolver = {
   Query: {
@@ -11,5 +12,6 @@ export const CategoryResolver = {
   Mutation: {
     createCategory,
     updateCategory,
+    updateCategoryIndex: UpdateCategoryIndexResolver,
   },
 };

@@ -13,6 +13,7 @@ extend type Query {
   ): [Attendance]
   getAttendanceStaffToday(date: String!): Attendance
   getSummaryAttendanceStaff(userId: Int!): JSON
+  attendanceStaff(userId: Int!, from: String, to: String): [Attendance]
 }
 
 extend type Mutation {

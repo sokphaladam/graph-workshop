@@ -121,7 +121,7 @@ export async function UpdateProducResolver(
     if (data.addons.length === 0) {
       await knex.table("addon_products").where({ product_id: id }).del();
     } else {
-      await previousAddon.map((x) => {
+      await previousAddon.map(async (x) => {
         return knex
           .table("addon_products")
           .where("id", x.id)
