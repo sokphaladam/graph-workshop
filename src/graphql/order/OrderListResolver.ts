@@ -6,6 +6,7 @@ import moment from "moment";
 import { createUserByIdLoader } from "src/dataloader/UserLoader";
 import DataLoader from "dataloader";
 import { createDeliveryByIDLoader } from "src/dataloader/DeliverLoader";
+import { Formatter } from "src/lib/Formatter";
 
 export function LogStatus(
   order: table_orders,
@@ -91,17 +92,25 @@ export async function OrderListResolver(
   const loaderUser = createUserByIdLoader(knex);
   const loaderDeliver = createDeliveryByIDLoader(knex);
 
+  const now = Formatter.getNowDate();
+
   const query = knex
     .table("orders")
     .innerJoin("order_items", "order_items.order_id", "orders.id")
-    .orderBy([
-      { column: "id", order: "asc" },
-      { column: "status", order: "asc" },
-    ])
+    .whereRaw('DATE(orders.created_at) = :date', {date: now})
     .offset(offset)
     .limit(limit)
     .select("orders.*")
     .groupBy("orders.id");
+
+  if(status[0] === '3') {
+    query.orderBy('confirm_checkout_date', 'desc')
+  }else {
+    query.orderBy([
+      { column: "id", order: "asc" },
+      { column: "status", order: "asc" },
+    ])
+  }
 
   if (orderId) {
     const items = await query.clone().where("id", orderId);
