@@ -8,6 +8,7 @@ import {
 } from "../users/activity/ActivityResolver";
 import { AttendanceStaffResolver } from "./AttendanceStaffResolver";
 import { AttendanceCheck } from "./AttendanceCheckResolver";
+import { Formatter } from "src/lib/Formatter";
 
 export const AttendanceResolver = {
   Query: {
@@ -68,6 +69,8 @@ export const AttendanceResolver = {
         return null;
       }
 
+      let today = Formatter.getNowDate();
+
       const start = Number(
         user.fromTime.split(":")[0] + "." + user.fromTime.split(":")[1]
       );
@@ -76,9 +79,11 @@ export const AttendanceResolver = {
       );
       const workBetween = end > start ? end - start : start - end;
 
-      const today = moment(new Date(date))
-        .subtract(workBetween, "hours")
-        .format("YYYY-MM-DD");
+      if (start > end) {
+        today = moment(new Date(date))
+          .subtract(workBetween, "hours")
+          .format("YYYY-MM-DD");
+      }
 
       const items = await knex
         .table("attendance")
