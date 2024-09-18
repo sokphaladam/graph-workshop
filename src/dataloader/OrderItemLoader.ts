@@ -4,6 +4,8 @@ import { table_order_items } from "src/generated/tables";
 import { createSkuByIDLoader } from "./SkuLoader";
 import { StatusOrderItem } from "src/graphql/order/OrderResolver";
 import { createProductByIDLoader } from "./ProductLoader";
+import { Formatter } from "src/lib/Formatter";
+import moment from "moment";
 
 export function createOrderItemLoader(knex: Knex, deleted?: boolean) {
   const loader = createSkuByIDLoader(knex);
@@ -30,7 +32,10 @@ export function createOrderItemLoader(knex: Knex, deleted?: boolean) {
             addons: x.addons,
             remark: x.remark,
             product: () => productLoader.load(x.product_id),
-            isPrint: (x as any).is_print
+            isPrint: (x as any).is_print,
+            createdDate: x.created_at
+              ? moment(new Date(x.created_at)).format("YYYY-MM-DD HH:mm:ss")
+              : null,
           };
         });
     });

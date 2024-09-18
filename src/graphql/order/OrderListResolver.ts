@@ -97,19 +97,19 @@ export async function OrderListResolver(
   const query = knex
     .table("orders")
     .innerJoin("order_items", "order_items.order_id", "orders.id")
-    .whereRaw('DATE(orders.created_at) = :date', {date: now})
+    .whereRaw("DATE(orders.created_at) = :date", { date: now })
     .offset(offset)
     .limit(limit)
     .select("orders.*")
     .groupBy("orders.id");
 
-  if(status[0] === '3') {
-    query.orderBy('confirm_checkout_date', 'desc')
-  }else {
+  if (status[0] === "3") {
+    query.orderBy("confirm_checkout_date", "desc");
+  } else {
     query.orderBy([
       { column: "id", order: "asc" },
       { column: "status", order: "asc" },
-    ])
+    ]);
   }
 
   if (orderId) {
@@ -228,5 +228,6 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
     bankType: (item as any).bank_type,
     person: (item as any).person,
     discount: (item as any).discount,
+    customerPaid: (item as any).customer_paid,
   };
 }

@@ -34,7 +34,8 @@ export const ShiftResolver = {
       const items: table_shift[] = await query
         .clone()
         .limit(limit)
-        .offset(offset);
+        .offset(offset)
+        .orderBy("id", "desc");
 
       return items.map((x) => {
         return {

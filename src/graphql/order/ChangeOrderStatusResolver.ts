@@ -90,6 +90,7 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
           currency: data.currency,
           bank: data.bankId,
           discount: data.discount,
+          customer_paid: data.customerPaid,
         };
         break;
       case 4:
