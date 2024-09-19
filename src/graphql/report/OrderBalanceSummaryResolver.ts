@@ -11,8 +11,7 @@ export async function OrderBalanceSummaryResolver(_, {}, ctx: ContextType) {
     .table("orders")
     .where({ status: "3" })
     .whereRaw("DATE(confirm_checkout_date) = :date", { date: now })
-    .sum("total_paid as total")
-    .first();
+    .select(['total_paid', 'discount'])
 
   const products = await knex
     .table("products")
@@ -26,7 +25,11 @@ export async function OrderBalanceSummaryResolver(_, {}, ctx: ContextType) {
     .first();
 
   return {
-    order: order.total || 0,
+    order: order.reduce((a,b) => {
+      const dis = (Number(b.total_paid) * Number(b.discount)) / 100
+      const am = Number(b.total_paid) - dis
+      return a= Number(a) + am
+    }, 0)|| 0,
     product: products.count || 0,
     staff: staff.count || 0,
   };

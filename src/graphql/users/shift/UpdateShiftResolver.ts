@@ -51,10 +51,18 @@ export async function UpdateShiftResolver(
       if (groupcard[1]) {
         const usd = groupcard[1]
           .filter((x) => x.currency === "USD" && x.bank === 1)
-          .reduce((a, b) => (a = Number(a) + Number(b.total_paid)), 0);
+          .reduce((a, b) => {
+            const dis = (Number(b.total_paid) * Number(b.discount)) / 100
+            const am = Number(b.total_paid) - dis;
+            return a = Number(a) + am
+          }, 0);
         const khr = groupcard[1]
           .filter((x) => x.currency === "KHR" && x.bank === 1)
-          .reduce((a, b) => (a = Number(a) + Number(b.total_paid)), 0);
+          .reduce((a, b) => {
+            const dis = (Number(b.total_paid) * Number(b.discount)) / 100
+            const am = Number(b.total_paid) - dis;
+            return a = Number(a) + am
+          }, 0);
 
         input.close_usd = String(Number(data.openCurrency.usd) + Number(usd));
         input.close_khr = String(
@@ -71,7 +79,11 @@ export async function UpdateShiftResolver(
       for (const c of Object.keys(groupcard).filter((x) => Number(x) > 1)) {
         const cc = cards.find((f) => Number(f.id) === Number(c)).name;
         const cv = (groupcard[c] as any[]).reduce(
-          (a, b) => (a = Number(a) + Number(b.total_paid)),
+          (a, b) => {
+            const dis = (Number(b.total_paid) * Number(b.discount)) / 100
+            const am = Number(b.total_paid) - dis;
+            return a = Number(a) + am
+          },
           0
         );
         cardInput.push({
