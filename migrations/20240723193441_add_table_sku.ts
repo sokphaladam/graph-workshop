@@ -13,6 +13,7 @@ export async function up(knex: Knex): Promise<void> {
       .string("status")
       .comment("AVAILABLE,OUT_OF_STOCK")
       .defaultTo("AVAILABLE");
+    table.boolean('is_active').defaultTo(true);
   });
 }
 

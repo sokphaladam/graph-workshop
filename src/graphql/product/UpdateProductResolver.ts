@@ -110,8 +110,7 @@ export async function UpdateProducResolver(
           "id",
           previousSku.map((x) => x.id)
         )
-        .where("product_id", id)
-        .del();
+        .where("product_id", id).update({is_active: false})
     }
     if (currentSku.length > 0) {
       await tx.table("product_sku").insert(currentSku);

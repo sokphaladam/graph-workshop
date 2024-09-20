@@ -6,7 +6,7 @@ export function createSkuByProductIDLoader(knex: Knex) {
   return new Dataloader(async (keys: number[]) => {
     const items: table_product_sku[] = await knex
       .table<table_product_sku>("product_sku")
-      .whereIn("product_id", keys);
+      .whereIn("product_id", keys).where('is_active', '=', true);
 
     return keys.map((row) => {
       return items
@@ -30,7 +30,7 @@ export function createSkuByIDLoader(knex: Knex) {
   return new Dataloader(async (keys: number[]) => {
     const items: table_product_sku[] = await knex
       .table<table_product_sku>("product_sku")
-      .whereIn("id", keys);
+      .whereIn("id", keys).where('is_active', '=', true);
 
     return keys.map((row) => {
       const find = items.find((f) => f.id === row);
