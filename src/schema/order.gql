@@ -15,6 +15,12 @@ extend type Mutation {
   ): Boolean
   peopleInOrder(id: Int!, count: Int!): Boolean
   addDiscountOrder(id: Int!, discount: Float!): Boolean
+  setTypePaymentOrder(
+    id: Int!
+    bankType: String
+    currency: String
+    bankId: Int
+  ): Boolean
 }
 
 extend type Query {
@@ -51,6 +57,8 @@ type Order {
   person: Int
   discount: Float
   customerPaid: String
+  bankId: Int
+  currency: String
 }
 
 type OrderLog {

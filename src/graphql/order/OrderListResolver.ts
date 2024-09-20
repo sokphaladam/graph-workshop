@@ -175,8 +175,10 @@ export async function OrderListResolver(
       deliveryCode: x.delivery_code,
       invoice: (x as any).invoice,
       bankType: (x as any).bank_type,
+      bankId: (x as any).bank,
       person: (x as any).person,
       discount: (x as any).discount,
+      currency: (x as any).currency,
     };
   });
 }
@@ -229,5 +231,7 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
     person: (item as any).person,
     discount: (item as any).discount,
     customerPaid: (item as any).customer_paid,
+    bankId: (item as any).bank,
+    currency: (item as any).currency,
   };
 }

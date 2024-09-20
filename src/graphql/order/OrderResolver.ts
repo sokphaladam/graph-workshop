@@ -14,6 +14,7 @@ import {
 import { SignatureOrderResolver } from "./SignatureOrderResolver";
 import { PeopleInOrderResolver } from "./PeopleInOrderResolver";
 import { AddDiscountOrderResolver } from "./AddDiscountOrderResolver";
+import { SetTypePaymentOrderResolver } from "./SetTypePaymentOrderResolver";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -54,6 +55,7 @@ export const OrderResolver = {
     signatureOrder: SignatureOrderResolver,
     peopleInOrder: PeopleInOrderResolver,
     addDiscountOrder: AddDiscountOrderResolver,
+    setTypePaymentOrder: SetTypePaymentOrderResolver,
   },
   Query: {
     orderList: OrderListResolver,
