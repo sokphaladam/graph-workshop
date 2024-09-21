@@ -20,6 +20,7 @@ export async function UserListResolver(
       .whereRaw("display_name LIKE :search OR contact LIKE :search", {
         search: "%" + search + "%",
       })
+      .orderBy('role_id', 'asc')
       .offset(offset)
       .limit(limit);
 

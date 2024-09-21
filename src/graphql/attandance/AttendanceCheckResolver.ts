@@ -4,6 +4,7 @@ import {
   PropsActivityInput,
 } from "../users/activity/ActivityResolver";
 import moment from "moment";
+import { Formatter } from "src/lib/Formatter";
 
 export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
   const knex = ctx.knex.default;
@@ -19,7 +20,7 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
     description: "",
   };
 
-  const todayTime = moment(new Date(date)).format("YYYY-MM-DD HH:mm:ss");
+  const todayTime = Formatter.getNowDateTime();
 
   const start = Number(
     user.fromTime.split(":")[0] + "." + user.fromTime.split(":")[1]
@@ -29,7 +30,7 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
   );
   const workBetween = end > start ? end - start : start - end;
 
-  const today = moment(new Date(date))
+  const today = start > end ? date : moment(new Date(date))
     .subtract(workBetween, "hours")
     .format("YYYY-MM-DD");
 

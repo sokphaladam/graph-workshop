@@ -25,6 +25,15 @@ export async function RemoveOrderItemResolver(
     });
 
     if (order) {
+      if(order.status === "3") {
+        await knex.table('orders').where({ id }).update({
+          total_paid: 0,
+          total: 0,
+          customer_paid: 0,
+          confirm_checkout_date: null,
+          confirm_checkout_by: null
+        })
+      }
       GraphPubSub.publish(order.uuid, {
         orderSubscript: { status: "REMOVE" },
       });
@@ -50,7 +59,17 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .where({ id: order_item.order_id })
       .first();
     await knex.table("order_items").where("id", id).increment("qty", 1);
+
     if (order) {
+      if(order.status === "3") {
+        await knex.table('orders').where({ id }).update({
+          total_paid: 0,
+          total: 0,
+          customer_paid: 0,
+          confirm_checkout_date: null,
+          confirm_checkout_by: null
+        })
+      }
       GraphPubSub.publish(order.uuid, {
         orderSubscript: { status: "ADD_QTY" },
       });
@@ -80,6 +99,15 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .first();
     await knex.table("order_items").where("id", id).decrement("qty", 1);
     if (order) {
+      if(order.status === "3") {
+        await knex.table('orders').where({ id }).update({
+          total_paid: 0,
+          total: 0,
+          customer_paid: 0,
+          confirm_checkout_date: null,
+          confirm_checkout_by: null
+        })
+      }
       GraphPubSub.publish(order.uuid, {
         orderSubscript: { status: "REMOVE_QTY" },
       });

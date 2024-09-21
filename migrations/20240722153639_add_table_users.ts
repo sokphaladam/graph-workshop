@@ -24,6 +24,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("type").comment("SYS, STAFF");
     table.time("from_time").defaultTo("08:00");
     table.time("to_time").defaultTo("17:00");
+    table.boolean('is_reset_password').defaultTo(false);
   });
 }
 
