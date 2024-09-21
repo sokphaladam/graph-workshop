@@ -30,15 +30,22 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
   );
   const workBetween = end > start ? end - start : start - end;
 
-  const today = start > end ? date : moment(new Date(date))
+  const today = moment(new Date(date))
     .subtract(workBetween, "hours")
     .format("YYYY-MM-DD");
 
-  const item = await knex
+  const query = knex
     .table("attendance")
     .where("user_id", userId)
-    .whereRaw(`DATE(check_date) = DATE(:date)`, { date: today })
+    .orderBy("id", "desc")
     .first();
+
+  if (start > end) {
+    console.log("check overnight");
+    query.whereRaw(`DATE(check_date) = DATE(:date)`, { date: today });
+  }
+
+  const item = await query.clone().select();
 
   if (item) {
     if (
@@ -51,32 +58,28 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
       return false;
     }
 
-    if (item.check_out) {
-      return false;
-      // if (item.overtime_from) {
-      //   await knex
-      //     .table("attendance")
-      //     .where({ id: item.id })
-      //     .update({ overtime_to: todayTime });
-      // } else {
-      //   await knex
-      //     .table("attendance")
-      //     .where({ id: item.id })
-      //     .update({ overtime_from: todayTime });
-      // }
-    } else {
+    if (!item.check_in) {
       activity.description = `Check out`;
       await knex
         .table("attendance")
         .where({ id: item.id })
-        .update({ check_out: todayTime });
+        .update({ check_in: todayTime, type: "WORK" });
     }
-  } else {
-    activity.description = `Check in`;
-    await knex
-      .table("attendance")
-      .insert({ check_in: todayTime, user_id: userId, check_date: today });
+
+    if (item.check_in && !item.check_out) {
+      activity.description = `Check out`;
+      await knex
+        .table("attendance")
+        .where({ id: item.id })
+        .update({ check_out: todayTime, type: "WORK" });
+    }
   }
+  // else {
+  //   activity.description = `Check in`;
+  //   await knex
+  //     .table("attendance")
+  //     .insert({ check_in: todayTime, user_id: userId, check_date: today });
+  // }
 
   await CreateActivity(
     _,

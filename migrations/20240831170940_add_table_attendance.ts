@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp("overtime_to");
     table.date("check_date");
     table.timestamps(true, true);
+    table.enum('type', ['WORK','ABSENT','LEAVE_REQUEST','LOST_CHECKOUT']).defaultTo('WORK')
   });
 }
 

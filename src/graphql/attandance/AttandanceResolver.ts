@@ -85,10 +85,14 @@ export const AttendanceResolver = {
           .format("YYYY-MM-DD");
       }
 
-      const items = await knex
+      const querr = knex
         .table("attendance")
-        .where({ user_id: user.id, check_date: today })
+        .where({ user_id: user.id })
+        .whereRaw(`DATE(check_date) = DATE(:date)`, { date: today })
+        .orderBy("id", "desc")
         .first();
+
+      const items = await querr.clone();
 
       if (!items) {
         return null;
