@@ -105,7 +105,8 @@ export async function UpdateShiftResolver(
       input.bill = orders.length.toString();
       input.card = cardInput.reduce((a, b) => (a = a + b.qty), 0);
       input.customer = countCustomer;
-      input.customer_cost_avg = (countTotal / countCustomer).toFixed(2);
+      input.customer_cost_avg =
+        countCustomer <= 0 ? "0" : (countTotal / countCustomer).toFixed(2);
     }
 
     await knex.table("shift").update(input).where({ id: id });
