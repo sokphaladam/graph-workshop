@@ -16,6 +16,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string("bank");
     table.string("bill");
     table.string("card");
+    table.string("customer");
+    table.string("customer_cost_avg");
     table.integer("user_id").index();
   });
 }

@@ -27,6 +27,8 @@ type Shift {
   bill: Int
   card: Int
   user: User
+  customer: String
+  customerAvgCost: String
 }
 
 type CurrencyShift {

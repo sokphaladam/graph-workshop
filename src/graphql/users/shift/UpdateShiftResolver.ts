@@ -52,16 +52,16 @@ export async function UpdateShiftResolver(
         const usd = groupcard[1]
           .filter((x) => x.currency === "USD" && x.bank === 1)
           .reduce((a, b) => {
-            const dis = (Number(b.total_paid) * Number(b.discount)) / 100
+            const dis = (Number(b.total_paid) * Number(b.discount)) / 100;
             const am = Number(b.total_paid) - dis;
-            return a = Number(a) + am
+            return (a = Number(a) + am);
           }, 0);
         const khr = groupcard[1]
           .filter((x) => x.currency === "KHR" && x.bank === 1)
           .reduce((a, b) => {
-            const dis = (Number(b.total_paid) * Number(b.discount)) / 100
+            const dis = (Number(b.total_paid) * Number(b.discount)) / 100;
             const am = Number(b.total_paid) - dis;
-            return a = Number(a) + am
+            return (a = Number(a) + am);
           }, 0);
 
         input.close_usd = String(Number(data.openCurrency.usd) + Number(usd));
@@ -78,23 +78,34 @@ export async function UpdateShiftResolver(
 
       for (const c of Object.keys(groupcard).filter((x) => Number(x) > 1)) {
         const cc = cards.find((f) => Number(f.id) === Number(c)).name;
-        const cv = (groupcard[c] as any[]).reduce(
-          (a, b) => {
-            const dis = (Number(b.total_paid) * Number(b.discount)) / 100
-            const am = Number(b.total_paid) - dis;
-            return a = Number(a) + am
-          },
-          0
-        );
+        const cv = (groupcard[c] as any[]).reduce((a, b) => {
+          const dis = (Number(b.total_paid) * Number(b.discount)) / 100;
+          const am = Number(b.total_paid) - dis;
+          return (a = Number(a) + am);
+        }, 0);
         cardInput.push({
           name: `${cc}`,
           value: cv.toFixed(2),
           qty: (groupcard[c] as any[]).length,
         });
       }
+
+      const countCustomer = orders.reduce(
+        (a, b) => (a = a + Number(b.person || 0)),
+        0
+      );
+
+      const countTotal = orders.reduce((a, b) => {
+        const dis = (Number(b.total_paid) * Number(b.discount)) / 100;
+        const am = Number(b.total_paid) - dis;
+        return (a = Number(a) + am);
+      }, 0);
+
       input.bank = JSON.stringify(cardInput);
       input.bill = orders.length.toString();
       input.card = cardInput.reduce((a, b) => (a = a + b.qty), 0);
+      input.customer = countCustomer;
+      input.customer_cost_avg = (countTotal / countCustomer).toFixed(2);
     }
 
     await knex.table("shift").update(input).where({ id: id });

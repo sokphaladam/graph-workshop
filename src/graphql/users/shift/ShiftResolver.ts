@@ -60,6 +60,8 @@ export const ShiftResolver = {
           bill: x.bill,
           card: x.card,
           user: () => loader.load(x.user_id),
+          customer: x.customer || 0,
+          customerAvgCost: x.customer_cost_avg || 0,
         };
       });
     },
@@ -112,6 +114,8 @@ export const ShiftResolver = {
         bill: item.bill,
         card: item.card,
         user: () => loader.load(item.user_id),
+        customer: item.customer || 0,
+        customerAvgCost: item.customer_cost_avg || 0,
       };
     },
   },

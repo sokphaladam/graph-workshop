@@ -34,6 +34,7 @@ extend type Query {
     toDate: String
   ): [Order]
   order(id: Int, token: String): Order
+  orderItem(id: Int!): JSON
 }
 
 type Order {
