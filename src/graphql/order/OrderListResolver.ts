@@ -84,7 +84,7 @@ export function LogStatus(
 
 export async function OrderListResolver(
   _,
-  { offset, limit, viewBy, status, orderId, fromDate, toDate },
+  { offset, limit, viewBy, status, orderId, fromDate, toDate, discount, sign },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
@@ -97,19 +97,37 @@ export async function OrderListResolver(
   const query = knex
     .table("orders")
     .innerJoin("order_items", "order_items.order_id", "orders.id")
-    .whereRaw("DATE(orders.created_at) = :date", { date: now })
     .offset(offset)
     .limit(limit)
     .select("orders.*")
     .groupBy("orders.id");
 
   if (status[0] === "3") {
-    query.orderBy("confirm_checkout_date", "desc");
+    if (sign) {
+      query.orderBy("signature_by", "desc");
+    }
+
+    if (discount) {
+      query.orderBy("orders.discount", "desc");
+    }
+    if (!sign && !discount) {
+      query.orderBy("confirm_checkout_date", "desc");
+    }
   } else {
-    query.orderBy([
-      { column: "id", order: "asc" },
-      { column: "status", order: "asc" },
-    ]);
+    if (sign) {
+      query.orderBy("signature_by", "desc");
+    }
+
+    if (discount) {
+      query.orderBy("orders.discount", "desc");
+    }
+
+    if (!sign && !discount) {
+      query.orderBy([
+        { column: "id", order: "asc" },
+        { column: "status", order: "asc" },
+      ]);
+    }
   }
 
   if (orderId) {
@@ -151,6 +169,8 @@ export async function OrderListResolver(
 
   if (fromDate && toDate) {
     query.whereBetween("orders.verify_date", [fromDate, toDate]);
+  } else {
+    query.whereRaw("DATE(orders.created_at) = :date", { date: now });
   }
 
   const items: table_orders[] = await query;

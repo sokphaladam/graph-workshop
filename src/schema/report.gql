@@ -1,6 +1,11 @@
 extend type Query {
   orderBalanceSummary(from: String, to: String): JSON
-  topProductSell(from: String, to: String, limit: Int = 10): [ProductSell]
+  topProductSell(
+    from: String
+    to: String
+    limit: Int = 10
+    categoryIds: [Int]
+  ): [ProductSell]
 }
 
 type ProductSell {

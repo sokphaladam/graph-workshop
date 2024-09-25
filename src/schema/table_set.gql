@@ -5,6 +5,7 @@ extend type Query {
 
 extend type Mutation {
   generateTableSet(sets: Int!): Boolean
+  swapOrderTable(orderId: Int!, table: String): Boolean
 }
 
 type TableSet {

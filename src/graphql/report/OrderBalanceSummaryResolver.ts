@@ -1,6 +1,4 @@
-import moment from "moment";
 import { ContextType } from "src/ContextType";
-import { Formatter } from "src/lib/Formatter";
 
 export async function OrderBalanceSummaryResolver(
   _,
@@ -9,8 +7,6 @@ export async function OrderBalanceSummaryResolver(
 ) {
   const knex = ctx.knex.default;
 
-  const now = Formatter.getNowDate();
-
   const order = await knex
     .table("orders")
     .where({ status: "3" })
@@ -18,7 +14,7 @@ export async function OrderBalanceSummaryResolver(
       from: from,
       to: to,
     })
-    .select(["total_paid", "discount"]);
+    .select(["total_paid", "discount", "signature_date"]);
 
   const products = await knex
     .table("products")
@@ -38,6 +34,8 @@ export async function OrderBalanceSummaryResolver(
         const am = Number(b.total_paid) - dis;
         return (a = Number(a) + am);
       }, 0) || 0,
+    discount: order.filter((f) => f.discount > 0).length,
+    signature: order.filter((f) => f.signature_date).length,
     product: products.count || 0,
     staff: staff.count || 0,
   };
