@@ -1,5 +1,6 @@
 import { ContextType } from "src/ContextType";
 import { createOrderByIDLoader } from "src/dataloader/OrderLoader";
+import { SwapOrderTableResolver } from "./SwapOrderTableResolver";
 
 export const TableSetResolver = {
   Query: {
@@ -65,5 +66,6 @@ export const TableSetResolver = {
 
       return true;
     },
+    swapOrderTable: SwapOrderTableResolver,
   },
 };
