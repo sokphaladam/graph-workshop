@@ -59,7 +59,7 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
     }
 
     if (!item.check_in) {
-      activity.description = `Check out`;
+      activity.description = `Check in`;
       await knex
         .table("attendance")
         .where({ id: item.id })

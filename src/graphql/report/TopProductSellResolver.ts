@@ -4,7 +4,7 @@ import { createSkuByIDLoader } from "src/dataloader/SkuLoader";
 
 export async function TopProductSellResolver(
   _,
-  { from, to, limit },
+  { from, to, limit, categoryIds },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
@@ -30,6 +30,11 @@ export async function TopProductSellResolver(
     WHERE products.is_active = TRUE
     AND orders.status = "3"
     AND DATE(orders.confirm_checkout_date) BETWEEN :from AND :to
+    ${
+      categoryIds
+        ? `AND products.category_id IN (${categoryIds.join(",")})`
+        : ""
+    }
     GROUP BY product_sku.id
     ORDER BY total_qty DESC
     LIMIT 0, :limit

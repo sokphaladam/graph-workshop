@@ -32,6 +32,8 @@ extend type Query {
     orderId: String
     fromDate: String
     toDate: String
+    discount: Boolean = false
+    sign: Boolean = false
   ): [Order]
   order(id: Int, token: String): Order
   orderItem(id: Int!): JSON
