@@ -163,7 +163,7 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
         data: {
           userId: ctx.auth.id,
           description: JSON.stringify({ input, id: data.orderId }),
-          type: "Edit Status Order",
+          type: "CHANGE_STATUS_ORDER",
         },
       },
       ctx

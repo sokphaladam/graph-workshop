@@ -23,7 +23,7 @@ export async function RemoveOrderItemResolver(
         data: {
           userId: ctx.auth.id,
           description: JSON.stringify(order_item),
-          type: "Remove Order Item",
+          type: "REMOVE_ORDER_ITEM",
         },
       },
       ctx
@@ -79,7 +79,7 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
         data: {
           userId: ctx.auth.id,
           description: `${JSON.stringify(order_item)} +1`,
-          type: "Increse Order Item",
+          type: "PLUS_ORDER_ITEM",
         },
       },
       ctx
@@ -129,7 +129,7 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
         data: {
           userId: ctx.auth.id,
           description: `${JSON.stringify(order_item)} +1`,
-          type: "Decrement Order Item",
+          type: "SUB_ORDER_ITEM",
         },
       },
       ctx

@@ -3,6 +3,7 @@ import { Graph } from "src/generated/graph";
 import { StatusOrderItem } from "../OrderResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { table_orders } from "src/generated/tables";
+import { CreateActivity } from "src/graphql/users/activity/ActivityResolver";
 
 export async function AddOrderItemResolver(
   _,
@@ -17,6 +18,7 @@ export async function AddOrderItemResolver(
     .first();
 
   if (order) {
+    await knex.table("orders").where("id", orderId).update({ status: "0" });
     const orderItem = await knex
       .table("order_items")
       .where({
@@ -64,6 +66,17 @@ export async function AddOrderItemResolver(
         orderSubscript: { status: "ADD_ITEM", uuid: order.uuid },
       });
     }
+    await CreateActivity(
+      _,
+      {
+        data: {
+          userId: ctx.auth.id,
+          description: JSON.stringify({ ...data, order_id: orderId }),
+          type: "ADD_ORDER_ITEM",
+        },
+      },
+      ctx
+    );
   }
 
   return true;
