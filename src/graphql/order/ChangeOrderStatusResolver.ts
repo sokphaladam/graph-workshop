@@ -6,6 +6,7 @@ import GraphPubSub from "src/lib/PubSub/PubSub";
 import { Knex } from "knex";
 import { table_orders } from "src/generated/tables";
 import { Formatter } from "src/lib/Formatter";
+import { CreateActivity } from "../users/activity/ActivityResolver";
 
 interface Props {
   orderId: number;
@@ -155,6 +156,18 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
         .where({ id: data.orderId })
         .update({ ...input });
     }
+
+    await CreateActivity(
+      _,
+      {
+        data: {
+          userId: ctx.auth.id,
+          description: JSON.stringify({ input, id: data.orderId }),
+          type: "Edit Status Order",
+        },
+      },
+      ctx
+    );
   }
 
   if (subStatus) {

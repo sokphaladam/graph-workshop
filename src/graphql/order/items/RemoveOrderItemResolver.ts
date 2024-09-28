@@ -1,4 +1,5 @@
 import { ContextType } from "src/ContextType";
+import { CreateActivity } from "src/graphql/users/activity/ActivityResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 
 export async function RemoveOrderItemResolver(
@@ -16,6 +17,18 @@ export async function RemoveOrderItemResolver(
       .where({ id: order_item.order_id })
       .first();
 
+    await CreateActivity(
+      _,
+      {
+        data: {
+          userId: ctx.auth.id,
+          description: JSON.stringify(order_item),
+          type: "Remove Order Item",
+        },
+      },
+      ctx
+    );
+
     await knex.table("order_items").where({ id: id }).del();
 
     await knex.table("orders").where({ id: order_item.order_id }).update({
@@ -25,15 +38,16 @@ export async function RemoveOrderItemResolver(
     });
 
     if (order) {
-      if(order.status === "3") {
-        await knex.table('orders').where({ id }).update({
+      if (order.status === "3") {
+        await knex.table("orders").where({ id }).update({
           total_paid: 0,
           total: 0,
           customer_paid: 0,
           confirm_checkout_date: null,
-          confirm_checkout_by: null
-        })
+          confirm_checkout_by: null,
+        });
       }
+
       GraphPubSub.publish(order.uuid, {
         orderSubscript: { status: "REMOVE" },
       });
@@ -59,16 +73,27 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .where({ id: order_item.order_id })
       .first();
     await knex.table("order_items").where("id", id).increment("qty", 1);
+    await CreateActivity(
+      _,
+      {
+        data: {
+          userId: ctx.auth.id,
+          description: `${JSON.stringify(order_item)} +1`,
+          type: "Increse Order Item",
+        },
+      },
+      ctx
+    );
 
     if (order) {
-      if(order.status === "3") {
-        await knex.table('orders').where({ id }).update({
+      if (order.status === "3") {
+        await knex.table("orders").where({ id }).update({
           total_paid: 0,
           total: 0,
           customer_paid: 0,
           confirm_checkout_date: null,
-          confirm_checkout_by: null
-        })
+          confirm_checkout_by: null,
+        });
       }
       GraphPubSub.publish(order.uuid, {
         orderSubscript: { status: "ADD_QTY" },
@@ -98,15 +123,26 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .where({ id: order_item.order_id })
       .first();
     await knex.table("order_items").where("id", id).decrement("qty", 1);
+    await CreateActivity(
+      _,
+      {
+        data: {
+          userId: ctx.auth.id,
+          description: `${JSON.stringify(order_item)} +1`,
+          type: "Decrement Order Item",
+        },
+      },
+      ctx
+    );
     if (order) {
-      if(order.status === "3") {
-        await knex.table('orders').where({ id }).update({
+      if (order.status === "3") {
+        await knex.table("orders").where({ id }).update({
           total_paid: 0,
           total: 0,
           customer_paid: 0,
           confirm_checkout_date: null,
-          confirm_checkout_by: null
-        })
+          confirm_checkout_by: null,
+        });
       }
       GraphPubSub.publish(order.uuid, {
         orderSubscript: { status: "REMOVE_QTY" },
