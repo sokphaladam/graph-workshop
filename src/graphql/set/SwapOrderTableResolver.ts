@@ -1,5 +1,6 @@
 import { ContextType } from "src/ContextType";
 import { table_orders } from "src/generated/tables";
+import { CreateActivity } from "../users/activity/ActivityResolver";
 
 export async function SwapOrderTableResolver(
   _,
@@ -30,6 +31,17 @@ export async function SwapOrderTableResolver(
       uuid: `${table}@${currentTable.uuid.split("@")[1]}`,
     };
     await knex.table("orders").where({ id: orderId }).update(input);
+    await CreateActivity(
+      _,
+      {
+        data: {
+          userId: ctx.auth.id,
+          type: "SWAP_ORDER_TABLE",
+          description: JSON.stringify(input),
+        },
+      },
+      ctx
+    );
     return true;
   }
 
