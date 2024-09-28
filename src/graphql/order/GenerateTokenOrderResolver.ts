@@ -2,6 +2,7 @@ import { ContextType } from "src/ContextType";
 import { StatusOrder } from "./OrderResolver";
 import { Telegram } from "src/lib/telegram";
 import GraphPubSub from "src/lib/PubSub/PubSub";
+import { CreateActivity } from "../users/activity/ActivityResolver";
 
 export async function GenerateTokenOrderResolver(
   _,
@@ -45,6 +46,24 @@ export async function GenerateTokenOrderResolver(
       vat: setting ? setting.value : "0",
       verify_code: code,
     });
+
+    if (ctx.auth) {
+      await CreateActivity(
+        _,
+        {
+          data: {
+            userId: ctx.auth.id,
+            type: "Create Order",
+            description: `តុលេខ (${set}) លេខកូដ (${code})`,
+          },
+        },
+        {
+          knex: {
+            default: tx,
+          },
+        }
+      );
+    }
 
     const str = `តុលេខ (${set}) លេខកូដ (${code})`;
 
