@@ -9,6 +9,7 @@ import {
 import { AttendanceStaffResolver } from "./AttendanceStaffResolver";
 import { AttendanceCheck } from "./AttendanceCheckResolver";
 import { Formatter } from "src/lib/Formatter";
+import { createLeaveByIdDateLoader } from "src/dataloader/LeaveLoader";
 
 export const AttendanceResolver = {
   Query: {
@@ -22,6 +23,7 @@ export const AttendanceResolver = {
     ) => {
       const knex = ctx.knex.default;
       const user = ctx.auth;
+      const loader = createLeaveByIdDateLoader(knex);
 
       if (!user) {
         return null;
@@ -58,12 +60,15 @@ export const AttendanceResolver = {
           checkDate: x.check_date
             ? moment(x.check_date).format("YYYY-MM-DD")
             : null,
+          type: x.type,
+          leave: x.leave_id ? () => loader.load(x.leave_id) : null,
         };
       });
     },
     getAttendanceStaffToday: async (_, { date }, ctx: ContextType) => {
       const knex = ctx.knex.default;
       const user = ctx.auth;
+      const loader = createLeaveByIdDateLoader(knex);
 
       if (!user) {
         return null;
@@ -116,6 +121,8 @@ export const AttendanceResolver = {
         checkDate: items.check_date
           ? moment(items.check_date).format("YYYY-MM-DD")
           : null,
+        type: items.type,
+        leave: items.leave_id ? () => loader.load(items.leave_id) : null,
       };
     },
   },

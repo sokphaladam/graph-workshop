@@ -1,6 +1,6 @@
 import moment from "moment";
 import { ContextType } from "src/ContextType";
-import { createLeaveByDateLoader } from "src/dataloader/LeaveLoader";
+import { createLeaveByIdDateLoader } from "src/dataloader/LeaveLoader";
 import { createUserByIdLoader } from "src/dataloader/UserLoader";
 import { table_attendance, table_users } from "src/generated/tables";
 
@@ -11,6 +11,7 @@ export async function AttendanceAdminListResolver(
 ) {
   const knex = ctx.knex.default;
   const loader = createUserByIdLoader(knex);
+  const loaderLeave = createLeaveByIdDateLoader(knex);
   const query = knex.table<table_attendance>("attendance");
 
   if (month) {
@@ -42,7 +43,8 @@ export async function AttendanceAdminListResolver(
       checkDate: x.check_date
         ? moment(x.check_date).format("YYYY-MM-DD")
         : null,
-      leave: null,
+      type: x.type,
+      leave: x.leave_id ? () => loaderLeave.load(x.leave_id) : null,
     };
   });
 }

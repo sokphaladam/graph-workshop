@@ -30,4 +30,5 @@ type Attendance {
   overTimeOut: String
   checkDate: String
   leave: Leave
+  type: String
 }
