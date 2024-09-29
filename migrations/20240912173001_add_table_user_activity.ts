@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments("id").primary();
     table.integer("user_id").index();
     table.string("type");
-    table.string("description");
+    table.text("description");
     table.timestamps(true, true);
   });
 }

@@ -223,4 +223,21 @@ export class Formatter {
     const orderId = Math.trunc(c / 999983);
     return { supplierId, orderId };
   }
+
+  static getDateRage(firstDate, lastDate) {
+    if (
+      moment(firstDate, "YYYY-MM-DD").isSame(
+        moment(lastDate, "YYYY-MM-DD"),
+        "day"
+      )
+    )
+      return [lastDate];
+    let date = firstDate;
+    const dates = [date];
+    do {
+      date = moment(date).add(1, "day");
+      dates.push(date.format("YYYY-MM-DD"));
+    } while (moment(date).isBefore(lastDate));
+    return dates.map((x) => moment(x).format("YYYY-MM-DD"));
+  }
 }
