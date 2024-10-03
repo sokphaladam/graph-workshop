@@ -27,8 +27,26 @@ export async function UpdateOTStatus(_, { id, status }, ctx: ContextType) {
   }
 
   await knex.transaction(async (tx) => {
-    const item = await tx.table("staff_overtime").where({ id }).first();
+    const item: table_staff_overtime = await tx
+      .table("staff_overtime")
+      .where({ id })
+      .first();
     await tx.table("staff_overtime").where({ id }).update(input);
+    if (status === "APPROVED") {
+      await tx
+        .table("attendance")
+        .insert({
+          user_id: item.user_id,
+          check_date: Formatter.date(item.ot_date),
+          overtime_from: Formatter.date(item.ot_date) + " " + item.ot_from,
+          overtime_to: Formatter.date(item.ot_date) + " " + item.ot_to,
+        })
+        .onConflict(["user_id", "check_date"])
+        .merge({
+          overtime_from: Formatter.date(item.ot_date) + " " + item.ot_from,
+          overtime_to: Formatter.date(item.ot_date) + " " + item.ot_to,
+        });
+    }
     await CreateActivity(
       _,
       {

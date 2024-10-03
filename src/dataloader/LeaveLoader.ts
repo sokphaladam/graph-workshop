@@ -5,29 +5,13 @@ import moment from "moment";
 import { Formatter } from "src/lib/Formatter";
 import { createUserByIdLoader } from "./UserLoader";
 
-export function createLeaveByDateLoader(knex: Knex) {
+export function createLeaveByIdDateLoader(knex: Knex) {
   const loaderUser = createUserByIdLoader(knex);
   return new Dataloader(async (keys: string[]) => {
-    console.log(keys);
-    // const items: table_user_leave[] = await knex
-    //   .table("user_leave")
-    //   .whereIn(knex.raw("DATE(request_date)") as any, keys)
-    //   .where({ status: "APPROVED" });
-
-    const items = await knex.raw(
-      `
-      SELECT * 
-      FROM user_leave 
-      WHERE DATE(request_date) IN (:date)`,
-      { date: keys }
-    );
-
-    console.log(items);
+    const items = await knex.table("user_leave").whereIn("id", keys);
 
     return keys.map((x) => {
-      const find = items[0].find(
-        (f) => moment(f.request_date).diff(moment(x), "day") === 0
-      );
+      const find = items.find((f) => f.id === x);
 
       if (!find) {
         return null;
@@ -35,8 +19,8 @@ export function createLeaveByDateLoader(knex: Knex) {
 
       return {
         id: find.id,
-        startDate: Formatter.dateTime(find.leave_from),
-        endDate: Formatter.dateTime(find.leave_to),
+        startDate: find.leave_from ? Formatter.dateTime(find.leave_from) : null,
+        endDate: find.leave_to ? Formatter.dateTime(find.leave_to) : null,
         leaveType: find.type,
         leaveReason: find.leave_reason,
         duration: find.duration,

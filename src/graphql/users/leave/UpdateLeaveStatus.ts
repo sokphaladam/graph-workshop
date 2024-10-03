@@ -27,8 +27,30 @@ export async function UpdateLeaveStatus(_, { id, status }, ctx: ContextType) {
   }
 
   await knex.transaction(async (tx) => {
-    const item = await tx.table("user_leave").where({ id }).first();
+    const item: table_user_leave = await tx
+      .table("user_leave")
+      .where({ id })
+      .first();
     await tx.table("user_leave").where({ id }).update(input);
+
+    if (status === "APPROVED") {
+      const dateRage = Formatter.getDateRage(item.leave_from, item.leave_to);
+      await tx
+        .table("attendance")
+        .insert(
+          dateRage.map((x) => {
+            return {
+              user_id: item.request_by,
+              check_date: x,
+              type: "LEAVE_REQUEST",
+              leave_id: item.id,
+            };
+          })
+        )
+        .onConflict(["user_id", "check_date"])
+        .merge({ type: "LEAVE_REQUEST", leave_id: item.id });
+    }
+
     await CreateActivity(
       _,
       {
