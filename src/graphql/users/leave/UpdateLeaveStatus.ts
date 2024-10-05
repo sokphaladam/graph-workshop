@@ -35,6 +35,7 @@ export async function UpdateLeaveStatus(_, { id, status }, ctx: ContextType) {
 
     if (status === "APPROVED") {
       const dateRage = Formatter.getDateRage(item.leave_from, item.leave_to);
+      // console.log(item.leave_from, item.leave_to, dateRage)
       await tx
         .table("attendance")
         .insert(

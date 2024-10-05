@@ -238,6 +238,6 @@ export class Formatter {
       date = moment(date).add(1, "day");
       dates.push(date.format("YYYY-MM-DD"));
     } while (moment(date).isBefore(lastDate));
-    return dates.map((x) => moment(x).format("YYYY-MM-DD"));
+    return dates.filter((_: any, i: number) => dates.length - 1 > i).map((x) => moment(x).format("YYYY-MM-DD"));
   }
 }
