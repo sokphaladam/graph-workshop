@@ -6,6 +6,7 @@ extend type Query {
     limit: Int = 10
     categoryIds: [Int]
   ): [ProductSell]
+  reportStaffPayroll(from: String, to: String): JSON
 }
 
 type ProductSell {
