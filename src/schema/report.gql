@@ -7,6 +7,7 @@ extend type Query {
     categoryIds: [Int]
   ): [ProductSell]
   reportStaffPayroll(from: String, to: String): JSON
+  reportSaleByDay(from: String, to: String): JSON
 }
 
 type ProductSell {
