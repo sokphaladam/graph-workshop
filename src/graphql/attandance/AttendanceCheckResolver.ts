@@ -37,15 +37,17 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
   const query = knex
     .table("attendance")
     .where("user_id", userId)
-    .whereRaw(`DATE(check_date) = :date`, {
-      date: moment(date).format("YYYY-MM-DD"),
-    })
+
     .orderBy("id", "desc")
     .first();
 
   if (start > end) {
     console.log("check overnight");
     query.whereRaw(`DATE(check_date) = DATE(:date)`, { date: today });
+  } else {
+    query.whereRaw(`DATE(check_date) = :date`, {
+      date: moment(date).format("YYYY-MM-DD"),
+    });
   }
 
   const item = await query.clone().select();
