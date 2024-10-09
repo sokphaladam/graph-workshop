@@ -14,6 +14,8 @@ export async function up(knex: Knex): Promise<void> {
       .enum("type", ["WORK", "ABSENT", "LEAVE_REQUEST", "LOST_CHECKOUT"])
       .defaultTo("WORK");
     table.integer("leave_id").index();
+    table.integer("ot_extra").defaultTo(1);
+    table.integer("holiday_extra").defaultTo(1);
   });
 }
 

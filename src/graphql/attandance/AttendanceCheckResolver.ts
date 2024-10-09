@@ -37,17 +37,29 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
   const query = knex
     .table("attendance")
     .where("user_id", userId)
+
     .orderBy("id", "desc")
     .first();
 
   if (start > end) {
     console.log("check overnight");
     query.whereRaw(`DATE(check_date) = DATE(:date)`, { date: today });
+  } else {
+    query.whereRaw(`DATE(check_date) = :date`, {
+      date: moment(date).format("YYYY-MM-DD"),
+    });
   }
 
   const item = await query.clone().select();
 
   if (item) {
+    const holiday = await knex
+      .table("public_holiday")
+      .whereRaw(`DATE(holiday_date) = :date`, {
+        date: moment(date).format("YYYY-MM-DD"),
+      })
+      .first();
+
     if (
       item.check_in &&
       item.check_out
@@ -63,7 +75,11 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
       await knex
         .table("attendance")
         .where({ id: item.id })
-        .update({ check_in: todayTime, type: "WORK" });
+        .update({
+          check_in: todayTime,
+          type: "WORK",
+          holiday_extra: holiday ? holiday.extra : 1,
+        });
     }
 
     if (item.check_in && !item.check_out) {
