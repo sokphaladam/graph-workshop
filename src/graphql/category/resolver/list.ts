@@ -25,7 +25,8 @@ export async function categoryList(_, {}, ctx: ContextType) {
 
   const category: table_category[] = await knex
     .table<table_category>("category")
-    .where("is_active", true);
+    .where("is_active", true)
+    .orderBy("index", "asc");
 
   const hash: { [key: number]: CategoryTreeNode } = {
     0: {

@@ -1,1 +1,1 @@
-/* eslint-disable */export interface table_category {  id?: number;  is_active?: number | null;  logo?: string | null;  name?: string | null;  root?: number | null;}
+/* eslint-disable */export interface table_category {  id?: number;  index?: number | null;  is_active?: number | null;  logo?: string | null;  name?: string | null;  root?: number | null;}
