@@ -1,3 +1,4 @@
+import { CheckProductCodeResolver } from "./CheckProductCodeResolver";
 import { CreateProductResolver } from "./CreateProductResolver";
 import { ProductIdResolver } from "./ProductIdResolver";
 import { ProductListResolver } from "./ProductListResolver";
@@ -9,6 +10,7 @@ export const ProductResolver = {
     createProduct: CreateProductResolver,
     updateProduct: UpdateProducResolver,
     updateStatusProduct: UpdateStatusProducResolver,
+    checkProductCode: CheckProductCodeResolver,
   },
   Query: {
     productList: ProductListResolver,
