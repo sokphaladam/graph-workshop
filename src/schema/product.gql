@@ -12,6 +12,7 @@ extend type Mutation {
   createProduct(data: ProductInput): Boolean
   updateProduct(id: Int!, data: ProductInput): Boolean
   updateStatusProduct(id: Int!, status: STATUS_PRODUCT!): Boolean
+  checkProductCode(code: String!): Boolean
 }
 
 input ProductInput {

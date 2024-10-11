@@ -28,6 +28,7 @@ export async function TopProductSellResolver(
     INNER JOIN orders
     ON orders.id = order_items.order_id
     WHERE products.is_active = TRUE
+    AND product_sku.is_active = TRUE
     AND orders.status = "3"
     AND DATE(orders.confirm_checkout_date) BETWEEN :from AND :to
     ${

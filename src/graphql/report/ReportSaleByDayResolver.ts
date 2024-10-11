@@ -27,7 +27,7 @@ export async function ReportSaleByDayResolver(
   const products = await knex
     .table("products")
     .innerJoin("product_sku", "product_sku.product_id", "products.id")
-    .where({ "products.is_active": true })
+    .where({ "products.is_active": true, "product_sku.is_active": true })
     .select("product_sku.id as sku_id", "title", "product_sku.name as name");
 
   const groups = orders.reduce((acc, item) => {
