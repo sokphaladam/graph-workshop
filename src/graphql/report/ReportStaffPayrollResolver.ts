@@ -86,6 +86,8 @@ export async function ReportStaffPayrollResolver(
       .filter((f) => f.holiday_extra > 1 && f.type === "WORK")
       .reduce((a, b) => (a = a + Number(salaryDay) * (b.holiday_extra - 1)), 0);
 
+    const totalWorkDays = list.filter((f) => f.type !== "ABSENT").length;
+
     return {
       user: {
         id: x.id,
@@ -99,6 +101,7 @@ export async function ReportStaffPayrollResolver(
           to: x.to_time,
           duration,
         },
+        profile: x.profile,
       },
       absent,
       absentPay: (absent * Number(salaryDay)).toFixed(2),
@@ -111,6 +114,7 @@ export async function ReportStaffPayrollResolver(
         pay: Number(ot.pay || 0).toFixed(2),
       },
       holiday,
+      totalWorkDays,
     };
   });
 }
