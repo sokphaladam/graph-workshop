@@ -1,0 +1,22 @@
+extend type Query {
+  holidayList: [Holiday]
+  holiday(id: Int!): Holiday
+}
+
+extend type Mutation {
+  createHoliday(data: HolidayInput): Boolean
+  updateHoliday(id: Int!, data: HolidayInput): Boolean
+}
+
+input HolidayInput {
+  name: String
+  date: String
+  extra: Int
+}
+
+type Holiday {
+  id: Int
+  name: String
+  date: String
+  extra: Int
+}
