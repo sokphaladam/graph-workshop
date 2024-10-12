@@ -11,7 +11,13 @@ export async function up(knex: Knex): Promise<void> {
     table.date("check_date");
     table.timestamps(true, true);
     table
-      .enum("type", ["WORK", "ABSENT", "LEAVE_REQUEST", "LOST_CHECKOUT"])
+      .enum("type", [
+        "WORK",
+        "ABSENT",
+        "LEAVE_REQUEST",
+        "LOST_CHECKOUT",
+        "DAY_OFF",
+      ])
       .defaultTo("WORK");
     table.integer("leave_id").index();
     table.integer("ot_extra").defaultTo(1);
