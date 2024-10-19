@@ -71,14 +71,14 @@ export async function ReportSaleByDayResolver(
       return {
         ...groups[x].reduce((a, b) => {
           const disPrice =
-            (Number(b.total || 0) * Number(b.discount || 0)) / 100;
+            (Number(b.total_paid || 0) * Number(b.discount || 0)) / 100;
+          const fixedPrice = Number(b.total_paid || 0) - disPrice;
           return {
             date: x,
             qty: (a.qty || 0) + (b.order || 0),
-            totalAmount: (a.totalAmount || 0) + Number(b.total || 0),
+            totalAmount: (a.totalAmount || 0) + Number(b.total_paid || 0),
             totalDiscount: (a.totalDiscount || 0) + disPrice,
-            totalAfterDiscount:
-              (a.totalAfterDiscount || 0) + Number(b.total_paid || 0),
+            totalAfterDiscount: (a.totalAfterDiscount || 0) + fixedPrice,
           };
         }, {}),
         ...groupProduct,
