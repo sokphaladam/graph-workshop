@@ -13,7 +13,7 @@ export async function RemoveOrderItemResolver(
   if (order_item) {
     const order = await knex
       .table("orders")
-      .select("uuid")
+      .select("uuid", "status")
       .where({ id: order_item.order_id })
       .first();
 
@@ -31,20 +31,15 @@ export async function RemoveOrderItemResolver(
 
     await knex.table("order_items").where({ id: id }).del();
 
-    await knex.table("orders").where({ id: order_item.order_id }).update({
-      total_paid: 0,
-      confirm_checkout_date: null,
-      confirm_checkout_by: null,
-    });
-
     if (order) {
       if (order.status === "3") {
-        await knex.table("orders").where({ id }).update({
+        await knex.table("orders").where({ id: order_item.order_id }).update({
           total_paid: 0,
           total: 0,
           customer_paid: 0,
           confirm_checkout_date: null,
           confirm_checkout_by: null,
+          status: "1",
         });
       }
 
@@ -53,6 +48,12 @@ export async function RemoveOrderItemResolver(
       });
       GraphPubSub.publish("ADMIN_CHANNEL", {
         orderSubscript: { status: "REMOVE", uuid: order.uuid },
+      });
+    } else {
+      await knex.table("orders").where({ id: order_item.order_id }).update({
+        total_paid: 0,
+        confirm_checkout_date: null,
+        confirm_checkout_by: null,
       });
     }
   }
@@ -87,7 +88,7 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
 
     if (order) {
       if (order.status === "3") {
-        await knex.table("orders").where({ id }).update({
+        await knex.table("orders").where({ id: order_item.order_id }).update({
           total_paid: 0,
           total: 0,
           customer_paid: 0,
@@ -136,7 +137,7 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
     );
     if (order) {
       if (order.status === "3") {
-        await knex.table("orders").where({ id }).update({
+        await knex.table("orders").where({ id: order_item.order_id }).update({
           total_paid: 0,
           total: 0,
           customer_paid: 0,

@@ -88,6 +88,10 @@ export async function ReportStaffPayrollResolver(
 
     const totalWorkDays = list.filter((f) => f.type !== "ABSENT").length;
 
+    const checkOutEmpty = list.filter(
+      (f) => f.type === "WORK" && !f.check_out && f.leave_id === null
+    ).length;
+
     return {
       user: {
         id: x.id,
@@ -109,6 +113,8 @@ export async function ReportStaffPayrollResolver(
       checkInLatePay: ((checkInLate / 60) * Number(salaryHour)).toFixed(2),
       checkOutEarly: (checkOutEarly / 60).toFixed(2),
       checkOutEarlyPay: ((checkOutEarly / 60) * Number(salaryHour)).toFixed(2),
+      checkOutEmpty,
+      checkOutEmptyPay: (0.5 * checkOutEmpty * Number(salaryHour)).toFixed(2),
       ot: {
         duration: ot.duration || 0,
         pay: Number(ot.pay || 0).toFixed(2),

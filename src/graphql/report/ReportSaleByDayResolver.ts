@@ -39,50 +39,57 @@ export async function ReportSaleByDayResolver(
     return acc;
   }, {});
 
+  const data = Object.keys(groups).map((x) => {
+    const groupProduct = products.reduce((acc, item) => {
+      const find = items.filter(
+        (f) =>
+          moment(f.created_at).format("YYYY-MM-DD") === x &&
+          f.sku_id === item.sku_id
+      );
+      const obj = find
+        ? find.reduce(
+            (a, b) => {
+              return {
+                qty: a.qty + b.qty,
+                total:
+                  Number(a.total) +
+                  (b.price * b.qty - (b.price * b.qty * b.discount) / 100),
+              };
+            },
+            { qty: 0, total: 0 }
+          )
+        : [];
+      return {
+        ...acc,
+        [`${item.title} (${item.name})`
+          .replace(/[\u200B-\u200D\uFEFF]/g, "")
+          .trim()]: {
+          ...obj,
+        },
+      };
+    }, {});
+
+    return {
+      ...groups[x].reduce((a, b) => {
+        const disPrice =
+          (Number(b.total_paid || 0) * Number(b.discount || 0)) / 100;
+        const fixedPrice = Number(b.total_paid || 0) - disPrice;
+        return {
+          date: x,
+          qty: (a.qty || 0) + (b.order || 0),
+          totalAmount: (a.totalAmount || 0) + Number(b.total_paid || 0),
+          totalDiscount: (a.totalDiscount || 0) + disPrice,
+          totalAfterDiscount: (a.totalAfterDiscount || 0) + fixedPrice,
+        };
+      }, {}),
+      ...groupProduct,
+    };
+  });
+
   return {
     header: products.map((x) =>
       `${x.title} (${x.name})`.replace(/[\u200B-\u200D\uFEFF]/g, "").trim()
     ),
-    data: Object.keys(groups).map((x) => {
-      const groupProduct = products.reduce((acc, item) => {
-        const find = items.filter(
-          (f) =>
-            moment(f.created_at).format("YYYY-MM-DD") === x &&
-            f.sku_id === item.sku_id
-        );
-        return {
-          ...acc,
-          [`${item.title} (${item.name})`
-            .replace(/[\u200B-\u200D\uFEFF]/g, "")
-            .trim()]: {
-            qty: find.reduce((a, b) => (a = a + b.qty), 0),
-            total: find
-              .reduce(
-                (a, b) =>
-                  (a =
-                    a + b.price * b.qty - (b.price * b.qty * b.discount) / 100),
-                0
-              )
-              .toFixed(2),
-          },
-        };
-      }, {});
-
-      return {
-        ...groups[x].reduce((a, b) => {
-          const disPrice =
-            (Number(b.total_paid || 0) * Number(b.discount || 0)) / 100;
-          const fixedPrice = Number(b.total_paid || 0) - disPrice;
-          return {
-            date: x,
-            qty: (a.qty || 0) + (b.order || 0),
-            totalAmount: (a.totalAmount || 0) + Number(b.total_paid || 0),
-            totalDiscount: (a.totalDiscount || 0) + disPrice,
-            totalAfterDiscount: (a.totalAfterDiscount || 0) + fixedPrice,
-          };
-        }, {}),
-        ...groupProduct,
-      };
-    }),
+    data,
   };
 }
