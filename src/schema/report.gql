@@ -8,7 +8,16 @@ extend type Query {
   ): [ProductSell]
   reportStaffPayroll(from: String, to: String): JSON
   reportSaleByDay(from: String, to: String): JSON
-  reportSaleProduct(from: String, to: String): JSON
+  reportSaleProduct(
+    from: String
+    to: String
+    filters: ReportSaleFilter
+    groupBy: ReportSaleGroupBy = PRODUCT
+  ): JSON
+}
+
+input ReportSaleFilter {
+  category: [Int]
 }
 
 type ProductSell {
@@ -16,4 +25,9 @@ type ProductSell {
   sku: SKU
   qty: Int
   total: Float
+}
+
+enum ReportSaleGroupBy {
+  PRODUCT
+  DATE
 }
