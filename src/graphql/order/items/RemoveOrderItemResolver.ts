@@ -45,6 +45,7 @@ export async function RemoveOrderItemResolver(
           customer_paid: 0,
           confirm_checkout_date: null,
           confirm_checkout_by: null,
+          status: "1",
         });
       }
 

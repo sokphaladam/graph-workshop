@@ -3,6 +3,7 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("table_set", (table) => {
     table.integer("set").primary().index();
+    table.integer("floor");
     table.timestamps(true, true);
   });
 }
