@@ -23,14 +23,12 @@ export async function OrderBalanceSummaryResolver(
       from: from,
       to: to,
     })
-    .whereIn("orders.status", ["1", "2", "3"])
+    .whereIn("orders.status", ["1", "2"])
     .select([
       "order_items.id",
       "order_items.price",
       "order_items.qty",
       "order_items.discount",
-      "orders.total_paid",
-      "orders.discount as odis",
     ]);
 
   const products = await knex
