@@ -11,7 +11,12 @@ export async function GenerateTokenOrderResolver(
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
+  const user = ctx.auth;
   const telegram = new Telegram();
+
+  if (!user) {
+    return null;
+  }
 
   return await knex.transaction(async (tx) => {
     const item: table_orders = await tx
@@ -44,6 +49,7 @@ export async function GenerateTokenOrderResolver(
       total_paid: "0",
       vat: setting ? setting.value : "0",
       verify_code: code,
+      created_by: user.id,
     });
 
     if (ctx.auth) {
