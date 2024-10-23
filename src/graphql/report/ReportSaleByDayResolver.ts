@@ -51,9 +51,10 @@ export async function ReportSaleByDayResolver(
             (a, b) => {
               return {
                 qty: a.qty + b.qty,
-                total:
+                total: (
                   Number(a.total) +
-                  (b.price * b.qty - (b.price * b.qty * b.discount) / 100),
+                  (b.price * b.qty - (b.price * b.qty * b.discount) / 100)
+                ).toFixed(2),
               };
             },
             { qty: 0, total: 0 }
