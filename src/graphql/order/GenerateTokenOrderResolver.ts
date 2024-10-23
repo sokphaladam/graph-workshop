@@ -3,6 +3,7 @@ import { StatusOrder } from "./OrderResolver";
 import { Telegram } from "src/lib/telegram";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { CreateActivity } from "../users/activity/ActivityResolver";
+import { table_orders } from "src/generated/tables";
 
 export async function GenerateTokenOrderResolver(
   _,
@@ -13,16 +14,14 @@ export async function GenerateTokenOrderResolver(
   const telegram = new Telegram();
 
   return await knex.transaction(async (tx) => {
-    const item = await tx
+    const item: table_orders = await tx
       .table("orders")
       .where({ set })
-      .where("total_paid", "=", 0)
       .whereNotIn("status", [StatusOrder.CANCELLED])
       .first();
 
     if (item) {
-      console.log(item.total_paid);
-      if (item.status === "3" && Number(item.total_paid || 0) <= 0) {
+      if (item.status === "3" && !item.confirm_checkout_date) {
         return item.uuid;
       }
 
