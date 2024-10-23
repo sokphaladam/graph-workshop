@@ -86,7 +86,7 @@ export async function ReportStaffPayrollResolver(
       .filter((f) => f.holiday_extra > 1 && f.type === "WORK")
       .reduce((a, b) => (a = a + Number(salaryDay) * (b.holiday_extra - 1)), 0);
 
-    const totalWorkDays = list.filter((f) => f.type !== "ABSENT").length;
+    const totalWorkDays = list.length;
 
     const checkOutEmpty = list.filter(
       (f) => f.type === "WORK" && !f.check_out && f.leave_id === null
