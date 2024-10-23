@@ -54,6 +54,10 @@ export async function ReportSaleProductResolver(
       .where({
         status: "3",
       })
+      .whereBetween("orders.confirm_checkout_date", [
+        from + " 00:00:00",
+        to + " 23:59:00",
+      ])
       .groupByRaw(`DATE(orders.confirm_checkout_date)`)
       .orderByRaw(`DATE(orders.confirm_checkout_date) desc`)
       .select(
