@@ -18,7 +18,14 @@ export async function AddOrderItemResolver(
     .first();
 
   if (order) {
-    await knex.table("orders").where("id", orderId).update({ status: "0" });
+    await knex.table("orders").where("id", orderId).update({
+      status: "0",
+      total_paid: 0,
+      total: 0,
+      customer_paid: 0,
+      confirm_checkout_date: null,
+      confirm_checkout_by: null,
+    });
     const orderItem = await knex
       .table("order_items")
       .where({
