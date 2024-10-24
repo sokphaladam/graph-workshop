@@ -63,10 +63,14 @@ export async function ReportSaleProductResolver(
       .select(
         knex.raw(
           `DATE(orders.confirm_checkout_date) AS "date",
-      SUM(if(orders.bank = 1, (orders.total_paid - (orders.total_paid * orders.discount / 100)), 0)) as cash,
-      SUM(if(orders.bank = 2, (orders.total_paid - (orders.total_paid * orders.discount / 100)), 0)) as aba, 
-      SUM(if(orders.discount > 0, (orders.total_paid * orders.discount) / 100, 0)) as discount, 
-      SUM((orders.total_paid - (orders.total_paid * orders.discount / 100))) AS amount`
+            SUM(if(orders.bank = 1, (orders.total_paid - (orders.total_paid * orders.discount / 100)), 0)) as cash,
+            SUM(if(orders.bank = 2, (orders.total_paid - (orders.total_paid * orders.discount / 100)), 0)) as aba, 
+            SUM(if(orders.discount > 0, (orders.total_paid * orders.discount) / 100, 0)) as discount, 
+            SUM(orders.person) AS customer,
+            SUM((orders.total_paid - (orders.total_paid * orders.discount / 100))) AS amount,
+            COUNT(orders.id) AS bill,
+            SUM(if(orders.bank = 1, 0, 1)) AS card
+      `
         )
       );
 
@@ -84,6 +88,7 @@ export async function ReportSaleProductResolver(
     return {
       ...x,
       date: Formatter.date(x.date),
+      avgSpending: x.amount / x.customer,
     };
   });
 }
