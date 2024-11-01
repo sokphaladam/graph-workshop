@@ -1,0 +1,32 @@
+extend type Query {
+  orderScheduleList: [OrderSchedule]
+  orderSchedule(id: Int!): OrderSchedule
+}
+
+extend type Mutation {
+  createOrderSchedule(data: OrderScheduleInput): Boolean
+  updateOrderSchedule(id: Int!, data: OrderScheduleInput): Boolean
+}
+
+input OrderScheduleInput {
+  name: String
+  startAt: String
+  endAt: String
+  items: [OrderScheduleItemInput]
+}
+
+input OrderScheduleItemInput {
+  skuId: Int
+}
+
+type OrderSchedule {
+  id: Int
+  name: String
+  startAt: String
+  endAt: String
+  items: [OrderScheduleItem]
+}
+
+type OrderScheduleItem {
+  sku: SKU
+}

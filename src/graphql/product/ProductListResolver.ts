@@ -7,12 +7,12 @@ import { table_products } from "src/generated/tables";
 
 export async function ProductListResolver(
   _,
-  { offset, limit, code, filter },
+  { offset, limit, code, filter, schedule },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
   const categoryLoader = createCategoryLoader(knex);
-  const skuLoader = createSkuByProductIDLoader(knex);
+  const skuLoader = createSkuByProductIDLoader(knex, schedule);
   const addonLoader = createAddonByProductIDLoader(knex);
   const integrateLoader = createIntegrateByProductIDLoader(knex);
 

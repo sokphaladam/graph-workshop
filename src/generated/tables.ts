@@ -5,6 +5,8 @@ export * from './tables/table_category';
 export * from './tables/table_delivery';
 export * from './tables/table_item_stock';
 export * from './tables/table_order_items';
+export * from './tables/table_order_schedule';
+export * from './tables/table_order_schedule_detail';
 export * from './tables/table_orders';
 export * from './tables/table_product_integrate';
 export * from './tables/table_product_sku';
