@@ -1,4 +1,5 @@
 import { CreateOrderScheduleResolver } from "./CreateOrderScheduleResolver";
+import { DeleteOrderScheduleResolver } from "./DeleteOrderScheduleResolver";
 import {
   OrderScheduleIdResolver,
   OrderScheduleListResolver,
@@ -13,5 +14,6 @@ export const OrderScheduleResolver = {
   Mutation: {
     createOrderSchedule: CreateOrderScheduleResolver,
     updateOrderSchedule: UpdateOrderScheduleResolver,
+    deleteOrderSchedule: DeleteOrderScheduleResolver,
   },
 };
