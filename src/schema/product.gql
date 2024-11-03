@@ -4,6 +4,7 @@ extend type Query {
     limit: Int = 25
     code: String
     filter: FilterProduct
+    schedule: Boolean
   ): [Product]
   product(id: Int!): Product
 }
@@ -82,6 +83,7 @@ type SKU {
   name: String
   image: String
   status: STATUS_PRODUCT
+  product: Product
 }
 
 type Integrate {

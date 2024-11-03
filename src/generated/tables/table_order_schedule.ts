@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_order_schedule {  created_at?: Date;  end_at?: undefined | null;  id?: number;  name?: string | null;  start_at?: undefined | null;  updated_at?: Date;}

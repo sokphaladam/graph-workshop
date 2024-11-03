@@ -16,6 +16,7 @@ import { PeopleInOrderResolver } from "./PeopleInOrderResolver";
 import { AddDiscountOrderResolver } from "./AddDiscountOrderResolver";
 import { SetTypePaymentOrderResolver } from "./SetTypePaymentOrderResolver";
 import { OrderItemResolver } from "./OrderItemResolver";
+import { OrderScheduleResolver } from "./schedule/OrderScheduleResolver";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -45,6 +46,7 @@ export const OrderResolver = {
   StatusOrderItem,
   OrderViewBy,
   Mutation: {
+    ...OrderScheduleResolver.Mutation,
     createOrder: CreateOrderResolver,
     changeOrderStatus: ChangeOrderStatusResolver,
     addOrderItem: AddOrderItemResolver,
@@ -59,6 +61,7 @@ export const OrderResolver = {
     setTypePaymentOrder: SetTypePaymentOrderResolver,
   },
   Query: {
+    ...OrderScheduleResolver.Query,
     orderList: OrderListResolver,
     order: OrderKeyResolver,
     orderItem: OrderItemResolver,

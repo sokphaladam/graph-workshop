@@ -1,0 +1,1 @@
+/* eslint-disable */export interface table_order_schedule_detail {  order_schedule_id?: number;  sku_id?: number;}
