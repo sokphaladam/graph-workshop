@@ -40,13 +40,12 @@ export function createSkuByProductIDLoader(knex: Knex, useSchedule?: boolean) {
             )
           ) {
             data.push(x);
+          } else {
+            data.push({
+              ...x,
+              status: "TIME_OUT",
+            });
           }
-          // else {
-          //   data.push({
-          //     ...x,
-          //     status: "TIME_OUT",
-          //   });
-          // }
         }
       }
       return keys.map((row) => {
