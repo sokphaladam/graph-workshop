@@ -36,11 +36,17 @@ export function createSkuByProductIDLoader(knex: Knex, useSchedule?: boolean) {
             !!isTimeInRange(
               find.start_at,
               find.end_at,
-              moment(Formatter.getNowDateTime()).format("HH:mm")
+              moment(Formatter.getNowDateTime()).format("HH:mm:ss")
             )
           ) {
             data.push(x);
           }
+          // else {
+          //   data.push({
+          //     ...x,
+          //     status: "TIME_OUT",
+          //   });
+          // }
         }
       }
       return keys.map((row) => {
