@@ -2,7 +2,7 @@ import { ContextType } from "src/ContextType";
 import { UserListResolver } from "./UserListResolver";
 import { createDataLoader } from "src/dataloader";
 import moment from "moment";
-import { LoginResolver } from "./LoginResolver";
+import { LoginResolver, ResetPasswordResolver } from "./LoginResolver";
 import { CreateUserResolver } from "./CreateUserResolver";
 import { UpdateUserResolver } from "./UpdateUserResolver";
 import { table_users } from "src/generated/tables";
@@ -17,6 +17,7 @@ export const UserResolver = {
     login: LoginResolver,
     createUser: CreateUserResolver,
     updateUser: UpdateUserResolver,
+    resetPassword: ResetPasswordResolver,
   },
   Query: {
     userList: UserListResolver,

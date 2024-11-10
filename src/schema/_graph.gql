@@ -11,6 +11,11 @@ type Mutation {
   testSubscription(str: String): Boolean
   createUser(data: UserInput): Boolean
   updateUser(id: Int!, data: UserInput): Boolean
+  resetPassword(
+    username: String!
+    oldPassowrd: String!
+    password: String!
+  ): Boolean
 }
 
 type Subscription {

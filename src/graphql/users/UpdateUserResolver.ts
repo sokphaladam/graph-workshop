@@ -38,6 +38,7 @@ export async function UpdateUserResolver(
     ).pwd;
 
     input.password = pwd;
+    (input as any).is_reset_password = true;
   }
 
   await knex.table("users").where({ id }).update(input);
