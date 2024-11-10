@@ -12,6 +12,7 @@ extend type Query {
     toDate: String
   ): [Shift]
   shiftById(id: Int, date: String, userId: Int): Shift
+  checkHaveOpenShiftToday: Boolean
 }
 
 type Shift {

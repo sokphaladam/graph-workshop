@@ -97,6 +97,7 @@ input FilterProduct {
   category: [Int]
   type: [TYPE_PRODUCT] = [PRODUCTION]
   isLowStock: Boolean
+  status: [STATUS_PRODUCT] = []
 }
 
 enum TYPE_PRODUCT {
@@ -112,4 +113,5 @@ enum STATUS_PRODUCT {
   AVAILABLE
   OUT_OF_STOCK
   TIME_OUT
+  INACTIVE
 }

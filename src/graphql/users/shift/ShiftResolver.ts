@@ -4,6 +4,7 @@ import { UpdateShiftResolver } from "./UpdateShiftResolver";
 import { table_shift } from "src/generated/tables";
 import moment from "moment";
 import { createUserByIdLoader } from "src/dataloader/UserLoader";
+import { CheckHaveOpenShiftTodayResolver } from "./ChechHaveOpenShiftTodayResolver";
 
 export const ShiftResolver = {
   Mutation: {
@@ -11,6 +12,7 @@ export const ShiftResolver = {
     updateShift: UpdateShiftResolver,
   },
   Query: {
+    checkHaveOpenShiftToday: CheckHaveOpenShiftTodayResolver,
     shiftList: async (
       _,
       { limit, offset, users, fromDate, toDate },
