@@ -37,6 +37,7 @@ export async function up(knex: Knex): Promise<void> {
     table.float("discount").defaultTo(0);
     table.float("customer_paid").defaultTo(0);
     table.integer("created_by").index();
+    table.boolean("first_print").defaultTo(0);
   });
 }
 
