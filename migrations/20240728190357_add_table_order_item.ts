@@ -18,6 +18,8 @@ export async function up(knex: Knex): Promise<void> {
       );
     table.boolean("is_print").defaultTo(false);
     table.timestamps(true, true);
+    table.integer("created_by");
+    table.integer("updated_by");
   });
 }
 
