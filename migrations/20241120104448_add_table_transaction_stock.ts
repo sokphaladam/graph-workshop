@@ -1,15 +1,12 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTable("item_stock", function (table) {
+  knex.schema.createTable("transaction_stock", function (table) {
     table.increments("id").primary();
-    table.integer("product_id").index();
-    table.string("name");
-    table.string("unit");
-    table.string("location");
+    table.integer("stock_id").index();
+    table.string("transaction_type");
     table.float("qty");
-    table.text("note");
-    table.text("proof");
+    table.integer("transaction_by").index();
     table.timestamps(true, true);
   });
 }

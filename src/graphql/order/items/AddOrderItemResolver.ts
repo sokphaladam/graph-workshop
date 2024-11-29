@@ -11,6 +11,7 @@ export async function AddOrderItemResolver(
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
+  const user = ctx.auth;
 
   const order: table_orders = await knex
     .table("orders")
@@ -50,6 +51,7 @@ export async function AddOrderItemResolver(
           addons: data.addons,
           remark: data.remark,
           status: StatusOrderItem.PENDING,
+          updated_by: user ? user.id : null,
         });
       // sendNotification(order, `Set: ${order.set} (Change)`, auth);
     } else {
@@ -63,6 +65,7 @@ export async function AddOrderItemResolver(
         addons: data.addons,
         remark: data.remark,
         status: StatusOrderItem.PENDING,
+        created_by: user ? user.id : null,
       });
 
       GraphPubSub.publish(order.uuid, {
