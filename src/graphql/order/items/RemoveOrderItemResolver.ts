@@ -1,5 +1,6 @@
 import { ContextType } from "src/ContextType";
 import { CreateActivity } from "src/graphql/users/activity/ActivityResolver";
+import { Formatter } from "src/lib/Formatter";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 
 export async function RemoveOrderItemResolver(
@@ -65,6 +66,7 @@ export async function RemoveOrderItemResolver(
 
 export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
+  const user = ctx.auth;
   const order_item = await knex.table("order_items").where({ id: id }).first();
 
   if (order_item) {
@@ -73,7 +75,10 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .select("uuid")
       .where({ id: order_item.order_id })
       .first();
-    await knex.table("order_items").where("id", id).increment("qty", 1);
+    await knex.table("order_items").where("id", id).increment("qty", 1).update({
+      updated_by: user ? user.id : null,
+      updated_at: Formatter.getNowDateTime(),
+    });
     await CreateActivity(
       _,
       {
@@ -112,6 +117,7 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
 
 export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
+  const user = ctx.auth;
 
   // sendNotification({}, `Change qty (-)`, ctx.auth);
 
@@ -123,7 +129,10 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .select("uuid")
       .where({ id: order_item.order_id })
       .first();
-    await knex.table("order_items").where("id", id).decrement("qty", 1);
+    await knex.table("order_items").where("id", id).decrement("qty", 1).update({
+      updated_by: user ? user.id : null,
+      updated_at: Formatter.getNowDateTime(),
+    });
     await CreateActivity(
       _,
       {

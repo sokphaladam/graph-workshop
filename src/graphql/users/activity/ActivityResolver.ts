@@ -26,21 +26,41 @@ export async function CreateActivity(
   return true;
 }
 
-async function ActivityStaff(_, { userId }, ctx: ContextType) {
+function isJson(str: string) {
+  try {
+    JSON.parse(str);
+  }catch(e) {
+    return false
+  }
+  return true
+}
+
+async function ActivityStaff(_, { userId, type, from, to }, ctx: ContextType) {
   const knex = ctx.knex.default;
 
-  const items = await knex
-    .table("user_activity")
-    .where({ user_id: userId })
-    .orderBy("id", "desc")
-    .limit(50)
-    .offset(0);
+  const query = knex.table("user_activity").orderBy("id", "desc")
+
+  if(userId) {
+    query.where({ user_id: userId })
+  }
+
+  if(type){
+    query.whereIn('type', type)
+  }
+
+  if(from && to) {
+    query.whereBetween('created_at', [from, to])
+  }
+
+  const items = await query.clone().select();
 
   return items.map((x) => {
+    const str = String(x.description).split('+');
     return {
       ...x,
       created_at: Formatter.dateTime(x.created_at),
       updated_at: Formatter.dateTime(x.updated_at),
+      description: isJson(str[0]) ? JSON.parse(str[0]) : str[0]  
     };
   });
 }

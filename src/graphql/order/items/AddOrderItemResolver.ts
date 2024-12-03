@@ -4,6 +4,7 @@ import { StatusOrderItem } from "../OrderResolver";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { table_orders } from "src/generated/tables";
 import { CreateActivity } from "src/graphql/users/activity/ActivityResolver";
+import { Formatter } from "src/lib/Formatter";
 
 export async function AddOrderItemResolver(
   _,
@@ -52,6 +53,7 @@ export async function AddOrderItemResolver(
           remark: data.remark,
           status: StatusOrderItem.PENDING,
           updated_by: user ? user.id : null,
+          updated_at: Formatter.getNowDateTime(),
         });
       // sendNotification(order, `Set: ${order.set} (Change)`, auth);
     } else {
