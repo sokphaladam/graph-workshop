@@ -3,6 +3,7 @@ import { Graph } from "src/generated/graph";
 import { table_order_items, table_orders } from "src/generated/tables";
 import { prefix } from "src/lib/prefix";
 import { StatusOrder, StatusOrderItem } from "./OrderResolver";
+import { Formatter } from "src/lib/Formatter";
 
 function getTotal(price, discount, qty) {
   const discount_price = (price * discount) / 100;
@@ -16,21 +17,39 @@ export async function CreateOrderResolver(
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
+  const auth = ctx.auth;
+
+  if (!auth) {
+    return false;
+  }
+
+  const total = data.carts.reduce((a, b) => {
+    const dis_price = Number(b.price) * (Number(b.discount) / 100);
+    const amount = Number(b.qty) * (Number(b.price) - dis_price);
+    return (a = a + amount);
+  }, 0);
+  const qty = data.carts.reduce((a, b) => (a = a + b.qty), 0);
 
   const input_order: table_orders = {
     customer_number: data.name,
     address: data.address,
-    order: data.carts.length,
+    order: qty,
     set: data.set,
-    status: StatusOrder.PENDING,
-    total: data.carts
-      .reduce((a, b) => (a = a + getTotal(b.price, b.discount, b.qty)), 0)
-      .toFixed(2),
-    total_paid: "0",
+    status: StatusOrder.CHECKOUT,
+    confirm_checkout_date: Formatter.getNowDateTime() as any,
+    confirm_checkout_by: auth ? auth.id : null,
+    total: String(total),
+    total_paid: String(total),
     uuid: data.uuid
       ? data.uuid
       : prefix(data.name.split(" ").map((x) => x.charAt(0).toUpperCase())) +
         new Date().getTime(),
+    invoice: data.invoice,
+    bank_type: data.bankType,
+    currency: data.currency,
+    bank: data.bankId,
+    discount: String(data.discount),
+    customer_paid: data.customerPaid,
   };
 
   const create = await knex.transaction((tx) => {
@@ -49,7 +68,10 @@ export async function CreateOrderResolver(
               product_id: x.productId,
               addons: x.addons,
               remark: x.remark,
-              status: StatusOrderItem.PENDING,
+              status: StatusOrderItem.MAKING,
+              is_print: true,
+              created_by: auth ? auth.id : null,
+              updated_by: auth ? auth.id : null,
             };
           })
         );

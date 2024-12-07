@@ -38,6 +38,7 @@ export async function UpdateShiftResolver(
         .where({
           status: "3",
         })
+        .whereNot({ set: "QO" })
         .whereBetween("confirm_checkout_date", [data.open, data.close]);
 
       const setting = await tx
