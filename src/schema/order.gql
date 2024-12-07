@@ -89,6 +89,13 @@ input OrderInput {
   uuid: String
   address: String
   set: String
+  amount: String
+  invoice: Int
+  bankType: String
+  currency: String
+  bankId: Int
+  discount: Float
+  customerPaid: String
   carts: [CartItemInput]
 }
 
