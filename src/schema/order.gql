@@ -148,4 +148,5 @@ enum OrderViewBy {
   KITCHEN
   ADMIN
   USER
+  QUICK_ORDER
 }
