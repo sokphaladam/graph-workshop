@@ -1,5 +1,5 @@
 extend type Mutation {
-  createOrder(data: OrderInput): Boolean
+  createOrder(data: OrderInput): Int
   changeOrderStatus(data: ChangeOrderInput): Boolean
   addOrderItem(orderId: Int!, data: CartItemInput): Boolean
   markOrderItemStatus(id: Int!, status: StatusOrderItem): Boolean
@@ -96,6 +96,7 @@ input OrderInput {
   bankId: Int
   discount: Float
   customerPaid: String
+  note: String
   carts: [CartItemInput]
 }
 
