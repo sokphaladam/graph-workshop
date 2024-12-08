@@ -13,7 +13,6 @@ COPY pnpm-lock.yaml .
 COPY package.json .
 
 RUN npm install -g pnpm
-RUN pnpm add -g pnpm
 
 COPY . .
 
