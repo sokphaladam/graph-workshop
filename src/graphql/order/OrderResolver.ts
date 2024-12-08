@@ -39,6 +39,7 @@ export enum OrderViewBy {
   KITCHEN = "0",
   ADMIN = "1",
   USER = "2",
+  QUICK_ORDER = "3",
 }
 
 export const OrderResolver = {

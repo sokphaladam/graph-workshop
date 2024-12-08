@@ -167,6 +167,10 @@ export async function OrderListResolver(
     ]);
   }
 
+  if (viewBy === OrderViewBy.QUICK_ORDER) {
+    query.where({ set: "QO" });
+  }
+
   if (fromDate && toDate) {
     query.whereBetween("orders.verify_date", [fromDate, toDate]);
   } else {
