@@ -20,7 +20,7 @@ export async function CreateOrderResolver(
   const auth = ctx.auth;
 
   if (!auth) {
-    return false;
+    return 0;
   }
 
   const total = data.carts.reduce((a, b) => {
@@ -50,7 +50,12 @@ export async function CreateOrderResolver(
     bank: data.bankId,
     discount: String(data.discount),
     customer_paid: data.customerPaid,
+    verify_date: Formatter.getNowDateTime() as any,
+    verify_by: auth ? auth.id : null,
+    note: data.note,
   };
+
+  let order_id = 0;
 
   const create = await knex.transaction((tx) => {
     return tx
@@ -59,6 +64,7 @@ export async function CreateOrderResolver(
       .then((res) => {
         return tx.table("order_items").insert(
           data.carts.map((x) => {
+            order_id = res[0];
             return {
               order_id: res[0],
               discount: x.discount.toFixed(2),
@@ -78,5 +84,5 @@ export async function CreateOrderResolver(
       });
   });
 
-  return create[0] > 0;
+  return create[0] > 0 ? order_id : 0;
 }
