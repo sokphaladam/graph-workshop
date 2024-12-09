@@ -5,6 +5,7 @@ extend type Query {
     code: String
     filter: FilterProduct
     schedule: Boolean
+    enabledOn: [String]
   ): [Product]
   product(id: Int!): Product
 }
@@ -84,6 +85,7 @@ type SKU {
   image: String
   status: STATUS_PRODUCT
   product: Product
+  enabledOn: String
 }
 
 type Integrate {

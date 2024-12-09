@@ -14,6 +14,7 @@ export async function up(knex: Knex): Promise<void> {
       .comment("AVAILABLE,OUT_OF_STOCK")
       .defaultTo("AVAILABLE");
     table.boolean('is_active').defaultTo(true);
+    table.string('enabled_on').defaultTo('ALL').comment('ALL,QORDER,WEB')
   });
 }
 

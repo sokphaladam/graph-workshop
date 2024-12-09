@@ -6,12 +6,22 @@ import { isTimeInRange } from "src/lib/isTimeInRange";
 import { Formatter } from "src/lib/Formatter";
 import moment from "moment";
 
-export function createSkuByProductIDLoader(knex: Knex, useSchedule?: boolean) {
+export function createSkuByProductIDLoader(
+  knex: Knex,
+  useSchedule?: boolean,
+  enabledOn?: string[]
+) {
   return new Dataloader(async (keys: number[]) => {
-    const items: table_product_sku[] = await knex
+    const query = knex
       .table<table_product_sku>("product_sku")
       .whereIn("product_id", keys)
       .where("is_active", "=", true);
+
+    if (enabledOn && enabledOn.length > 0) {
+      query.whereIn("enabled_on", enabledOn);
+    }
+
+    const items: table_product_sku[] = await query.clone().select();
 
     if (!!useSchedule) {
       const schedule = await knex
@@ -60,6 +70,7 @@ export function createSkuByProductIDLoader(knex: Knex, useSchedule?: boolean) {
               name: x.name,
               image: x.image,
               status: x.status,
+              enabledOn: x.enabled_on,
             };
           });
       });
@@ -77,6 +88,7 @@ export function createSkuByProductIDLoader(knex: Knex, useSchedule?: boolean) {
             name: x.name,
             image: x.image,
             status: x.status,
+            enabledOn: x.enabled_on,
           };
         });
     });

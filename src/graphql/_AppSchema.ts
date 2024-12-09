@@ -19,6 +19,7 @@ import { OverTimeResolver } from "./users/overtime/OverTimeResolver";
 import { ReportResolver } from "./report/ReportResolver";
 import { ActivityResolver } from "./users/activity/ActivityResolver";
 import { HolidayResolver } from "./holiday/HolidayResolver";
+import { StockResolver } from "./stock/StockResolver";
 
 const books = [
   {
@@ -54,6 +55,7 @@ export const AppResolvers = [
   ReportResolver,
   ActivityResolver,
   HolidayResolver,
+  StockResolver,
   {
     Query: {
       books: () => books,

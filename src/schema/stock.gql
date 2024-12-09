@@ -1,6 +1,7 @@
 extend type Mutation {
   createProductStock(data: ProductStockInput): Boolean
   updateProductStock(id: Int!, data: ProductStockInput): Boolean
+  setItemShowOn(productId: Int!, skuId: Int, status: String): Boolean
 }
 
 extend type Query {
