@@ -7,7 +7,7 @@ import { table_products } from "src/generated/tables";
 
 export async function ProductListResolver(
   _,
-  { offset, limit, code, filter, schedule },
+  { offset, limit, code, filter, schedule, enabledOn },
   ctx: ContextType
 ) {
   const knex = ctx.knex.default;
@@ -18,7 +18,7 @@ export async function ProductListResolver(
 
   const queries = knex
     .table<table_products>("products")
-    .where("is_active", true);
+    .where("products.is_active", true);
 
   if (code) {
     const item = await queries
@@ -45,24 +45,32 @@ export async function ProductListResolver(
 
   if (filter) {
     if (filter.category) {
-      queries.whereIn("category_id", filter.category);
+      queries.whereIn("products.category_id", filter.category);
     }
 
     if (filter.type) {
-      queries.whereIn("type", filter.type);
+      queries.whereIn("products.type", filter.type);
     }
 
     if (filter.isLowStock) {
-      queries.whereRaw("stock <= stock_alter");
+      queries.whereRaw("products.stock <= products.stock_alter");
     }
 
     if (filter.status && filter.status.length > 0) {
-      queries.whereIn("status", filter.status);
+      queries.whereIn("products.status", filter.status);
     }
+  }
+
+  if (enabledOn && enabledOn.length > 0) {
+    queries
+      .innerJoin("product_sku", "products.id", "product_sku.product_id")
+      .whereIn("enabled_on", enabledOn);
   }
 
   const items: table_products[] = await queries
     .clone()
+    .select("products.*")
+    .groupBy("products.id")
     .offset(offset)
     .limit(limit);
 
