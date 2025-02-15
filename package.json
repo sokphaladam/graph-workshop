@@ -15,7 +15,7 @@
     "file": "ts-node framework/generate_file.ts",
     "ts-node": "ts-node"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "npm@10.2.3",
   "keywords": [],
   "author": "",
   "license": "ISC",

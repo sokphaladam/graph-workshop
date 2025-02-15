@@ -43,6 +43,7 @@ export function createOrderByIDLoader(knex: Knex) {
           ? () => loaderDelivery.load(find.delivery_id)
           : null,
         deliveryCode: find.delivery_code,
+        firstPrint: (find as any).first_print,
       };
     });
   });

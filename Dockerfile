@@ -9,18 +9,19 @@ ENV DB_MAIN=${DB_MAIN}
 WORKDIR /usr/src/app
 
 # where available (npm@5+)
-COPY pnpm-lock.yaml .
+# COPY pnpm-lock.yaml .
+COPY package-lock.json .
 COPY package.json .
 
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 
 COPY . .
 
-RUN pnpm i
-RUN pnpm -v
+RUN npm i
+RUN npm -v
 
-RUN pnpm graph
-RUN pnpm run build
+RUN npm run graph
+RUN npm run build
 # HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 # EXPOSE 8080
-CMD [ "pnpm", "run", "start" ]
+CMD [ "npm", "run", "start" ]

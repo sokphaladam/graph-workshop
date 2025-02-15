@@ -257,5 +257,6 @@ export async function OrderKeyResolver(_, { id, token }, ctx: ContextType) {
     customerPaid: (item as any).customer_paid,
     bankId: (item as any).bank,
     currency: (item as any).currency,
+    firstPrint: (item as any).first_print,
   };
 }
