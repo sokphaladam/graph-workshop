@@ -17,6 +17,7 @@ import { AddDiscountOrderResolver } from "./AddDiscountOrderResolver";
 import { SetTypePaymentOrderResolver } from "./SetTypePaymentOrderResolver";
 import { OrderItemResolver } from "./OrderItemResolver";
 import { OrderScheduleResolver } from "./schedule/OrderScheduleResolver";
+import { MarkFirstPrintOrderResolver } from "./MarkFirstPrintOrderResolver";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -60,6 +61,7 @@ export const OrderResolver = {
     peopleInOrder: PeopleInOrderResolver,
     addDiscountOrder: AddDiscountOrderResolver,
     setTypePaymentOrder: SetTypePaymentOrderResolver,
+    markFirstPrintOrder: MarkFirstPrintOrderResolver,
   },
   Query: {
     ...OrderScheduleResolver.Query,
