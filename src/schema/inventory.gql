@@ -1,0 +1,26 @@
+extend type Query {
+  transactionStockList(offset: Int = 0, limit: Int = 30): [TransactionStock]
+}
+
+extend type Mutation {
+  createTransactionStock(data: [TransactionStockInput]): Boolean
+}
+
+input TransactionStockInput {
+  productId: Int!
+  skuId: Int!
+  qty: Int
+  type: String
+  description: String
+}
+
+type TransactionStock {
+  id: String
+  product: Product
+  sku: SKU
+  type: String
+  qty: Int
+  by: User
+  description: String
+  date: String
+}
