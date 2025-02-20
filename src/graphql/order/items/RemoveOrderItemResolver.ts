@@ -30,6 +30,11 @@ export async function RemoveOrderItemResolver(
       ctx
     );
 
+    if (status === "4") {
+      await knex.table("order_items").where({ id: id }).update({ status: "4" });
+      return true;
+    }
+
     await knex.table("order_items").where({ id: id }).del();
 
     if (order) {
@@ -75,10 +80,14 @@ export async function IncreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .select("uuid")
       .where({ id: order_item.order_id })
       .first();
-    await knex.table("order_items").where("id", id).increment("qty", 1).update({
-      updated_by: user ? user.id : null,
-      updated_at: Formatter.getNowDateTime(),
-    });
+    await knex
+      .table("order_items")
+      .where("id", id)
+      .increment("qty", 1)
+      .update({
+        updated_by: user ? user.id : null,
+        updated_at: Formatter.getNowDateTime(),
+      });
     await CreateActivity(
       _,
       {
@@ -129,10 +138,14 @@ export async function DecreaseOrderItemResolver(_, { id }, ctx: ContextType) {
       .select("uuid")
       .where({ id: order_item.order_id })
       .first();
-    await knex.table("order_items").where("id", id).decrement("qty", 1).update({
-      updated_by: user ? user.id : null,
-      updated_at: Formatter.getNowDateTime(),
-    });
+    await knex
+      .table("order_items")
+      .where("id", id)
+      .decrement("qty", 1)
+      .update({
+        updated_by: user ? user.id : null,
+        updated_at: Formatter.getNowDateTime(),
+      });
     await CreateActivity(
       _,
       {
