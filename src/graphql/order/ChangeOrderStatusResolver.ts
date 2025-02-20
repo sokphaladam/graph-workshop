@@ -133,24 +133,7 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
           total,
           order: qty,
         });
-    }
-    // else if (Number(data.status) === 4) {
-    //   const items = await knex
-    //     .table("order_items")
-    //     .where({ order_id: data.orderId })
-    //     .count("* as total")
-    //     .first<{ total: number }>();
-
-    //   if (Number(items.total) > 0) {
-    //     await knex
-    //       .table("orders")
-    //       .where({ id: data.orderId })
-    //       .update({ ...input });
-    //   } else {
-    //     await knex.table("orders").where({ id: data.orderId }).del();
-    //   }
-    // }
-    else {
+    } else {
       await knex
         .table("orders")
         .where({ id: data.orderId })
