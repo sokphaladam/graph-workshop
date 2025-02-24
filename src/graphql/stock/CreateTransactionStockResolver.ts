@@ -1,4 +1,5 @@
 import { ContextType } from "src/ContextType";
+import { randomUUID } from "crypto";
 
 export async function CreateTransactionStockResolver(
   _,
@@ -9,7 +10,7 @@ export async function CreateTransactionStockResolver(
 
   const input = data.map((x) => {
     return {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       product_id: x.productId,
       sku_id: x.skuId,
       transaction_type: x.type,
