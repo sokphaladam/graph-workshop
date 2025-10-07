@@ -7,7 +7,7 @@ if [ $(git rev-parse HEAD) != $(git rev-parse origin/deploy-local) ]; then
   . ~/.nvm/nvm.sh && npm install --omit=dev
   . ~/.nvm/nvm.sh && npm run graph
   . ~/.nvm/nvm.sh && npm run build
-  . ~/.nvm/nvm.sh && ~/.pm2 && pm2 restart graph-workshop
+  . ~/.pm2 && pm2 restart graph-workshop
   echo "✅ Updated successfully!!"
 else
   echo "✅ No changes, skipping build."
