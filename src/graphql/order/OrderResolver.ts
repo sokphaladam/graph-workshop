@@ -17,7 +17,10 @@ import { AddDiscountOrderResolver } from "./AddDiscountOrderResolver";
 import { SetTypePaymentOrderResolver } from "./SetTypePaymentOrderResolver";
 import { OrderItemResolver } from "./OrderItemResolver";
 import { OrderScheduleResolver } from "./schedule/OrderScheduleResolver";
-import { MarkFirstPrintOrderResolver } from "./MarkFirstPrintOrderResolver";
+import {
+  MarkFirstPrintOrderResolver,
+  setPrintOrderItemToKitchen,
+} from "./MarkFirstPrintOrderResolver";
 import { OrderMergeReolver } from "./OrderMergeReolver";
 
 export enum StatusOrder {
@@ -64,6 +67,7 @@ export const OrderResolver = {
     setTypePaymentOrder: SetTypePaymentOrderResolver,
     markFirstPrintOrder: MarkFirstPrintOrderResolver,
     mergeOrder: OrderMergeReolver,
+    setPrintOrderItemToKitchen: setPrintOrderItemToKitchen,
   },
   Query: {
     ...OrderScheduleResolver.Query,

@@ -13,3 +13,13 @@ export async function MarkFirstPrintOrderResolver(
 
   return true;
 }
+
+export async function setPrintOrderItemToKitchen(_, { id }, ctx: ContextType) {
+  const knex = ctx.knex.default;
+
+  await knex.table("order_items").where({ id }).update({
+    is_print: false,
+  });
+
+  return true;
+}
