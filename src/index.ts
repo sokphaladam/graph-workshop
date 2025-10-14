@@ -71,7 +71,7 @@ async function workplace(knexPools: KnexList) {
   console.log("Apollo Server is started");
   app.use(
     cors({
-      origin: ["http://116.212.144.88:3000", "http://localhost:3000"],
+      origin: "*",
     })
   );
 
