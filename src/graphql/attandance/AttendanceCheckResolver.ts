@@ -60,13 +60,7 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
       })
       .first();
 
-    if (
-      item.check_in &&
-      item.check_out
-      // &&
-      // item.overtime_from &&
-      // item.overtime_to
-    ) {
+    if (item.check_in && item.check_out) {
       return false;
     }
 
@@ -89,13 +83,14 @@ export async function AttendanceCheck(_, { userId, date }, ctx: ContextType) {
         .where({ id: item.id })
         .update({ check_out: todayTime, type: "WORK" });
     }
+  } else {
+    await knex.table("attendance").insert({
+      check_date: Formatter.getNowDate(),
+      check_in: todayTime,
+      type: "WORK",
+      user_id: userId,
+    });
   }
-  // else {
-  //   activity.description = `Check in`;
-  //   await knex
-  //     .table("attendance")
-  //     .insert({ check_in: todayTime, user_id: userId, check_date: today });
-  // }
 
   await CreateActivity(
     _,
