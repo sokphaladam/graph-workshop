@@ -1,4 +1,5 @@
 import { ContextType } from "src/ContextType";
+import { Formatter } from "src/lib/Formatter";
 
 export async function MarkFirstPrintOrderResolver(
   _,
@@ -19,6 +20,7 @@ export async function setPrintOrderItemToKitchen(_, { id }, ctx: ContextType) {
 
   await knex.table("order_items").where({ id }).update({
     is_print: false,
+    printed_at: Formatter.getNowDateTime(),
   });
 
   return true;

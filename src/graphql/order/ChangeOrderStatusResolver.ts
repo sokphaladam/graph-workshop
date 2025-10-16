@@ -158,13 +158,21 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
       await knex
         .table("order_items")
         .where({ order_id: data.orderId, id: data.id })
-        .update({ status: subStatus });
+        .update(
+          subStatus === "1"
+            ? { status: subStatus, printed_at: Formatter.getNowDateTime() }
+            : { status: subStatus }
+        );
     } else {
       await knex
         .table("order_items")
         .where({ order_id: data.orderId })
         .whereNotIn("status", ["4", "5"])
-        .update({ status: subStatus });
+        .update(
+          subStatus === "1"
+            ? { status: subStatus, printed_at: Formatter.getNowDateTime() }
+            : { status: subStatus }
+        );
     }
   }
 
