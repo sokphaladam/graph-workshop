@@ -160,7 +160,11 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
         .where({ order_id: data.orderId, id: data.id })
         .update(
           subStatus === "1"
-            ? { status: subStatus, printed_at: Formatter.getNowDateTime() }
+            ? {
+                status: subStatus,
+                printed_at: Formatter.getNowDateTime(),
+                printed_by: auth ? auth.id : null,
+              }
             : { status: subStatus }
         );
     } else {
@@ -170,7 +174,11 @@ export async function ChangeOrderStatusResolver(_, { data }, ctx: ContextType) {
         .whereNotIn("status", ["4", "5"])
         .update(
           subStatus === "1"
-            ? { status: subStatus, printed_at: Formatter.getNowDateTime() }
+            ? {
+                status: subStatus,
+                printed_at: Formatter.getNowDateTime(),
+                printed_by: auth ? auth.id : null,
+              }
             : { status: subStatus }
         );
     }

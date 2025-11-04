@@ -17,11 +17,21 @@ export async function MarkFirstPrintOrderResolver(
 
 export async function setPrintOrderItemToKitchen(_, { id }, ctx: ContextType) {
   const knex = ctx.knex.default;
+  const user = ctx.auth.id;
 
-  await knex.table("order_items").where({ id }).update({
-    is_print: false,
-    printed_at: Formatter.getNowDateTime(),
-  });
+  const item = await knex.table("order_items").where({ id }).first();
+
+  if (item) {
+    await knex
+      .table("order_items")
+      .where({ id })
+      .update({
+        is_print: false,
+        printed_at: Formatter.getNowDateTime(),
+        printed_by: user,
+        print_time: item.print_time + 1,
+      });
+  }
 
   return true;
 }
