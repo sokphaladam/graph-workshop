@@ -32,6 +32,7 @@ export const TableSetResolver = {
           set: x.set,
           fake: x.fake ? true : false,
           order: find ? () => loaderOrder.load(find.id) : null,
+          floor: x.floor ? x.floor : "Ground Floor",
         };
       });
     },
@@ -67,5 +68,22 @@ export const TableSetResolver = {
       return true;
     },
     swapOrderTable: SwapOrderTableResolver,
+    configureTableSet: async (_, { data }, ctx: ContextType) => {
+      const knex = ctx.knex.default;
+
+      await knex.transaction(async (trx) => {
+        for (const item of data) {
+          const sets = Array.from(
+            { length: item.rangeEnd - item.rangeStart + 1 },
+            (_, i) => i + item.rangeStart
+          );
+          await trx.table("table_set").whereIn("set", sets).update({
+            floor: item.floor,
+          });
+        }
+      });
+
+      return true;
+    },
   },
 };

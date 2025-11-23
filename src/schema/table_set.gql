@@ -6,10 +6,18 @@ extend type Query {
 extend type Mutation {
   generateTableSet(sets: Int!): Boolean
   swapOrderTable(orderId: Int!, table: String): Boolean
+  configureTableSet(data: [ConfigureTableSetInput]): Boolean
 }
 
 type TableSet {
   set: Int
   fake: Boolean
   order: Order
+  floor: String
+}
+
+input ConfigureTableSetInput {
+  floor: String!
+  rangeStart: Int!
+  rangeEnd: Int!
 }

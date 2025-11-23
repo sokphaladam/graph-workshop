@@ -18,6 +18,7 @@ export function createCategoryLoader(knex: Knex) {
         id: find.id,
         name: find.name,
         root: find.root,
+        index: find.index,
       };
     });
   });

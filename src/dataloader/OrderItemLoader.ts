@@ -36,6 +36,16 @@ export function createOrderItemLoader(knex: Knex, deleted?: boolean) {
             createdDate: x.created_at
               ? moment(new Date(x.created_at)).format("YYYY-MM-DD HH:mm:ss")
               : null,
+            printedDate: (x as any).printed_at
+              ? moment(new Date((x as any).printed_at)).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                )
+              : null,
+            printSuccessDate: (x as any).print_success_date
+              ? moment(new Date((x as any).print_success_date)).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                )
+              : null,
           };
         });
     });

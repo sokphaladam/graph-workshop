@@ -5,6 +5,7 @@ interface CategoryTreeNode {
   id: number;
   name: string;
   path: string;
+  index: number;
   children: CategoryTreeNode[];
 }
 
@@ -34,6 +35,7 @@ export async function categoryList(_, {}, ctx: ContextType) {
       id: 0,
       name: "",
       path: "",
+      index: 0,
     },
   };
 
@@ -43,6 +45,7 @@ export async function categoryList(_, {}, ctx: ContextType) {
       name: item.name as string,
       path: "",
       children: [],
+      index: item.index,
     };
 
     hash[item.id] = node;

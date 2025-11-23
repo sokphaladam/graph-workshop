@@ -86,6 +86,8 @@ type OrderItem {
   product: Product
   isPrint: Boolean
   createdDate: String
+  printedDate: String
+  printSuccessDate: String
 }
 
 input OrderInput {
