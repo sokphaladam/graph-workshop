@@ -5,6 +5,8 @@ import { Connection } from "mysql2";
 
 dotenv.config();
 
+console.log("Database Connection String:", process.env.DB_MAIN);
+
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql2",
