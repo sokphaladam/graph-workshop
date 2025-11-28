@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: graph-docker
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PORT: 4000 # Change to your real port
+        DB_MAIN: "" # Your DB URL here
+    environment:
+      PORT: 4000 # Should match build args
+      DB_MAIN: "" # Your DB URL here
+    ports:
+      - "4000:4000" # host:container
+    restart: always
+    command: ["npm", "run", "start"]
