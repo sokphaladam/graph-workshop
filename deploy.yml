@@ -7,12 +7,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PORT: 4000 # Change to your real port
-        DB_MAIN: "" # Your DB URL here
+        PORT: $PORT # Change to your real port
+        DB_MAIN: $DB_MAIN # Your DB URL here
     environment:
-      PORT: 4000 # Should match build args
-      DB_MAIN: "" # Your DB URL here
+      PORT: $PORT # Should match build args
+      DB_MAIN: $DB_MAIN # Your DB URL here
     ports:
-      - "4000:4000" # host:container
+      - "$PORT:$PORT" # host:container
     restart: always
     command: ["npm", "run", "start"]
