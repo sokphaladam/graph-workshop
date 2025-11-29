@@ -3,6 +3,8 @@ version: "3.8"
 services:
   app:
     container_name: graph-docker
+    image: graph-docker:latest
+    network_mode: host
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,11 +16,5 @@ services:
       DB_MAIN: $DB_MAIN # Your DB URL here
     ports:
       - "$PORT:$PORT" # host:container
-    networks:
-      - default
     restart: always
     command: ["npm", "run", "start"]
-
-networks:
-  default:
-    driver: bridge
