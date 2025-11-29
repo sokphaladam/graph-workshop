@@ -3,6 +3,7 @@ version: "3.8"
 services:
   app:
     container_name: graph-docker
+    network_mode: "host"
     build:
       context: .
       dockerfile: Dockerfile
