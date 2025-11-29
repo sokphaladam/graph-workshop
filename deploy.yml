@@ -17,3 +17,7 @@ services:
       - "$PORT:$PORT" # host:container
     restart: always
     command: ["npm", "run", "start"]
+
+networks:
+  default:
+    driver: host
