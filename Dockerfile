@@ -23,5 +23,5 @@ RUN npm -v
 RUN npm run graph
 RUN npm run builds
 # HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
-EXPOSE ${DB_MAIN}
+EXPOSE ${PORT}
 CMD [ "npm", "run", "start" ]
