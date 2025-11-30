@@ -87,7 +87,7 @@ async function workplace(knexPools: KnexList) {
   const PORT = Number(envconfig.port) || 4000;
 
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: PORT }, resolve)
+    httpServer.listen({ port: PORT, host: "0.0.0.0" }, resolve)
   );
   console.log(`🚀 Server ready at http://localhost:${PORT}`);
 }
