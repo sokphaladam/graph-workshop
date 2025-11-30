@@ -2,23 +2,17 @@ version: "3.8"
 
 services:
   app:
-    container_name: graph-docker
     build:
       context: .
       dockerfile: Dockerfile
       args:
         PORT: $PORT # Change to your real port
         DB_MAIN: $DB_MAIN # Your DB URL here
+    container_name: graph-docker
+    ports:
+      - "$PORT:$PORT" # host:container
     environment:
       PORT: $PORT # Should match build args
       DB_MAIN: $DB_MAIN # Your DB URL here
-    ports:
-      - "$PORT:$PORT" # host:container
-    networks:
-      - default
     restart: always
     command: ["npm", "run", "start"]
-
-networks:
-  default:
-    driver: bridge
