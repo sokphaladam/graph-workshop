@@ -21,7 +21,7 @@ RUN npm i
 RUN npm -v
 
 RUN npm run graph
-RUN npm run builds
+RUN npm run build
 # HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
-# EXPOSE 4000
+EXPOSE 4000
 CMD [ "npm", "run", "start" ]
