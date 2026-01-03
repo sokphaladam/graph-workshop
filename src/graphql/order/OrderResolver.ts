@@ -22,6 +22,7 @@ import {
   setPrintOrderItemToKitchen,
 } from "./MarkFirstPrintOrderResolver";
 import { OrderMergeReolver } from "./OrderMergeReolver";
+import { SetOrderItemDiscount } from "./items/SetOrderItemDiscount";
 
 export enum StatusOrder {
   PENDING = "0",
@@ -68,6 +69,7 @@ export const OrderResolver = {
     markFirstPrintOrder: MarkFirstPrintOrderResolver,
     mergeOrder: OrderMergeReolver,
     setPrintOrderItemToKitchen: setPrintOrderItemToKitchen,
+    setOrderItemDiscount: SetOrderItemDiscount,
   },
   Query: {
     ...OrderScheduleResolver.Query,

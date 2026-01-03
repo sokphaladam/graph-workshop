@@ -24,6 +24,7 @@ extend type Mutation {
   markFirstPrintOrder(orderId: Int!): Boolean
   mergeOrder(fromOrderId: [Int!], toOrderId: Int): Boolean
   setPrintOrderItemToKitchen(id: Int!): Boolean
+  setOrderItemDiscount(orderDetailId: Int!, discount: Float!): Boolean
 }
 
 extend type Query {
