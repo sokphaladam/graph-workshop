@@ -17,7 +17,7 @@ export async function UpdateShiftResolver(
     data,
     expected,
   }: { id: number; data: Graph.ShiftInput; expected: boolean },
-  ctx: ContextType
+  ctx: ContextType,
 ) {
   const knex = ctx.knex.default;
 
@@ -39,7 +39,8 @@ export async function UpdateShiftResolver(
           status: "3",
         })
         .whereNot({ set: "QO" })
-        .whereBetween("confirm_checkout_date", [data.open, data.close]);
+        .whereBetween("confirm_checkout_date", [data.open, data.close])
+        .where("confirm_checkout_by", data.userId);
 
       const setting = await tx
         .table("setting")
@@ -67,11 +68,11 @@ export async function UpdateShiftResolver(
 
         input.close_usd = String(Number(data.openCurrency.usd) + Number(usd));
         input.close_khr = String(
-          Number(data.openCurrency.khr) + Number(khr * setting.value)
+          Number(data.openCurrency.khr) + Number(khr * setting.value),
         );
         input.expect_usd = String(Number(data.openCurrency.usd) + Number(usd));
         input.expect_khr = String(
-          Number(data.openCurrency.khr) + Number(khr * setting.value)
+          Number(data.openCurrency.khr) + Number(khr * setting.value),
         );
       }
 
@@ -93,7 +94,7 @@ export async function UpdateShiftResolver(
 
       const countCustomer = orders.reduce(
         (a, b) => (a = a + Number(b.person || 0)),
-        0
+        0,
       );
 
       const countTotal = orders.reduce((a, b) => {

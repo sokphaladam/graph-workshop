@@ -1,8 +1,10 @@
 import { ContextType } from "src/ContextType";
+import { Formatter } from "src/lib/Formatter";
 
 // Individual product detail row
 export interface ProductDetail {
   product_id: number;
+  sku_id: number;
   product_code: string;
   product_name: string;
   category_name: string;
@@ -13,6 +15,7 @@ export interface ProductDetail {
   discount: number;
   revenue: number;
   profit: number;
+  created_at?: string | null;
 }
 // Category summary (aggregated totals + product list)
 export interface CategorySummary {
@@ -42,7 +45,47 @@ export interface SaleBreakdownReport {
   categories: Record<string, CategorySummary>;
 }
 
-function buildReport(rows: any[]) {
+function buildReport(rows: any[], groupBy?: string) {
+  // First, group the rows based on groupBy parameter
+  const groupedRows = new Map<string, any[]>();
+
+  rows.forEach((row) => {
+    let key: string;
+    if (groupBy === "PRODUCT") {
+      // Group by product_id and sku_id only
+      key = `${row.product_id}-${row.sku_id}`;
+    } else {
+      // Group by product_id, sku_id, and created_at
+      key = `${row.product_id}-${row.sku_id}-${row.created_at}`;
+    }
+
+    if (!groupedRows.has(key)) {
+      groupedRows.set(key, []);
+    }
+    groupedRows.get(key)!.push(row);
+  });
+
+  // Now aggregate the grouped rows
+  const aggregatedRows: any[] = [];
+  groupedRows.forEach((group) => {
+    const firstRow = group[0];
+    const totalQuantity = group.reduce(
+      (sum, row) => sum + Number(row.quantity),
+      0,
+    );
+    const totalDiscountAmount = group.reduce(
+      (sum, row) => sum + Number(row.discount_item),
+      0,
+    );
+
+    const aggregated = {
+      ...firstRow,
+      quantity: totalQuantity,
+      discount_item: totalDiscountAmount,
+    };
+    aggregatedRows.push(aggregated);
+  });
+
   const report = {
     grandTotal: {
       quantity: 0,
@@ -55,14 +98,23 @@ function buildReport(rows: any[]) {
     categories: {} as Record<string, CategorySummary>,
   };
 
-  rows.forEach((row) => {
+  aggregatedRows.forEach((row) => {
+    // Calculate derived fields
+    // Note: Assuming price field should be added to the query or handled separately
+    const supply_price = 0; // Currently not available in data
+    const total_price = Number(row.quantity) * (row.price || 0); // Price field needed from query
+    const discount = Number(row.discount_item); // Handle discount as amount (could be percentage if needed)
+    const revenue = total_price - discount;
+    const profit = revenue - supply_price;
+
     // Grand total
     report.grandTotal.quantity += Number(row.quantity);
-    report.grandTotal.supply_price += Number(row.supply_price);
-    report.grandTotal.total_price += Number(row.total_price);
-    report.grandTotal.discount += Number(row.discount);
-    report.grandTotal.revenue += Number(row.revenue);
-    report.grandTotal.profit += Number(row.profit);
+    report.grandTotal.supply_price += supply_price;
+    report.grandTotal.total_price += total_price;
+    report.grandTotal.discount += discount;
+    report.grandTotal.revenue += revenue;
+    report.grandTotal.profit += profit;
+
     // Category summary
     if (!report.categories[row.category_name]) {
       report.categories[row.category_name] = {
@@ -80,21 +132,37 @@ function buildReport(rows: any[]) {
     }
     const cat = report.categories[row.category_name];
     cat.summary.quantity += Number(row.quantity);
-    cat.summary.supply_price += Number(row.supply_price);
-    cat.summary.total_price += Number(row.total_price);
-    cat.summary.discount += Number(row.discount);
-    cat.summary.revenue += Number(row.revenue);
-    cat.summary.profit += Number(row.profit);
+    cat.summary.supply_price += supply_price;
+    cat.summary.total_price += total_price;
+    cat.summary.discount += discount;
+    cat.summary.revenue += revenue;
+    cat.summary.profit += profit;
+
     // Product detail
-    cat.products.push(row);
+    cat.products.push({
+      product_id: row.product_id,
+      product_code: row.product_code,
+      product_name: row.product_name,
+      category_name: row.category_name,
+      sku_name: row.sku_name,
+      quantity: Number(row.quantity),
+      supply_price,
+      total_price,
+      discount,
+      revenue,
+      profit,
+      sku_id: row.sku_id,
+      created_at:
+        groupBy === "PRODUCT" ? null : Formatter.dateTime(row.created_at),
+    });
   });
 
   return report;
 }
 
-export function ReportSaleBreakDownResolver(
+export async function ReportSaleBreakDownResolver(
   _: any,
-  { from, to }: { from: string; to: string },
+  { from, to, groupBy }: { from: string; to: string; groupBy?: string },
   ctx: ContextType,
 ): Promise<SaleBreakdownReport> {
   const knex = ctx.knex.default;
@@ -109,28 +177,66 @@ export function ReportSaleBreakDownResolver(
       "category.name as category_name",
       "order_items.product_id",
       "products.code as product_code",
+      "product_sku.id as sku_id",
       "products.title as product_name",
       "product_sku.name as sku_name",
-      knex.raw("SUM(order_items.qty) as quantity"),
-      knex.raw("SUM(0 * order_items.qty) as supply_price"),
-      knex.raw("SUM(order_items.qty * order_items.price) as total_price"),
-      knex.raw("SUM(order_items.discount) as discount"),
-      knex.raw(
-        "SUM(order_items.qty * order_items.price - order_items.discount) as revenue",
-      ),
-      knex.raw(
-        "SUM((order_items.qty * order_items.price - order_items.discount) - (0 * order_items.qty)) as profit",
-      ),
+      "order_items.qty as quantity",
+      "order_items.discount as discount_item",
+      "order_items.created_at as created_at",
+      "order_items.price",
     )
     .where("orders.status", "=", "3")
     .andWhereBetween("orders.created_at", [from, to])
-    .groupBy("category.name", "order_items.product_id", "order_items.sku_id")
     .orderBy("category.name")
     .orderBy("products.title");
 
+  const discountOrder = await knex
+    .table("orders")
+    .where("orders.status", "=", "3")
+    .andWhere("orders.discount", ">", 0)
+    .andWhereBetween("orders.created_at", [from, to]);
+
+  const rows = await query;
+
+  const items = rows
+    .filter((row) => {
+      const hasDiscount = discountOrder
+        .map((dis) => dis.id)
+        .includes(row.order_id);
+
+      return !hasDiscount;
+    })
+    .map((row) => {
+      return {
+        ...row,
+        discount_item: (Number(row.discount_item) * (row.price || 0)) / 100, // Convert discount percentage to amount
+      };
+    });
+
+  for (const discount of discountOrder) {
+    const orderId = discount.id;
+
+    const orderItems = rows.filter((item) => item.order_id === orderId);
+
+    const discountAmount =
+      (Number(discount.discount) * Number(discount.total_paid)) / 100;
+
+    const splitDiscount = discountAmount / orderItems.length;
+
+    orderItems.forEach((item) => {
+      const currentDiscount =
+        (Number(item.discount_item) * (item.price || 0)) / 100;
+      const totalDiscount = currentDiscount + splitDiscount;
+
+      items.push({
+        ...item,
+        discount_item: totalDiscount,
+      });
+    });
+  }
+
   return (async () => {
-    const rows = await query;
-    const report = buildReport(rows);
+    const report = buildReport(items, groupBy);
     return report;
   })();
 }

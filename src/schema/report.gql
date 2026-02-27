@@ -14,7 +14,11 @@ extend type Query {
     filters: ReportSaleFilter
     groupBy: ReportSaleGroupBy = PRODUCT
   ): JSON
-  reportSaleBreakDown(from: String, to: String): JSON
+  reportSaleBreakDown(
+    from: String
+    to: String
+    groupBy: ReportSaleGroupBy = PRODUCT
+  ): JSON
 }
 
 input ReportSaleFilter {
