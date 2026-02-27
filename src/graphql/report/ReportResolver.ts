@@ -1,4 +1,5 @@
 import { OrderBalanceSummaryResolver } from "./OrderBalanceSummaryResolver";
+import { ReportSaleBreakDownResolver } from "./ReportSaleBreakDownResolver";
 import { ReportSaleByDayResolver } from "./ReportSaleByDayResolver";
 import { ReportSaleProductResolver } from "./ReportSaleProductResolver";
 import { ReportStaffPayrollResolver } from "./ReportStaffPayrollResolver";
@@ -11,5 +12,6 @@ export const ReportResolver = {
     reportStaffPayroll: ReportStaffPayrollResolver,
     reportSaleByDay: ReportSaleByDayResolver,
     reportSaleProduct: ReportSaleProductResolver,
+    reportSaleBreakDown: ReportSaleBreakDownResolver,
   },
 };
