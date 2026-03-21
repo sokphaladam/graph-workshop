@@ -9,7 +9,7 @@ import { Formatter } from "src/lib/Formatter";
 export async function AddOrderItemResolver(
   _,
   { orderId, data }: { orderId: number; data: Graph.CartItemInput },
-  ctx: ContextType
+  ctx: ContextType,
 ) {
   const knex = ctx.knex.default;
   const user = ctx.auth;
@@ -68,6 +68,7 @@ export async function AddOrderItemResolver(
         remark: data.remark,
         status: StatusOrderItem.PENDING,
         created_by: user ? user.id : null,
+        created_at: Formatter.getNowDateTime(),
       });
 
       GraphPubSub.publish(order.uuid, {
@@ -87,7 +88,7 @@ export async function AddOrderItemResolver(
           type: "ADD_ORDER_ITEM",
         },
       },
-      ctx
+      ctx,
     );
   }
 

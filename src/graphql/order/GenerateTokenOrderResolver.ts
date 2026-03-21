@@ -4,11 +4,12 @@ import { Telegram } from "src/lib/telegram";
 import GraphPubSub from "src/lib/PubSub/PubSub";
 import { CreateActivity } from "../users/activity/ActivityResolver";
 import { table_orders } from "src/generated/tables";
+import { Formatter } from "src/lib/Formatter";
 
 export async function GenerateTokenOrderResolver(
-  _,
+  _: any,
   { set }: { set: number },
-  ctx: ContextType
+  ctx: ContextType,
 ) {
   const knex = ctx.knex.default;
   const user = ctx.auth;
@@ -50,6 +51,7 @@ export async function GenerateTokenOrderResolver(
       vat: setting ? setting.value : "0",
       verify_code: code,
       created_by: user.id,
+      created_at: Formatter.getNowDateTime(),
     });
 
     if (ctx.auth) {
@@ -66,7 +68,7 @@ export async function GenerateTokenOrderResolver(
           knex: {
             default: tx,
           },
-        }
+        },
       );
     }
 
@@ -83,9 +85,9 @@ export async function GenerateTokenOrderResolver(
 }
 
 export async function verifyOtpOrder(
-  _,
+  _: any,
   { token, code }: { token: string; code: string },
-  ctx: ContextType
+  ctx: ContextType,
 ) {
   const knex = ctx.knex.default;
 
